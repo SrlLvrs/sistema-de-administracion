@@ -92,7 +92,7 @@ export default {
     //Método para llamar a la API cuando se cree la instancia
     created() {
         //Variable con endpoint en archivo .env
-        let url = import.meta.env.VITE_SECTOR_READ;
+        let url = "https://nuestrocampo.cl/api/sectores/read.php";
 
         axios.get(url).then((response) => (this.sectores = response.data));
     },
