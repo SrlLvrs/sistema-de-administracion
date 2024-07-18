@@ -13,7 +13,8 @@
         <div class="grid grid-cols-1">
             <h1 class="text-center p-4 m-0">Sectores de reparto</h1>
             <div class="flex justify-center">
-                <button class="btn btn-outline btn-success">
+                <!-- Botón CREAR NUEVO SECTOR -->
+                <button class="btn btn-outline btn-success mb-3" onclick="my_modal_1.showModal()">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -21,6 +22,44 @@
 
                     Crear nuevo sector
                 </button>
+
+                <!-- Modal para crear un sector -->
+                <dialog id="my_modal_1" class="modal">
+                    <div class="modal-box">
+                        <h3 class="text-lg font-bold">Nuevo sector</h3>
+                        <div class="label">
+                            <span class="label-text">Nombre del sector</span>
+                        </div>
+                        <input v-model="nombresector" type="text" placeholder="Ingresa el nombre del sector"
+                            class="input input-bordered w-full max-w-xs mb-2" />
+                        <div class="label">
+                            <span class="label-text">Comuna</span>
+                        </div>
+                        <input v-model="comuna" type="text" placeholder="Ingresa la comuna"
+                            class="input input-bordered w-full max-w-xs  mb-2" />
+                        <div class="label">
+                            <span class="label-text">Día de reparto</span>
+                        </div>
+                        <select v-model="diareparto" class="select select-bordered w-full max-w-xs">
+                            <option v-for="dia in dias" v-bind:value="dia.value">
+                                {{ dia.text }}
+                            </option>
+                        </select>
+                        <div class="label">
+                            <span class="label-text">Orden en que se hace el reparto</span>
+                        </div>
+                        <input v-model="orden" type="text" placeholder="Ingresa un número"
+                            class="input input-bordered w-full max-w-xs mb-2" />
+                        <div class="modal-action">
+                            <form method="dialog">
+                                <!-- if there is a button in form, it will close the modal -->
+                                <button class="btn btn-outline btn-success mr-2" @click="crearSector()">Añadir
+                                    sector</button>
+                                <button class="btn btn-outline btn-error">Salir</button>
+                            </form>
+                        </div>
+                    </div>
+                </dialog>
             </div>
         </div>
     </div>
@@ -39,6 +78,7 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
+            <!-- Body -->
             <tbody>
                 <!-- GET -->
                 <!-- el nombre del array es SECTORES, que debe ser el mismo que se define en DATA() RETURN -->
@@ -80,13 +120,46 @@ import axios from "axios";
 
 export default {
     //Nombre del componente
-    name: "PostsList",
+    name: "Sectores",
 
     data() {
         return {
             //Array para guardar datos de la API
             sectores: [],
+            nombresector: "",
+            comuna: "",
+            diareparto: "A",
+            message: "",
+            dias: [
+                { text: 'Lunes', value: 'A' },
+                { text: 'Martes', value: 'B' },
+                { text: 'Miércoles', value: 'C' },
+                { text: 'Jueves', value: 'D' },
+                { text: 'Viernes', value: 'E' },
+                { text: 'Sábado', value: 'F' },
+                { text: 'Domingo', value: 'G' }
+            ],
+            orden: "",
         };
+    },
+
+    computed: {
+        diadelasemana() {
+            let dia = this.dias.find(dia => dia.value === this.diareparto);
+            return dia ? dia.text : '';
+        }
+    },
+
+    methods: {
+        crearSector() {
+            let nombresector = this.nombresector;
+            let comuna = this.comuna;
+            let orden = this.orden;
+            let diareparto = this.diadelasemana;
+            let url = `https://nuestrocampo.cl/api/sectores/create.php?nombresector=${nombresector}&comuna=${comuna}&diareparto=${diareparto}&orden=${orden}`
+            axios.put(url);
+            console.log("Sector creado");
+        }
     },
 
     //Método para llamar a la API cuando se cree la instancia
