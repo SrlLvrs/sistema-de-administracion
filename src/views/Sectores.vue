@@ -52,7 +52,12 @@
                     <td> {{ sector.orden }}</td>
                     <td>
                         <!-- Botón EDITAR SECTOR -->
-                        <editarSectorModal :nombre="sector.nombreSector"/>
+                        <editarSectorModal 
+                        :id="sector.id" 
+                        :nombreSector="sector.nombreSector" 
+                        :comuna="sector.comuna" 
+                        :diareparto="sector.diaReparto" 
+                        :orden="sector.orden" />
                         <!-- Botón BORRAR SECTOR -->
                         <eliminarSectorModal :id="sector.id" />
                     </td>
