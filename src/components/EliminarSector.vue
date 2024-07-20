@@ -52,9 +52,8 @@ export default {
     methods: {
         eliminarSector(id) {
             let url = `https://nuestrocampo.cl/api/sectores/delete.php?id=${id}`;
-            axios.delete(url);
+            axios.put(url);
             location.reload();
-            console.log("Sector eliminado");
         }
     }
 };

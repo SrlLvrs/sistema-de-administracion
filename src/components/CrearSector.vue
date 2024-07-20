@@ -26,8 +26,8 @@
                 <span class="label-text">Día de reparto</span>
             </div>
             <select v-model="diareparto" class="select select-bordered w-full max-w-xs">
-                <option v-for="dia in dias" v-bind:value="dia.value">
-                    {{ dia.text }}
+                <option v-for="dia in diasdelasemana">
+                    {{ dia }}
                 </option>
             </select>
             <div class="label">
@@ -70,25 +70,10 @@ export default {
             //Array para guardar datos de la API
             nombresector: "",
             comuna: "",
-            diareparto: "A",
-            dias: [
-                { text: 'Lunes', value: 'A' },
-                { text: 'Martes', value: 'B' },
-                { text: 'Miércoles', value: 'C' },
-                { text: 'Jueves', value: 'D' },
-                { text: 'Viernes', value: 'E' },
-                { text: 'Sábado', value: 'F' },
-                { text: 'Domingo', value: 'G' }
-            ],
+            diareparto: "",
+            diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
             orden: "",
         };
-    },
-
-    computed: {
-        diadelasemana() {
-            let dia = this.dias.find(dia => dia.value === this.diareparto);
-            return dia ? dia.text : '';
-        }
     },
 
     methods: {
@@ -96,7 +81,7 @@ export default {
             let nombresector = this.nombresector;
             let comuna = this.comuna;
             let orden = this.orden;
-            let diareparto = this.diadelasemana;
+            let diareparto = this.diareparto;
             let url = `https://nuestrocampo.cl/api/sectores/create.php?nombresector=${nombresector}&comuna=${comuna}&diareparto=${diareparto}&orden=${orden}`
             axios.post(url);
             location.reload();
