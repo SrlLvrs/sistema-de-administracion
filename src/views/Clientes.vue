@@ -26,15 +26,19 @@
             <thead>
                 <tr>
                     <!-- 
+                        <th>index</th>
                         -->
-                    <th>index</th>
                     <th>ID</th>
                     <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Sector</th>
                     <th>Comuna</th>
+                    <th>Teléfono</th>
+                    <th>Teléfono 2</th>
+                    <th>Link Maps</th>
+                    <th>Frecuencia</th>
                     <th>Día de reparto</th>
-                    <th>Orden de Reparto</th>
                     <th>Acciones</th>
-                    <!-- CREAR UN API REST USANDO JOIN, ESTE DEBE LEER LA INFO DEL CLIENTE, PERO TAMBIÉN LA INFORMACION DE LOS SECTORES -->
                 </tr>
             </thead>
             <!-- Body -->
@@ -42,22 +46,20 @@
                 <!-- GET -->
                 <!-- el nombre del array es SECTORES, que debe ser el mismo que se define en DATA() RETURN -->
                 <!-- Los resultados deben recorrerse dentro del TR -->
-                <tr v-for="(sector, index) in sectores" :key="sector.id">
+                <tr v-for="(cliente, index) in clientes" :key="cliente.id">
                     <!-- 
                         <th> {{ index }}</th>
-                        <td> {{ sector.id }}</td>
                         -->
-                    <td> {{ sector.nombreSector }}</td>
-                    <td> {{ sector.comuna }}</td>
-                    <td> {{ sector.diaReparto }}</td>
-                    <td> {{ sector.orden }}</td>
-                    <td>
-                        <!-- Botón EDITAR SECTOR -->
-                        <editarSectorModal :id="sector.id" :nombreSector="sector.nombreSector" :comuna="sector.comuna"
-                            :diareparto="sector.diaReparto" :orden="sector.orden" />
-                        <!-- Botón BORRAR SECTOR -->
-                        <eliminarSectorModal :id="sector.id" />
-                    </td>
+                    <td> {{ cliente.id }}</td>
+                    <td> {{ cliente.nombre }}</td>
+                    <td> {{ cliente.direccion }}</td>
+                    <td> {{ cliente.nombresector }}</td>
+                    <td> {{ cliente.comuna }}</td>
+                    <td> {{ cliente.telefono }}</td>
+                    <td> {{ cliente.telefono2 }}</td>
+                    <td> {{ cliente.linkmaps }}</td>
+                    <td> {{ cliente.frecuencia }}</td>
+                    <td> {{ cliente.diadereparto }}</td>
                 </tr>
             </tbody>
         </table>
@@ -67,29 +69,24 @@
 <script>
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
-import eliminarSectorModal from "../components/EliminarSector.vue";
-import crearSectorModal from "../components/CrearSector.vue";
-import editarSectorModal from "../components/EditarSector.vue";
 
 export default {
     //Nombre del componente
-    name: "Sectores",
+    name: "Clientes",
 
     data() {
         return {
             //Array para guardar datos de la API
-            sectores: [],
+            clientes: [],
         };
     },
-
-    components: { eliminarSectorModal, crearSectorModal, editarSectorModal },
 
     //Método para llamar a la API cuando se cree la instancia
     created() {
         //Variable con endpoint
-        let url = "https://nuestrocampo.cl/api/sectores/read.php";
+        let url = "https://nuestrocampo.cl/api/clientes/read.php";
 
-        axios.get(url).then((response) => (this.sectores = response.data));
+        axios.get(url).then((response) => (this.clientes = response.data));
     },
 };
 </script>
