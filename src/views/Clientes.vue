@@ -35,7 +35,6 @@
                     <th>Comuna</th>
                     <th>Teléfono</th>
                     <th>Teléfono 2</th>
-                    <th>Link Maps</th>
                     <th>Frecuencia</th>
                     <th>Día de reparto</th>
                     <th>Acciones</th>
@@ -57,18 +56,19 @@
                     <td> {{ cliente.comuna }}</td>
                     <td> {{ cliente.telefono }}</td>
                     <td> {{ cliente.telefono2 }}</td>
-                    <td> {{ cliente.linkmaps }}</td>
                     <td> {{ cliente.frecuencia }}</td>
                     <td> {{ cliente.diadereparto }}</td>
                     <td>
                         <button class="btn btn-outline btn-info">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            <a :href="cliente.linkmaps" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                             </svg>
+                        </a>
 
                         </button>
                         <!-- 
