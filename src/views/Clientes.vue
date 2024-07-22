@@ -60,6 +60,23 @@
                     <td> {{ cliente.linkmaps }}</td>
                     <td> {{ cliente.frecuencia }}</td>
                     <td> {{ cliente.diadereparto }}</td>
+                    <td>
+                        <button class="btn btn-outline btn-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                            </svg>
+
+                        </button>
+                        <!-- 
+                            <div>
+                                <button @click="copyToClipboard(cliente.linkmaps)">Copiar texto</button>
+                            </div>
+                            -->
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -81,6 +98,32 @@ export default {
         };
     },
 
+    methods: {
+        async copyToClipboard(maps) {
+            //const text = "Este es el texto a copiar";
+
+            if (navigator.clipboard) {
+                try {
+                    await navigator.clipboard.writeText(maps);
+                    alert("Texto copiado al portapapeles usando CLIPBOARD!");
+                } catch (err) {
+                    console.error("Error al copiar el texto: ", err);
+                }
+            } else {
+                // Fallback para navegadores que no soportan navigator.clipboard
+                const textArea = document.createElement("textarea");
+                textArea.value = maps;
+                textArea.style.position = "absolute";
+                textArea.style.left = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+                alert("Texto copiado al portapapeles usando execCommand!");
+            }
+        }
+    },
+
     //Método para llamar a la API cuando se cree la instancia
     created() {
         //Variable con endpoint
@@ -88,5 +131,5 @@ export default {
 
         axios.get(url).then((response) => (this.clientes = response.data));
     },
-};
+}
 </script>
