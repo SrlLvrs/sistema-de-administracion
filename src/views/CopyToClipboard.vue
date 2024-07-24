@@ -14,8 +14,8 @@
         <div class="grid grid-cols-1">
             <h1 class="text-center p-4 m-0">Clientes</h1>
             <div class="flex justify-center">
-                <!-- Botón CREAR NUEVO CLIENTE -->
-                <CrearCliente />
+                <!-- Botón CREAR NUEVO SECTOR -->
+                <crearSectorModal />
             </div>
         </div>
     </div>
@@ -71,6 +71,11 @@
                         </a>
 
                         </button>
+                        <!-- 
+                            <div>
+                                <button @click="copyToClipboard(cliente.linkmaps)">Copiar texto</button>
+                            </div>
+                            -->
                     </td>
                 </tr>
             </tbody>
@@ -81,7 +86,6 @@
 <script>
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
-import CrearCliente from "../components/CrearCliente.vue";
 
 export default {
     //Nombre del componente
@@ -94,7 +98,31 @@ export default {
         };
     },
 
-    methods: {},
+    methods: {
+        async copyToClipboard(maps) {
+            //const text = "Este es el texto a copiar";
+
+            if (navigator.clipboard) {
+                try {
+                    await navigator.clipboard.writeText(maps);
+                    alert("Texto copiado al portapapeles usando CLIPBOARD!");
+                } catch (err) {
+                    console.error("Error al copiar el texto: ", err);
+                }
+            } else {
+                // Fallback para navegadores que no soportan navigator.clipboard
+                const textArea = document.createElement("textarea");
+                textArea.value = maps;
+                textArea.style.position = "absolute";
+                textArea.style.left = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+                alert("Texto copiado al portapapeles usando execCommand!");
+            }
+        }
+    },
 
     //Método para llamar a la API cuando se cree la instancia
     created() {
@@ -103,7 +131,5 @@ export default {
 
         axios.get(url).then((response) => (this.clientes = response.data));
     },
-
-    components: { CrearCliente },
 }
 </script>
