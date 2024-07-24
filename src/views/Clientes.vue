@@ -59,7 +59,8 @@
                     <td> {{ cliente.frecuencia }}</td>
                     <td> {{ cliente.diadereparto }}</td>
                     <td>
-                        <button class="btn btn-outline btn-info">
+                        <!-- BOTÓN MAPS -->
+                        <button class="btn btn-outline btn-info mr-2">
                             <a :href="cliente.linkmaps" target="_blank">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -70,6 +71,7 @@
                                 </svg>
                             </a>
                         </button>
+                        <EliminarCliente :id="cliente.id" />
                     </td>
                 </tr>
             </tbody>
@@ -81,6 +83,7 @@
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
 import CrearCliente from "../components/CrearCliente.vue";
+import EliminarCliente from "../components/EliminarCliente.vue";
 
 export default {
     //Nombre del componente
@@ -103,6 +106,6 @@ export default {
         axios.get(url).then((response) => (this.clientes = response.data));
     },
 
-    components: { CrearCliente },
+    components: { CrearCliente, EliminarCliente },
 }
 </script>

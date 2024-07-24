@@ -112,31 +112,19 @@ export default {
         return {
             //Array para guardar datos de la API
             sectores: [],
-<<<<<<< HEAD
             nombre: "", //Nombre del cliente
-=======
-            nombre: "",
->>>>>>> 069c97f08029ad6c240894231434f4b755ad8d97
             nombresector: "",
             comuna: "",
             direccion: "",
             telefono: "",
             telefono2: "",
             linkmaps: "",
-<<<<<<< HEAD
             diareparto: '', //dre
-=======
-            diareparto: '',
->>>>>>> 069c97f08029ad6c240894231434f4b755ad8d97
             frecuenciaSeleccionada: "Ninguna",
             frecuencias: ['Ninguna', 'Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', '1 vez al mes'],
             diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
             ciudadSeleccionada: null,
             sectorSeleccionado: null //ID del sector
-<<<<<<< HEAD
-=======
-
->>>>>>> 069c97f08029ad6c240894231434f4b755ad8d97
         };
     },
 
@@ -179,27 +167,10 @@ export default {
                 location.reload();
             }
         },
-<<<<<<< HEAD
     },
 
     created() {
         //Leer sectores
-=======
-
-        crearSector() {
-            let nombresector = this.nombresector;
-            let comuna = this.comuna;
-            let orden = this.orden;
-            let diareparto = this.diareparto;
-            let url = `https://nuestrocampo.cl/api/sectores/create.php?nombresector=${nombresector}&comuna=${comuna}&diareparto=${diareparto}&orden=${orden}`
-            axios.post(url);
-            location.reload();
-        }
-    },
-
-    created() {
-        //Variable con endpoint
->>>>>>> 069c97f08029ad6c240894231434f4b755ad8d97
         let url = "https://nuestrocampo.cl/api/sectores/read.php";
 
         axios.get(url).then((response) => (this.sectores = response.data));
