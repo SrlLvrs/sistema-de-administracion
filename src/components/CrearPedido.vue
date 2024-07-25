@@ -1,13 +1,11 @@
 <template>
-    <button class="btn btn-outline btn-success mb-4" onclick="crearSectorModal.showModal()">
+    <button class="btn btn-outline btn-success m-2" onclick="crearSectorModal.showModal()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
         </svg>
-
-        Crear nuevo cliente
     </button>
-    <!-- Modal CREAR NUEVO SECTOR -->
+    <!-- Modal CREAR NUEVO PEDIDO-->
 
     <dialog id="crearSectorModal" class="modal">
         <div class="modal-box">
@@ -103,7 +101,7 @@ import axios from "axios";
 
 export default {
     //Nombre del componente
-    name: "CrearClienteModal",
+    name: "CrearPedidoModal",
 
     data() {
         return {
