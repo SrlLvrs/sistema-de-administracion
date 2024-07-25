@@ -7,17 +7,6 @@
             <div class="flex justify-center">
                 <!-- Botón CREAR NUEVO CLIENTE -->
                 <CrearCliente />
-
-                <!-- INPUT FILTRAR -->
-                <label class="input input-bordered flex items-center gap-2 ml-2">
-                    <input v-model="filterText" type="text" class="grow" placeholder="Nombre o dirección..." />
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                        class="h-4 w-4 opacity-70">
-                        <path fill-rule="evenodd"
-                            d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </label>
             </div>
         </div>
     </div>
@@ -47,21 +36,25 @@
                 <!-- GET -->
                 <!-- el nombre del array es SECTORES, que debe ser el mismo que se define en DATA() RETURN -->
                 <!-- Los resultados deben recorrerse dentro del TR -->
-                <tr v-for="item in filteredItems" :key="item.id">
-                    <td> {{ item.nombre }}</td>
-                    <td> {{ item.direccion }}</td>
-                    <td> {{ item.nombresector }}</td>
-                    <td> {{ item.comuna }}</td>
-                    <td> {{ item.telefono }}</td>
-                    <td> {{ item.telefono2 }}</td>
-                    <td> {{ item.frecuencia }}</td>
-                    <td> {{ item.diadereparto }}</td>
+                <tr v-for="(cliente, index) in clientes" :key="cliente.id">
+                    <!-- 
+                        <th> {{ index }}</th>
+                        <td> {{ cliente.id }}</td>
+                        -->
+                    <td> {{ cliente.nombre }}</td>
+                    <td> {{ cliente.direccion }}</td>
+                    <td> {{ cliente.nombresector }}</td>
+                    <td> {{ cliente.comuna }}</td>
+                    <td> {{ cliente.telefono }}</td>
+                    <td> {{ cliente.telefono2 }}</td>
+                    <td> {{ cliente.frecuencia }}</td>
+                    <td> {{ cliente.diadereparto }}</td>
                     <td>
                         <!-- Crear Pedido -->
-                        <CrearPedido :id="item.id + 'pdd'" />
+                        <CrearPedido :id="cliente.id" />
                         <!-- BOTÓN MAPS -->
                         <button class="btn btn-outline btn-info mr-2">
-                            <a :href="item.linkmaps" target="_blank">
+                            <a :href="cliente.linkmaps" target="_blank">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -71,15 +64,14 @@
                                 </svg>
                             </a>
                         </button>
-
                         <!-- Editar Cliente -->
-                        <EditarCliente :id="item.id" :nombre="item.nombre" :comuna="item.comuna"
-                            :sector="item.nombresector" :id_sector="item.id_sector" :dia="item.diadereparto"
-                            :direccion="item.direccion" :telefono="item.telefono" :telefono2="item.telefono2"
-                            :linkmaps="item.linkmaps" :frecuencia="item.frecuencia" />
 
+                        <EditarCliente :id="cliente.id" :nombre="cliente.nombre" :comuna="cliente.comuna"
+                            :sector="cliente.nombresector" :id_sector="cliente.id_sector" :dia="cliente.diadereparto"
+                            :direccion="cliente.direccion" :telefono="cliente.telefono" :telefono2="cliente.telefono2"
+                            :linkmaps="cliente.linkmaps" :frecuencia="cliente.frecuencia" />
                         <!-- Eliminar Cliente -->
-                        <EliminarCliente :id="item.id" />
+                        <EliminarCliente :id="cliente.id" />
                     </td>
                 </tr>
             </tbody>
@@ -102,25 +94,11 @@ export default {
     data() {
         return {
             //Array para guardar datos de la API
-            items: [],
-            filterText: '',
+            clientes: [],
         };
     },
 
     methods: {
-    },
-
-    computed: {
-        //Esta función filtra el array en base a el NOMBRE o la DIRECCION del cliente
-        filteredItems() {
-            return this.items.filter(item => {
-                return item.nombre.toLowerCase().includes(this.filterText.toLowerCase()) || //esta linea filtra texto
-                    item.direccion.toLowerCase().includes(this.filterText.toLowerCase());
-                //item.edad.toString().includes(this.filterText); //esta linea filtra INTs
-                //hay que añadir una de estas 2 tipos de lineas, para cada una de las columnas a filtrar
-
-            });
-        }
     },
 
     //Método para llamar a la API cuando se cree la instancia
@@ -128,7 +106,7 @@ export default {
         //Variable con endpoint
         let url = "https://nuestrocampo.cl/api/clientes/read.php";
 
-        axios.get(url).then((response) => (this.items = response.data));
+        axios.get(url).then((response) => (this.clientes = response.data));
     },
 
     components: { CrearCliente, EliminarCliente, EditarCliente, CrearPedido },
