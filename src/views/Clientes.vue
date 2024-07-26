@@ -23,8 +23,8 @@
     </div>
     <!-- RESULTADOS -->
     <div class="overflow-x-auto">
-        <table class="table w-11/12">
-            <!-- head -->
+        <table class="table">
+            <!-- head w-11/12 -->
             <thead>
                 <tr>
                     <!-- 

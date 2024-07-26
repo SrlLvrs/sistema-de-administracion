@@ -9,7 +9,7 @@
     <div class="prose max-w-none">
         <h1>Tareas Pendientes</h1>
         <ul>
-            <li>Agregar la columna PREFERENCIA a CLIENTES</li>
+            <li>Agregar la columna PREFERENCIA a CLIENTES (NECESITA IDS DE PRODUCTO)</li>
             <li>Obtener porcentaje de clientes fijos y libres</li>
             <li>Listado de clientes fijos mensuales</li>
             <li>Agendar mes completo en base a los días de reparto</li>

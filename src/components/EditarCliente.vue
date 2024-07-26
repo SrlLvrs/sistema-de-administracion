@@ -186,13 +186,13 @@ export default {
                 let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}`
                 console.log("diareparto está vacio")
                 axios.put(url);
-                //location.reload();
+                location.reload();
             } else {
                 // Si diareparto no está vacío, ejecuta el código aquí
                 let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}&dre=${dre}`
                 console.log("diareparto no está vacío");
                 axios.put(url);
-                //location.reload();
+                location.reload();
             }
         },
     },
