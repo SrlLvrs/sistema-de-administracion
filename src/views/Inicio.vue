@@ -6,4 +6,18 @@
         </svg>
         <span>Vista de inicio. Como el sistema aún está en construcción, algunos botones están en proceso. Por favor, no presionar ninguno.</span>
     </div>
+    <div class="prose max-w-none">
+        <h1>Tareas Pendientes</h1>
+        <ul>
+            <li>Agregar la columna PREFERENCIA a CLIENTES</li>
+            <li>Obtener porcentaje de clientes fijos y libres</li>
+            <li>Listado de clientes fijos mensuales</li>
+            <li>Agendar mes completo en base a los días de reparto</li>
+            <li>Lista de clientes deudores</li>
+            <li>Si un cliente debe más de un pedido, que aparezca una sola vez</li>
+            <li>Abrir el perfil del cliente cuando se abra la deuda</li>
+            <li>Crear botón con información de la deuda, para pegar directamente en whatsapp</li>
+        </ul>
+    </div>
+
 </template>

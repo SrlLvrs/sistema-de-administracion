@@ -39,6 +39,7 @@
                     <th>Teléfono 2</th>
                     <th>Frecuencia</th>
                     <th>Día de reparto</th>
+                    <th>Observaciones</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -56,6 +57,7 @@
                     <td> {{ item.telefono2 }}</td>
                     <td> {{ item.frecuencia }}</td>
                     <td> {{ item.diadereparto }}</td>
+                    <td> {{ item.observacion }}</td>
                     <td>
                         <!-- Crear Pedido -->
                         <CrearPedido :id="item.id + 'pdd'" />
@@ -76,7 +78,7 @@
                         <EditarCliente :id="item.id" :nombre="item.nombre" :comuna="item.comuna"
                             :sector="item.nombresector" :id_sector="item.id_sector" :dia="item.diadereparto"
                             :direccion="item.direccion" :telefono="item.telefono" :telefono2="item.telefono2"
-                            :linkmaps="item.linkmaps" :frecuencia="item.frecuencia" />
+                            :linkmaps="item.linkmaps" :frecuencia="item.frecuencia" :observaciones="item.observacion"/>
 
                         <!-- Eliminar Cliente -->
                         <EliminarCliente :id="item.id" />

@@ -78,6 +78,12 @@
                 </option>
             </select>
 
+            <div class="label">
+                <span class="label-text">Observaciones</span>
+            </div>
+            <input v-model="observaciones" type="text" placeholder="Casa esquina. Árbol afuera."
+                class="input input-bordered w-full max-w-xs mb-2">
+
             <div class="modal-action">
                 <form method="dialog">
                     <button class="btn btn-outline btn-success mr-2" @click="crearCliente()">
@@ -117,6 +123,7 @@ export default {
             telefono2: "",
             linkmaps: "",
             diareparto: '', //dre
+            observaciones: '',
             frecuenciaSeleccionada: "Ninguna",
             frecuencias: ['Ninguna', 'Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', '1 vez al mes'],
             diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
@@ -149,16 +156,17 @@ export default {
             let t2 = this.telefono2;
             let l = this.linkmaps;
             let f = this.frecuenciaSeleccionada;
+            let o = this.observaciones;
             let dre = this.diareparto;
 
             if (dre === "") {
                 // Si diareparto está vacío, ejecuta el código aquí
-                let url = `https://nuestrocampo.cl/api/clientes/create.php?nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}`
+                let url = `https://nuestrocampo.cl/api/clientes/create.php?nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}`
                 axios.post(url);
                 location.reload();
             } else {
                 // Si diareparto no está vacío, ejecuta el código aquí
-                let url = `https://nuestrocampo.cl/api/clientes/create.php?nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&dre=${dre}`
+                let url = `https://nuestrocampo.cl/api/clientes/create.php?nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}&dre=${dre}`
                 console.log("diareparto no está vacío");
                 axios.post(url);
                 location.reload();

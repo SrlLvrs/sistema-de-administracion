@@ -93,6 +93,13 @@
                 </option>
             </select>
 
+            <!-- Observaciones -->
+            <div class="label">
+                <span class="label-text">Observaciones</span>
+            </div>
+            <input v-model="localObservaciones" type="text" placeholder="Casa esquina. Árbol afuera."
+                class="input input-bordered w-full max-w-xs mb-2">
+
             <!-- Botones del modal -->
             <div class="modal-action">
                 <label :for="nombre" class="btn">Salir</label>
@@ -129,6 +136,7 @@ export default {
         telefono2: String,
         linkmaps: String,
         frecuencia: String,
+        observaciones: String,
     },
 
     data() {
@@ -141,6 +149,7 @@ export default {
             localTelefono: this.telefono,
             localTelefono2: this.telefono2,
             localLinkMaps: this.linkmaps,
+            localObservaciones: this.observaciones,
             frecuenciaSeleccionada: this.frecuencia,
             frecuencias: ['Ninguna', 'Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', '1 vez al mes'],
             diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
@@ -158,6 +167,7 @@ export default {
             let t2 = this.localTelefono2;
             let l = this.localLinkMaps;
             let f = this.frecuenciaSeleccionada;
+            let o = this.localObservaciones;
             let dre = this.diareparto;
             
         /** Este If compara el sector PROP con el sector DATA
@@ -173,16 +183,16 @@ export default {
 
             if (dre === "") {
                 // Si diareparto está vacío, ejecuta el código aquí
-                let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}`
+                let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}`
                 console.log("diareparto está vacio")
                 axios.put(url);
-                location.reload();
+                //location.reload();
             } else {
                 // Si diareparto no está vacío, ejecuta el código aquí
-                let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&dre=${dre}`
+                let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}&dre=${dre}`
                 console.log("diareparto no está vacío");
                 axios.put(url);
-                location.reload();
+                //location.reload();
             }
         },
     },
