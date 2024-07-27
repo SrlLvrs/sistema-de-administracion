@@ -14,6 +14,7 @@
                     <!-- Este es el menú de pantallas pequeñas -->
                     <li><router-link to='/'>Inicio</router-link></li>
                     <li><router-link to='/clientes'>Clientes</router-link></li>
+                    <li><router-link to='/productos'>Productos</router-link></li>
                     <li><router-link to='/sectores'>Sectores de Reparto</router-link></li>
                     <li><router-link to='/pedidos'>Pedidos</router-link></li>
                     <li><router-link to='/produccion'>Producción</router-link></li>
@@ -27,6 +28,7 @@
                 <!-- Este es el menú de pantallas grandes -->
                 <li><router-link to='/'>Inicio</router-link></li>
                 <li><router-link to='/clientes'>Clientes</router-link></li>
+                <li><router-link to='/productos'>Productos</router-link></li>
                 <li><router-link to='/sectores'>Sectores de Reparto</router-link></li>
                 <li><router-link to='/pedidos'>Pedidos</router-link></li>
                 <li><router-link to='/produccion'>Producción</router-link></li>
