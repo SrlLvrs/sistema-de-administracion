@@ -43,10 +43,16 @@
                 <!-- el nombre del array es SECTORES, que debe ser el mismo que se define en DATA() RETURN -->
                 <!-- Los resultados deben recorrerse dentro del TR -->
                 <tr v-for="item in filteredItems" :key="item.id">
-                    <td> {{ item.id }}</td>
                     <td> {{ item.descripcion }}</td>
                     <td> {{ item.precio }}</td>
                     <td>
+                        <!-- Editar Producto -->
+                        <EditarProducto 
+                        :label="item.id + 'edit'" 
+                        :id="item.id"
+                        :descripcion="item.descripcion"
+                        :precio="item.precio" />
+
                         <!-- Eliminar Producto -->
                         <EliminarProducto :id="item.id" />
                     </td>
@@ -61,6 +67,7 @@
 import axios from "axios";
 import CrearProducto from "../components/CrearProducto.vue";
 import EliminarProducto from "../components/EliminarProducto.vue";
+import EditarProducto from "../components/EditarProducto.vue"
 
 export default {
     //Nombre del componente
@@ -98,6 +105,6 @@ export default {
         axios.get(url).then((response) => (this.items = response.data));
     },
 
-    components: { CrearProducto, EliminarProducto }
+    components: { CrearProducto, EliminarProducto, EditarProducto }
 }
 </script>

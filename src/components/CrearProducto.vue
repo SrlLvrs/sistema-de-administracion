@@ -11,7 +11,6 @@
 
     <dialog id="crearProductoModal" class="modal">
         <div class="modal-box">
-
             <h3 class="text-lg font-bold">Nuevo producto</h3>
 
             <div class="label">
