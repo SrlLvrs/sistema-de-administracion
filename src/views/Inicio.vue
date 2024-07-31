@@ -17,6 +17,7 @@
             <li>Si un cliente debe más de un pedido, que aparezca una sola vez</li>
             <li>Abrir el perfil del cliente cuando se abra la deuda</li>
             <li>Crear botón con información de la deuda, para pegar directamente en whatsapp</li>
+            <li>Hamburguesa de Navbar cierre de dropdown</li>
         </ul>
     </div>
 

@@ -12,18 +12,18 @@
     <input type="checkbox" :id="label" class="modal-toggle" />
     <div class="modal" role="dialog">
         <div class="modal-box">
-            <h3 class="text-lg font-bold">Editar producto</h3>
+            <h3 class="text-lg font-bold mb-2 text-center">Editar producto</h3>
             
             <!-- Descripción -->
             <div class="label">
-                <span class="label-text">Descripción</span>
+                <span class="label-text font-bold">Descripción</span>
             </div>
             <input v-model="localDescripcion" type="text" placeholder="Huevos 1era Categoría, Bandeja 30un"
                 class="input input-bordered w-full max-w-xs mb-2" />
 
             <!-- Precio -->
             <div class="label">
-                <span class="label-text">Precio</span>
+                <span class="label-text font-bold">Precio</span>
             </div>
             <input v-model="localPrecio" type="number" placeholder="7500"
                 class="input input-bordered w-full max-w-xs mb-2" />

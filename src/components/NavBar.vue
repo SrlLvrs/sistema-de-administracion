@@ -12,18 +12,18 @@
                 <ul tabindex="0"
                     class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                     <!-- Este es el menú de pantallas pequeñas -->
-                    <li><router-link to='/'>Inicio</router-link></li>
-                    <li><router-link to='/clientes'>Clientes</router-link></li>
-                    <li><router-link to='/productos'>Productos</router-link></li>
-                    <li><router-link to='/sectores'>Sectores de Reparto</router-link></li>
-                    <li><router-link to='/pedidos'>Pedidos</router-link></li>
-                    <li><router-link to='/produccion'>Producción</router-link></li>
-                    <li><router-link to='/admin'>Administrar usuarios</router-link></li>
+                    <li><router-link to='/' @click.native="close">Inicio</router-link></li>
+                    <li><router-link to='/clientes' @click.native="close">Clientes</router-link></li>
+                    <li><router-link to='/productos' @click.native="close">Productos</router-link></li>
+                    <li><router-link to='/sectores' @click.native="close">Sectores de Reparto</router-link></li>
+                    <li><router-link to='/pedidos' @click.native="close">Pedidos</router-link></li>
+                    <li><router-link to='/produccion' @click.native="close">Producción</router-link></li>
+                    <li><router-link to='/admin' @click.native="close">Administrar usuarios</router-link></li>
                 </ul>
             </div>
             <a class="btn btn-ghost text-xl"><router-link to='/'>Nuestro Campo</router-link></a>
         </div>
-        <div class="navbar-end hidden lg:flex">
+        <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
                 <!-- Este es el menú de pantallas grandes -->
                 <li><router-link to='/'>Inicio</router-link></li>
@@ -37,3 +37,14 @@
         </div>
     </div>
 </template>
+
+<script>
+export default {
+    methods: {
+        close() {
+            document.activeElement.blur();
+        }
+    }
+}
+
+</script>
