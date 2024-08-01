@@ -12,23 +12,23 @@
     <dialog id="crearSectorModal" class="modal">
         <div class="modal-box">
 
-            <h3 class="text-lg font-bold">Nuevo cliente</h3>
+            <h3 class="text-lg font-bold mb-2 text-center">Nuevo cliente</h3>
 
             <div class="label">
-                <span class="label-text">Nombre</span>
+                <span class="label-text font-bold">Nombre</span>
             </div>
             <input v-model="nombre" type="text" placeholder="Ingresa el nombre del cliente"
                 class="input input-bordered w-full max-w-xs mb-2" />
 
             <div class="label">
-                <span class="label-text">Comuna</span>
+                <span class="label-text font-bold">Comuna</span>
             </div>
             <select v-model="ciudadSeleccionada" class="select select-bordered w-full max-w-xs">
                 <option v-for="ciudad in ciudades" :key="ciudad" :value="ciudad">{{ ciudad }}</option>
             </select>
 
             <div class="label">
-                <span class="label-text">Sector</span>
+                <span class="label-text font-bold">Sector</span>
             </div>
             <select v-model="sectorSeleccionado" class="select select-bordered w-full max-w-xs">
                 <option v-for="sector in sectoresFiltrados" :key="sector.id" :value="sector.id">{{
@@ -37,7 +37,7 @@
             <p v-if="diaReparto">Día de reparto sugerido: {{ diaReparto }}</p>
 
             <div class="label">
-                <span class="label-text">Día de reparto excepcional</span>
+                <span class="label-text font-bold">Día de reparto excepcional</span>
             </div>
             <select v-model="diareparto" class="select select-bordered w-full max-w-xs">
                 <option v-for="dia in diasdelasemana">
@@ -46,31 +46,31 @@
             </select>
 
             <div class="label">
-                <span class="label-text">Dirección</span>
+                <span class="label-text font-bold">Dirección</span>
             </div>
             <input v-model="direccion" type="text" placeholder="Ingresa la dirección del cliente"
                 class="input input-bordered w-full max-w-xs mb-2">
 
             <div class="label">
-                <span class="label-text">Teléfono</span>
+                <span class="label-text font-bold">Teléfono</span>
             </div>
             <input v-model="telefono" type="text" placeholder="Ej. 56922446688"
                 class="input input-bordered w-full max-w-xs mb-2">
 
             <div class="label">
-                <span class="label-text">Teléfono 2</span>
+                <span class="label-text font-bold">Teléfono 2</span>
             </div>
             <input v-model="telefono2" type="text" placeholder="Ej. 56922446688"
                 class="input input-bordered w-full max-w-xs mb-2">
 
             <div class="label">
-                <span class="label-text">Link de Google Maps</span>
+                <span class="label-text font-bold">Link de Google Maps</span>
             </div>
             <input v-model="linkmaps" type="text" placeholder="https://maps.app.goo.gl/..."
                 class="input input-bordered w-full max-w-xs mb-2">
 
             <div class="label">
-                <span class="label-text">Frecuencia</span>
+                <span class="label-text font-bold">Frecuencia</span>
             </div>
             <select v-model="frecuenciaSeleccionada" class="select select-bordered w-full max-w-xs">
                 <option v-for="frecuencia in frecuencias">
@@ -79,10 +79,17 @@
             </select>
 
             <div class="label">
-                <span class="label-text">Observaciones</span>
+                <span class="label-text font-bold">Observaciones</span>
             </div>
             <input v-model="observaciones" type="text" placeholder="Casa esquina. Árbol afuera."
                 class="input input-bordered w-full max-w-xs mb-2">
+
+            <div class="label">
+                <span class="label-text font-bold">Preferencia</span>
+            </div>
+            <select v-model="productoSeleccionado" class="select select-bordered w-full max-w-xs">
+                <option v-for="producto in productos" :key="producto" :value="producto.id">{{ producto.descripcion }}</option>
+            </select>
 
             <div class="modal-action">
                 <form method="dialog">
@@ -115,6 +122,7 @@ export default {
         return {
             //Array para guardar datos de la API
             sectores: [],
+            productos: [],
             nombre: "", //Nombre del cliente
             nombresector: "",
             comuna: "",
@@ -128,7 +136,8 @@ export default {
             frecuencias: ['Ninguna', 'Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', '1 vez al mes'],
             diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
             ciudadSeleccionada: null,
-            sectorSeleccionado: null //ID del sector
+            sectorSeleccionado: null, //ID del sector
+            productoSeleccionado: 1,
         };
     },
 
@@ -157,16 +166,17 @@ export default {
             let l = this.linkmaps;
             let f = this.frecuenciaSeleccionada;
             let o = this.observaciones;
+            let p = this.productoSeleccionado;
             let dre = this.diareparto;
 
             if (dre === "") {
                 // Si diareparto está vacío, ejecuta el código aquí
-                let url = `https://nuestrocampo.cl/api/clientes/create.php?nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}`
+                let url = `https://nuestrocampo.cl/api/clientes/create.php?nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}&preferencia=${p}`
                 axios.post(url);
                 location.reload();
             } else {
                 // Si diareparto no está vacío, ejecuta el código aquí
-                let url = `https://nuestrocampo.cl/api/clientes/create.php?nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}&dre=${dre}`
+                let url = `https://nuestrocampo.cl/api/clientes/create.php?nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}&preferencia=${p}&dre=${dre}`
                 console.log("diareparto no está vacío");
                 axios.post(url);
                 location.reload();
@@ -179,6 +189,10 @@ export default {
         let url = "https://nuestrocampo.cl/api/sectores/read.php";
 
         axios.get(url).then((response) => (this.sectores = response.data));
+        
+        let url2 = "https://nuestrocampo.cl/api/productos/read.php";
+        
+        axios.get(url2).then((response) => (this.productos = response.data));
     },
 };
 </script>
