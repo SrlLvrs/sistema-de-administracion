@@ -33,13 +33,16 @@
                         -->
                     <th>Nombre</th>
                     <th>Dirección</th>
-                    <th>Sector</th>
-                    <th>Comuna</th>
+                    <!-- 
+                        <th>Sector</th>
+                        <th>Comuna</th>
+                        -->
                     <th>Teléfono</th>
                     <th>Teléfono 2</th>
                     <th>Frecuencia</th>
                     <th>Día de reparto</th>
                     <th>Observaciones</th>
+                    <th>Preferencias</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -50,14 +53,17 @@
                 <!-- Los resultados deben recorrerse dentro del TR -->
                 <tr v-for="item in filteredItems" :key="item.id">
                     <td> {{ item.nombre }}</td>
-                    <td> {{ item.direccion }}</td>
-                    <td> {{ item.nombresector }}</td>
-                    <td> {{ item.comuna }}</td>
+                    <td> {{ item.direccion }}, {{item.nombresector}}, {{  item.comuna }}</td>
+                    <!-- 
+                        <td> {{ item.nombresector }}</td>
+                        <td> {{ item.comuna }}</td>
+                        -->
                     <td> {{ item.telefono }}</td>
                     <td> {{ item.telefono2 }}</td>
                     <td> {{ item.frecuencia }}</td>
                     <td> {{ item.diadereparto }}</td>
                     <td> {{ item.observacion }}</td>
+                    <td> {{ item.preferencia }}</td>
                     <td>
                         <!-- Crear Pedido -->
                         <CrearPedido :id="item.id + 'pdd'" />
