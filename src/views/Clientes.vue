@@ -84,7 +84,8 @@
                         <EditarCliente :id="item.id" :nombre="item.nombre" :comuna="item.comuna"
                             :sector="item.nombresector" :id_sector="item.id_sector" :dia="item.diadereparto"
                             :direccion="item.direccion" :telefono="item.telefono" :telefono2="item.telefono2"
-                            :linkmaps="item.linkmaps" :frecuencia="item.frecuencia" :observaciones="item.observacion"/>
+                            :linkmaps="item.linkmaps" :frecuencia="item.frecuencia" :observaciones="item.observacion"
+                            :producto_preferido="item.preferencia" :id_producto_preferido="item.id_producto"/>
 
                         <!-- Eliminar Cliente -->
                         <EliminarCliente :id="item.id" />

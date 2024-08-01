@@ -13,18 +13,18 @@
     <div class="modal" role="dialog">
         <div class="modal-box">
 
-            <h3 class="text-lg font-bold">Editar cliente</h3>
+            <h3 class="text-lg font-bold mb-2 text-center">Editar cliente</h3>
 
             <!-- Nombre cliente -->
             <div class="label">
-                <span class="label-text">Nombre</span>
+                <span class="label-text font-bold">Nombre</span>
             </div>
             <input v-model="localNombre" type="text" placeholder="Ingresa el nombre del cliente"
                 class="input input-bordered w-full max-w-xs mb-2" />
 
             <!-- Comuna -->
             <div class="label">
-                <span class="label-text">Comuna</span>
+                <span class="label-text font-bold">Comuna</span>
             </div>
             <select v-model="ciudadSeleccionada" class="select select-bordered w-full max-w-xs">
                 <option disabled selected> {{ comuna }} </option>
@@ -33,7 +33,7 @@
 
             <!-- Sector -->
             <div class="label">
-                <span class="label-text">Sector</span>
+                <span class="label-text font-bold">Sector</span>
             </div>
             <select v-model="sectorSeleccionado" class="select select-bordered w-full max-w-xs">
                 <option disabled selected> {{ sector }} </option>
@@ -46,7 +46,7 @@
             <p class="my-2 mx-1 font-bold text-red-500" v-if="diaReparto">Día de reparto sugerido: {{ diaReparto }}</p>
 
             <div class="label">
-                <span class="label-text">Día de reparto excepcional</span>
+                <span class="label-text font-bold">Día de reparto excepcional</span>
             </div>
             <select v-model="diareparto" class="select select-bordered w-full max-w-xs">
                 <option v-for="dia in diasdelasemana">
@@ -56,35 +56,35 @@
 
             <!-- Dirección -->
             <div class="label">
-                <span class="label-text">Dirección</span>
+                <span class="label-text font-bold">Dirección</span>
             </div>
             <input v-model="localDireccion" type="text" placeholder="Ingresa la dirección del cliente"
                 class="input input-bordered w-full max-w-xs mb-2">
 
             <!-- Teléfono -->
             <div class="label">
-                <span class="label-text">Teléfono</span>
+                <span class="label-text font-bold">Teléfono</span>
             </div>
             <input v-model="localTelefono" type="text" placeholder="Ej. 56922446688"
                 class="input input-bordered w-full max-w-xs mb-2">
 
             <!-- Teléfono 2 -->
             <div class="label">
-                <span class="label-text">Teléfono 2</span>
+                <span class="label-text font-bold">Teléfono 2</span>
             </div>
             <input v-model="localTelefono2" type="text" placeholder="Ej. 56922446688"
                 class="input input-bordered w-full max-w-xs mb-2">
 
             <!-- Link de Google Maps -->
             <div class="label">
-                <span class="label-text">Link de Google Maps</span>
+                <span class="label-text font-bold">Link de Google Maps</span>
             </div>
             <input v-model="localLinkMaps" type="text" placeholder="https://maps.app.goo.gl/..."
                 class="input input-bordered w-full max-w-xs mb-2">
 
             <!-- Frecuencia -->
             <div class="label">
-                <span class="label-text">Frecuencia</span>
+                <span class="label-text font-bold">Frecuencia</span>
             </div>
             <select v-model="frecuenciaSeleccionada" class="select select-bordered w-full max-w-xs">
                 <option disabled selected> {{ frecuencia }} </option>
@@ -95,10 +95,21 @@
 
             <!-- Observaciones -->
             <div class="label">
-                <span class="label-text">Observaciones</span>
+                <span class="label-text font-bold">Observaciones</span>
             </div>
             <input v-model="localObservaciones" type="text" placeholder="Casa esquina. Árbol afuera."
                 class="input input-bordered w-full max-w-xs mb-2">
+
+            <!-- Preferencia -->
+            <div class="label">
+                <span class="label-text font-bold">Preferencia</span>
+            </div>
+            <select v-model="producto_seleccionado" class="select select-bordered w-full max-w-xs">
+                <option disabled selected> {{ producto_preferido }}</option>
+                <option v-for="producto in productos" :key="producto.id" :value="producto.id">
+                    {{ producto.descripcion }}
+                </option>
+            </select>
 
             <!-- Botones del modal -->
             <div class="modal-action">
@@ -137,12 +148,15 @@ export default {
         linkmaps: String,
         frecuencia: String,
         observaciones: String,
+        producto_preferido: String,
+        id_producto_preferido: Number,
     },
 
     data() {
         return {
             //Array para guardar datos de la API
             sectores: [],
+            productos: [],
             localNombre: this.nombre,
             diareparto: '', //dre
             localDireccion: this.direccion,
@@ -155,6 +169,7 @@ export default {
             diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
             ciudadSeleccionada: this.comuna,
             sectorSeleccionado: this.sector,
+            producto_seleccionado: this.producto_preferido,
         };
     },
 
@@ -168,28 +183,36 @@ export default {
             let l = this.localLinkMaps;
             let f = this.frecuenciaSeleccionada;
             let o = this.localObservaciones;
+            let p = '';
             let dre = this.diareparto;
-            
-        /** Este If compara el sector PROP con el sector DATA
-         * Como el valor DATA se entrega por PROP, si este valor no cambia
-         * entonces se usa el mismo id, que también viene por prop
-         * si el valor cambia, el id se actualiza solo, en la variable SECTORSELECCIONADO
-         */
-        if (this.sector === this.sectorSeleccionado){
-            ids = this.id_sector
-        } else {
-            ids = this.sectorSeleccionado;
-        }
+
+            /** Este If compara el sector PROP con el sector DATA
+             * Como el valor DATA llega por PROP, si este valor no cambia
+             * entonces se usa el mismo id, que también viene por prop
+             * si el valor cambia, el id se actualiza solo, en la variable SECTORSELECCIONADO
+             */
+            if (this.sector === this.sectorSeleccionado) {
+                ids = this.id_sector
+            } else {
+                ids = this.sectorSeleccionado;
+            }
+
+            /**Este if hace lo mismo que arriba, pero para el producto preferido */
+            if (this.producto_preferido === this.producto_seleccionado) {
+                p = this.id_producto_preferido
+            } else {
+                p = this.producto_seleccionado;
+            }
 
             if (dre === "") {
                 // Si diareparto está vacío, ejecuta el código aquí
-                let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}`
+                let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}&preferencia=${p}`
                 console.log("diareparto está vacio")
                 axios.put(url);
                 location.reload();
             } else {
                 // Si diareparto no está vacío, ejecuta el código aquí
-                let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}&dre=${dre}`
+                let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}&preferencia=${p}&dre=${dre}`
                 console.log("diareparto no está vacío");
                 axios.put(url);
                 location.reload();
@@ -217,6 +240,10 @@ export default {
         let url = "https://nuestrocampo.cl/api/sectores/read.php";
 
         axios.get(url).then((response) => (this.sectores = response.data));
+
+        let url2 = "https://nuestrocampo.cl/api/productos/read.php";
+
+        axios.get(url2).then((response) => (this.productos = response.data));
     },
 };
 </script>
