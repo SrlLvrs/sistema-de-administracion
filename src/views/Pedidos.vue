@@ -33,6 +33,7 @@
                     <th>Pagado</th>
                     <th>Medio de Pago</th>
                     <th>Hora de Cierre</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <!-- Body -->
@@ -43,7 +44,7 @@
                 <tr v-for="item in filteredItems" :key="item.id">
                     <td> {{ item.id }}</td>
                     <td> {{ item.cliente }}</td>
-                    <td> {{ item.estado }}</td>
+                    <td class="badge-info"> {{ item.estado }}</td>
                     <td> {{ item.pagado }}</td>
                     <td> {{ item.medio_pago }}</td>
                     <td> {{ item.hora_cierre }}</td>
@@ -51,6 +52,7 @@
                         <!-- Editar Pedido -->
 
                         <!-- Eliminar Pedido -->
+                        <EliminarPedido :id="item.id"/>
                     </td>
                 </tr>
             </tbody>
@@ -61,6 +63,7 @@
 <script>
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
+import EliminarPedido from "../components/EliminarPedido.vue";
 
 export default {
     //Nombre del componente
@@ -98,6 +101,6 @@ export default {
         axios.get(url).then((response) => (this.items = response.data));
     },
 
-    components: {  },
+    components: { EliminarPedido },
 }
 </script>
