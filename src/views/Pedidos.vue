@@ -32,6 +32,7 @@
                     <th>Estado</th>
                     <th>Pagado</th>
                     <th>Medio de Pago</th>
+                    <th>Hora de Creación</th>
                     <th>Hora de Cierre</th>
                     <th>Acciones</th>
                 </tr>
@@ -47,6 +48,7 @@
                     <td class="badge-info"> {{ item.estado }}</td>
                     <td> {{ item.pagado }}</td>
                     <td> {{ item.medio_pago }}</td>
+                    <td> {{ item.hora_creacion }}</td>
                     <td> {{ item.hora_cierre }}</td>
                     <td>
                         <!-- Editar Pedido -->

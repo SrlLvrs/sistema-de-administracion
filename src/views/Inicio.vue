@@ -17,7 +17,7 @@
             <li>Abrir el perfil del cliente cuando se abra la deuda</li>
             <li>Crear botón con información de la deuda, para pegar directamente en whatsapp</li>
             <li>Hamburguesa de Navbar cierre de dropdown</li>
+            <li>Revisar botones para evitar sobrecarga del sistema en CREATED()</li>
         </ul>
     </div>
-
 </template>

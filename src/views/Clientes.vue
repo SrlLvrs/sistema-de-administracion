@@ -66,7 +66,7 @@
                     <td> {{ item.preferencia }}</td>
                     <td>
                         <!-- Crear Pedido -->
-                        <CrearPedido :id="item.id + 'pdd'" />
+                        <CrearPedido :id="item.id + 'pdd'" :cliente="item.id"/>
                         <!-- BOTÓN MAPS -->
                         <button class="btn btn-outline btn-info mr-2">
                             <a :href="item.linkmaps" target="_blank">
