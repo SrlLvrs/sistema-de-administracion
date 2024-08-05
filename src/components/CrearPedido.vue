@@ -20,7 +20,7 @@
                     <span class="label-text font-bold">Nombre del Cliente</span>
                 </div>
                 <p> {{ item.cliente }} </p>
-                
+
                 <!-- Estado del pedido -->
                 <div class="label">
                     <span class="label-text font-bold">Estado</span>
@@ -34,18 +34,43 @@
             </div>
 
             <select v-model="producto_seleccionado" class="select select-bordered w-full max-w-xs">
-                <option v-for="producto in productos">
-                    {{ producto.descripcion }}
+                <option v-for="(producto, index) in productos" :key="index" :value="index">
+                    {{ producto.descripcion }} - ${{ producto.precio }}
                 </option>
             </select>
             <label class="btn" @click="agregarProducto()">Añadir</label>
 
+            <!-- Productos elegidos -->
             <div class="label">
                 <span class="label-text font-bold">Productos elegidos</span>
             </div>
-            <ul>
-                <li v-for="producto_elegido in productos_elegidos"> - {{ producto_elegido }}</li>
-            </ul>
+
+            <div class="overflow-x-auto">
+                <table class="table">
+                    <!-- head -->
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(producto, index) in productos_elegidos" :key="index" :value="index">
+                            <th>{{ producto.descripcion }}</th>
+                            <td>{{ producto.precio }}</td>
+                            <button class="btn" @click="removeItem(index)">Eliminar</button>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+
+
+
+
 
 
 
@@ -109,10 +134,18 @@ export default {
             let url3 = "https://nuestrocampo.cl/api/productos/read.php";
             axios.get(url3).then((response) => (this.productos = response.data));
         },
-        agregarProducto(){
-            if (this.producto_seleccionado) {
-                this.productos_elegidos.push(this.producto_seleccionado)
+        agregarProducto() {
+            if (this.producto_seleccionado !== null) {
+                const selectedArray = this.productos[this.producto_seleccionado];
+                let spread = { ...selectedArray }
+                console.log(spread)
+                this.productos_elegidos.push(spread);
+                console.log('producto añadido')
             }
+        },
+        removeItem(index) {
+            console.log(index)
+            this.productos_elegidos.splice(index, 1);
         },
     }
 }

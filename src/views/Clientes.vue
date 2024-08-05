@@ -52,7 +52,7 @@
                 <!-- el nombre del array es SECTORES, que debe ser el mismo que se define en DATA() RETURN -->
                 <!-- Los resultados deben recorrerse dentro del TR -->
                 <tr v-for="item in filteredItems" :key="item.id">
-                    <td> {{ item.nombre }}</td>
+                    <th> {{ item.nombre }}</th>
                     <td> {{ item.direccion }}, {{item.nombresector}}, {{  item.comuna }}</td>
                     <!-- 
                         <td> {{ item.nombresector }}</td>
