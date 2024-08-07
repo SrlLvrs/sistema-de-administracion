@@ -119,11 +119,19 @@
 
                 <!-- Acciones -->
                 <div class="modal-action">
-                    <label :for="id" class="btn">Salir</label>
+                    <!-- Descartar pedido -->
+                    <button class="btn btn-outline btn-error" @click="descartarPedido(items[0].id)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                        Descartar Pedido</button>
+
+                    <!-- Crear pedido -->
                     <button class="btn btn-outline btn-success" @click="crearPedido_Producto()">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                         </svg>
                         Crear Pedido
                     </button>
@@ -229,9 +237,14 @@ export default {
 
                 let url = `https://nuestrocampo.cl/api/pedidos_productos/create.php?id_pedido=${pedido}&id_producto=${producto}&cantidad=${cantidad}&total=${total}`
                 axios.post(url);
-                console.log('Productos enviados a la base de datos')
+                location.reload();
             }
         },
+        descartarPedido(i){
+            let url = `https://nuestrocampo.cl/api/pedidos/delete-empty.php?id=${i}`
+            axios.delete(url);
+            location.reload();
+        }
     }
 }
 </script>
