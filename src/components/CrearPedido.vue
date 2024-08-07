@@ -14,101 +14,120 @@
         <div class="modal-box modal-pedido">
             <h3 class="text-lg font-bold text-center">Nuevo Pedido</h3>
 
-            <div v-for="item in items">
-                <!-- Nombre del cliente -->
-                <div class="label">
-                    <span class="label-text font-bold">Nombre del Cliente</span>
-                </div>
-                <p> {{ item.cliente }} </p>
-
-                <!-- Estado del pedido -->
-                <div class="label">
-                    <span class="label-text font-bold">Estado</span>
-                </div>
-                <p> {{ item.estado }}</p>
-
-                <!-- Pagado -->
-                <div class="label">
-                    <span class="label-text font-bold">Pagado</span>
-                </div>
-                <p> {{ item.pagado }}</p>
-
-                <!-- Medio de Pago -->
-                <div class="label">
-                    <span class="label-text font-bold">Medio de Pago</span>
-                </div>
-                <p> {{ item.medio_pago }}</p>
+            <!-- Renderización condicional -->
+            <div v-if="items.length === 0">
+                <span class="loading loading-spinner loading-md"></span>
             </div>
+            <div v-else>
+                <div v-for="item in items">
+                    <!-- Nombre del cliente -->
+                    <div>
+                        <div class="label">
+                            <span class="label-text font-bold">Nombre del Cliente</span>
+                        </div>
+                        <p> {{ item.cliente }} </p>
+                    </div>
 
-            <!-- Todos los productos -->
-            <div class="label">
-                <span class="label-text font-bold">Productos</span>
-            </div>
+                    <!-- Estado del pedido -->
+                    <div>
+                        <div class="label">
+                            <span class="label-text font-bold">Estado</span>
+                        </div>
+                        <p> {{ item.estado }}</p>
+                    </div>
 
-            <select v-model="producto_seleccionado" class="select select-bordered w-full max-w-xs">
-                <option v-for="(producto, index) in productos" :key="index" :value="index">
-                    {{ producto.descripcion }} - ${{ producto.precio }}
-                </option>
-            </select>
+                    <!-- Pagado -->
+                    <div>
+                        <div class="label">
+                            <span class="label-text font-bold">Pagado</span>
+                        </div>
+                        <p> {{ item.pagado }}</p>
+                    </div>
 
-            <!-- Cantidad -->
-            <div class="label">
-                <span class="label-text font-bold">Cantidad</span>
-            </div>
-            <input v-model="cantidad" type="number" placeholder="1" class="input input-bordered w-full max-w-xs" />
-            <label class="btn btn-outline btn-success m-1" @click="agregarProducto()">Añadir</label>
-
-            <!-- Productos elegidos -->
-            <!-- Sólo aparece si el array productos_elegidos tiene elementos -->
-            <div v-if="productos_elegidos.length > 0">
-                <div class="label">
-                    <span class="label-text font-bold">Productos elegidos</span>
+                    <!-- Medio de Pago -->
+                    <div>
+                        <div class="label">
+                            <span class="label-text font-bold">Medio de Pago</span>
+                        </div>
+                        <p> {{ item.medio_pago }}</p>
+                    </div>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="table">
-                        <!-- head -->
-                        <thead>
-                            <tr>
-                                <th>Cantidad</th>
-                                <th>Producto</th>
-                                <th>Precio Unitario</th>
-                                <th>Total</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(producto, index) in productos_elegidos" :key="index" :value="index">
-                                <th>{{ producto.cantidad }}</th>
-                                <th>{{ producto.descripcion }}</th>
-                                <td>{{ producto.precio }}</td>
-                                <td>{{ producto.total }}</td>
-                                <button class="btn btn-outline btn-error m-1" @click="borrarProducto(index)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                    </svg>
-                                </button>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="label">
-                    <span class="label-text font-bold">Total: {{ total }}</span>
-                </div>
-            </div>
+                <!-- Todos los productos -->
+                <div>
+                    <div class="label">
+                        <span class="label-text font-bold">Productos</span>
+                    </div>
 
-            <!-- Acciones -->
-            <div class="modal-action">
-                <label :for="id" class="btn">Salir</label>
-                <button class="btn btn-outline btn-success" @click="crearPedido_Producto()">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    Crear Pedido
-                </button>
+                    <select v-model="producto_seleccionado" class="select select-bordered w-full max-w-xs">
+                        <option v-for="(producto, index) in productos" :key="index" :value="index">
+                            {{ producto.descripcion }} - ${{ producto.precio }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Cantidad -->
+                <div>
+                    <div class="label">
+                        <span class="label-text font-bold">Cantidad</span>
+                    </div>
+                    <input v-model="cantidad" type="number" placeholder="1"
+                        class="input input-bordered w-full max-w-xs" />
+                    <label class="btn btn-outline btn-success m-1" @click="agregarProducto()">Añadir</label>
+                </div>
+
+                <!-- Productos elegidos -->
+                <!-- Sólo aparece si el array productos_elegidos tiene elementos -->
+                <div v-if="productos_elegidos.length > 0">
+                    <div class="label">
+                        <span class="label-text font-bold">Productos elegidos</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <!-- head -->
+                            <thead>
+                                <tr>
+                                    <th>Cantidad</th>
+                                    <th>Producto</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(producto, index) in productos_elegidos" :key="index" :value="index">
+                                    <th>{{ producto.cantidad }}</th>
+                                    <th>{{ producto.descripcion }}</th>
+                                    <td>{{ producto.precio }}</td>
+                                    <td>{{ producto.total }}</td>
+                                    <button class="btn btn-outline btn-error m-1" @click="borrarProducto(index)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                        </svg>
+                                    </button>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="label">
+                        <span class="label-text font-bold">Total: {{ total }}</span>
+                    </div>
+                </div>
+
+                <!-- Acciones -->
+                <div class="modal-action">
+                    <label :for="id" class="btn">Salir</label>
+                    <button class="btn btn-outline btn-success" @click="crearPedido_Producto()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        Crear Pedido
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -128,7 +147,6 @@ export default {
 
     data() {
         return {
-            //Array para guardar datos de la API
             items: [],
             productos: [],
             producto_seleccionado: '',
