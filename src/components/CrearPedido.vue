@@ -29,7 +29,7 @@
                     </div>
 
                     <!-- Estado del pedido -->
-                    <div>
+                    <div class="mt-2">
                         <div class="label">
                             <span class="label-text font-bold">Estado</span>
                         </div>
@@ -37,7 +37,7 @@
                     </div>
 
                     <!-- Pagado -->
-                    <div>
+                    <div class="mt-2">
                         <div class="label">
                             <span class="label-text font-bold">Pagado</span>
                         </div>
@@ -45,11 +45,19 @@
                     </div>
 
                     <!-- Medio de Pago -->
-                    <div>
+                    <div class="mt-2">
                         <div class="label">
                             <span class="label-text font-bold">Medio de Pago</span>
                         </div>
                         <p> {{ item.medio_pago }}</p>
+                    </div>
+
+                    <!-- Fecha de entrega -->
+                    <div class="mt-2">
+                        <div class="label">
+                            <span class="label-text font-bold">Fecha de entrega</span>
+                        </div>
+                        <VCalendar :fecha_reparto="item.fecha_entrega" v-model="fecha_reparto_local"></VCalendar>
                     </div>
                 </div>
 
@@ -143,6 +151,7 @@
 
 <script>
 import axios from "axios";
+import VCalendar from "../components/VCalendar.vue";
 
 export default {
     //Nombre del componente
@@ -161,6 +170,7 @@ export default {
             productos_elegidos: [],
             cantidad: 1,
             total: '',
+            fecha_reparto_local: '',
         };
     },
 
@@ -169,6 +179,7 @@ export default {
     },
 
     methods: {
+        /** Crea un pedido vacío con valores por defecto al inicializar el componente */
         crearPedido() {
             //POST nuevo pedido
             let idc = this.cliente;
@@ -184,7 +195,22 @@ export default {
             //GET todos los productos
             let url3 = "https://nuestrocampo.cl/api/productos/read.php";
             axios.get(url3).then((response) => (this.productos = response.data));
+
+            //Fecha de hoy
+            const obtenerFechaFormateada = () => {
+                const fecha = new Date();
+
+                const año = fecha.getFullYear();
+                const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+                const dia = String(fecha.getDate()).padStart(2, '0');
+
+                return `${año}-${mes}-${dia}`;
+            };
+
+            console.log(obtenerFechaFormateada());
+            this.fecha_reparto_local = obtenerFechaFormateada();
         },
+        /** Copia los productos del array de todos los productos, a un array vacío */
         agregarProducto() {
             //Mueve los productos seleccionados del array de todos los productos, a un array vacío
             //los cuales irán finalmente a la base de datos
@@ -215,6 +241,7 @@ export default {
                 this.total = totalSum;
             }
         },
+        /** Elimina los productos de la tabla de productos seleccionados */
         borrarProducto(i) {
             this.productos_elegidos.splice(i, 1);
 
@@ -225,7 +252,20 @@ export default {
 
             this.total = totalSum;
         },
+        /** Inserta los productos de la tabla en la base de datos y modifica la fecha */
         crearPedido_Producto() {
+            //Editar campos en tabla PEDIDOS (Por v-model, va solo la fecha)
+            let id = this.items[0].id
+            let idc = this.items[0].id_cliente
+            let idr = this.items[0].id_repartidor
+            let e = this.items[0].estado
+            let p = this.items[0].pagado
+            let m = this.items[0].medio_pago
+            let f = this.fecha_reparto_local
+
+            let url = `https://nuestrocampo.cl/api/pedidos/update.php?id=${id}&idcliente=${idc}&idrepartidor=${idr}&estado=${e}&pagado=${p}&mediopago=${m}&fechaentrega=${f}`
+            axios.put(url);
+
             //Envía todos los productos del array, usando un ciclo for.
             let array = this.productos_elegidos;
             for (let i = 0; i < array.length; i++) {
@@ -240,11 +280,14 @@ export default {
                 location.reload();
             }
         },
-        descartarPedido(i){
+        /** BORRA el pedido vacío */
+        descartarPedido(i) {
             let url = `https://nuestrocampo.cl/api/pedidos/delete-empty.php?id=${i}`
             axios.delete(url);
             location.reload();
-        }
-    }
+        },
+    },
+
+    components: { VCalendar },
 }
 </script>
