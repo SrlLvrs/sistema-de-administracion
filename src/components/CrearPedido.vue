@@ -57,7 +57,7 @@
                         <div class="label">
                             <span class="label-text font-bold">Fecha de entrega</span>
                         </div>
-                        <VCalendar :fecha_reparto="item.fecha_entrega" v-model="fecha_reparto_local"></VCalendar>
+                        <VCalendar v-model="fecha_reparto_local"></VCalendar>
                     </div>
                 </div>
 
@@ -187,7 +187,7 @@ export default {
             axios.post(url);
 
             //GET último pedido
-            let url2 = "https://nuestrocampo.cl/api/pedidos/last-read.php";
+            let url2 = "https://nuestrocampo.cl/api/pedidos/read-last.php";
             setTimeout(() => {
                 axios.get(url2).then((response) => (this.items = response.data));
             }, 1000);
@@ -275,7 +275,7 @@ export default {
                 let cantidad = array[i].cantidad;
                 let total = array[i].total;
 
-                let url = `https://nuestrocampo.cl/api/pedidos_productos/create.php?id_pedido=${pedido}&id_producto=${producto}&cantidad=${cantidad}&total=${total}`
+                let url = `https://nuestrocampo.cl/api/pedidos/create-detail.php?id_pedido=${pedido}&id_producto=${producto}&cantidad=${cantidad}&total=${total}`
                 axios.post(url);
                 location.reload();
             }

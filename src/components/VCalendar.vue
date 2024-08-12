@@ -4,13 +4,9 @@
 
 <script>
 export default {
-   props: {
-    fecha_reparto: String,
-  },
-   
   data() {
     return {
-      fecha: this.fecha_reparto,
+      fecha: '',
       masks: {
         modelValue: 'YYYY-MM-DD'
       }

@@ -55,6 +55,11 @@
                     <td>
                         <!-- Editar Pedido -->
 
+                        <!-- Detalle Pedido -->
+                        <DetallePedido 
+                        :label="item.id + 'edit'"
+                        :id="item.id"/>
+
                         <!-- Eliminar Pedido -->
                         <EliminarPedido :id="item.id"/>
                     </td>
@@ -68,6 +73,7 @@
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
 import EliminarPedido from "../components/EliminarPedido.vue";
+import DetallePedido from "../components/DetallesPedido.vue";
 
 export default {
     //Nombre del componente
@@ -105,6 +111,6 @@ export default {
         axios.get(url).then((response) => (this.items = response.data));
     },
 
-    components: { EliminarPedido },
+    components: { EliminarPedido, DetallePedido },
 }
 </script>

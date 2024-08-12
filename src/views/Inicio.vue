@@ -10,7 +10,6 @@
         <h1>Tareas Pendientes</h1>
         <ul>
             <li>Modal de confirmación de pedidos</li>
-            <li>Mostrar dia de reparto y componente calendario</li>
             <li>Lista de clientes deudores</li>
             <li>Obtener porcentaje de clientes fijos y libres</li>
             <li>Listado de clientes fijos mensuales</li>
