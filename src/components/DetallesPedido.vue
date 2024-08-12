@@ -11,72 +11,76 @@
     <!-- Modal -->
     <input type="checkbox" :id="label" class="modal-toggle" />
     <div class="modal" role="dialog">
-        <div class="modal-box">
+        <div class="modal-box modal-pedido">
             <h3 class="text-lg font-bold mb-2 text-center">Detalle del pedido {{ id }}</h3>
 
-            {{ items }}
-
-            <!-- Agregar aca el spinner de carga para que cargue la info de los items[0] -->
-
-            <div v-for="item in items">
-                <!-- Cliente -->
-                <div class="label">
-                    <span class="label-text font-bold">Nombre del cliente</span>
-                </div>
-                <p> {{ item[0].Nombre }} </p>
-
-                <!-- Estado -->
-                <div class="label">
-                    <span class="label-text font-bold">Estado</span>
-                </div>
-                <p> {{ item[0].Estado }}</p>
-
-                <!-- Pagado -->
-                <div class="label">
-                    <span class="label-text font-bold">Pagado</span>
-                </div>
-                <p> {{ item[0].Pagado }} </p>
-
-                <!-- Medio de Pago -->
-                <div class="label">
-                    <span class="label-text font-bold">Medio de Pago</span>
-                </div>
-                <p> {{ item[0].MedioPago }} </p>
-
-                <!-- Fecha de Entrega -->
-                <div class="label">
-                    <span class="label-text font-bold">Fecha de Entrega</span>
-                </div>
-                <p> {{ item[0].FechaEntrega }} </p>
+            <!-- Loading Spinner en Renderización condicional -->
+            <div v-if="items.length === 0">
+                <span class="loading loading-spinner loading-md"></span>
             </div>
 
-            <!-- Detalle -->
-            <div>
-                <div class="label">
-                    <span class="label-text font-bold">Detalle del pedido</span>
+            <div v-else>
+                <div>
+                    <!-- Cliente -->
+                    <div class="label">
+                        <span class="label-text font-bold">Nombre del cliente</span>
+                    </div>
+                    <p> {{ items[0].Nombre }} </p>
+
+                    <!-- Estado -->
+                    <div class="label">
+                        <span class="label-text font-bold">Estado</span>
+                    </div>
+                    <p> {{ items[0].Estado }}</p>
+
+                    <!-- Pagado -->
+                    <div class="label">
+                        <span class="label-text font-bold">Pagado</span>
+                    </div>
+                    <p> {{ items[0].Pagado }} </p>
+
+                    <!-- Medio de Pago -->
+                    <div class="label">
+                        <span class="label-text font-bold">Medio de Pago</span>
+                    </div>
+                    <p> {{ items[0].MedioPago }} </p>
+
+                    <!-- Fecha de Entrega -->
+                    <div class="label">
+                        <span class="label-text font-bold">Fecha de Entrega</span>
+                    </div>
+                    <p> {{ items[0].FechaEntrega }} </p>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="table">
-                        <!-- head -->
-                        <thead>
-                            <tr>
-                                <th>Cantidad</th>
-                                <th>Producto</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(item, index) in items" :key="index" :value="index">
-                                <th>{{ item.Cantidad }}</th>
-                                <th>{{ item.Descripcion }}</th>
-                                <td>{{ item.Total }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="label">
-                    <span class="label-text font-bold">Total: {{ total }}</span>
+
+                <!-- Detalle -->
+                <div>
+                    <div class="label">
+                        <span class="label-text font-bold">Detalle del pedido</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <!-- head -->
+                            <thead>
+                                <tr>
+                                    <th>Cantidad</th>
+                                    <th>Producto</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(item, index) in items" :key="index" :value="index">
+                                    <th>{{ item.Cantidad }}</th>
+                                    <th>{{ item.Descripcion }}</th>
+                                    <td>{{ item.Total }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="label">
+                        <span class="label-text font-bold">Total: {{ suma }}</span>
+                    </div>
                 </div>
             </div>
 
@@ -104,6 +108,7 @@ export default {
     data() {
         return {
             items: [],
+            suma: '',
         };
     },
 
@@ -114,8 +119,17 @@ export default {
             let url = `https://nuestrocampo.cl/api/pedidos/read-detail.php?id=${idp}`
 
             axios.get(url).then((response) => (this.items = response.data));
-        }
 
+            //Sumar el total
+            setTimeout(() => {
+                let adicion = this.items.reduce((total, pedido) => {
+                    return total + parseInt(pedido.Total, 10);
+                }, 0);
+                console.log(adicion)
+                this.suma = adicion
+            }, 1000);
+
+        },
     },
 };
 </script>
