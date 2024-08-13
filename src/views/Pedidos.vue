@@ -53,10 +53,13 @@
                     <td> {{ item.hora_creacion }}</td>
                     <td> {{ item.hora_cierre }}</td>
                     <td>
-                        <!-- Editar Pedido -->
-
                         <!-- Detalle Pedido -->
                         <DetallePedido 
+                        :label="item.id + 'detail'"
+                        :id="item.id"/>
+
+                        <!-- Editar Pedido -->
+                        <EditarPedido
                         :label="item.id + 'edit'"
                         :id="item.id"/>
 
@@ -74,6 +77,7 @@
 import axios from "axios";
 import EliminarPedido from "../components/EliminarPedido.vue";
 import DetallePedido from "../components/DetallesPedido.vue";
+import EditarPedido from "../components/EditarPedido.vue";
 
 export default {
     //Nombre del componente
@@ -111,6 +115,6 @@ export default {
         axios.get(url).then((response) => (this.items = response.data));
     },
 
-    components: { EliminarPedido, DetallePedido },
+    components: { EliminarPedido, DetallePedido, EditarPedido },
 }
 </script>
