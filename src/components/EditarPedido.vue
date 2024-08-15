@@ -14,71 +14,112 @@
         <div class="modal-box modal-pedido">
             <h3 class="text-lg font-bold mb-2 text-center">Editar pedido {{ id }}</h3>
 
-            <div v-if="items.length === 0">
+            <!-- Loading Spinner, sólo aparece hasta que se rellene el array PRODUCTOS -->
+            <div v-if="productos.length === 0">
                 <span class="loading loading-spinner loading-md"></span>
             </div>
 
+            <!-- Todo lo demás -->
             <div v-else>
                 <!-- Nombre cliente -->
-                <div class="label">
-                    <span class="label-text font-bold">Cliente</span>
-                </div>
+                <div>
+                    <div class="label">
+                        <span class="label-text font-bold">Cliente</span>
+                    </div>
 
-                <select v-model="id_cliente_nuevo" class="select select-bordered w-full max-w-xs">
-                    <option disabled selected> {{ this.items[0].Nombre }} </option>
-                    <option v-for="cliente in clientes" :key="cliente.id" :value="cliente.id"> {{ cliente.nombre }}
-                    </option>
-                </select>
-                <p>id_cliente_actual = {{ id_cliente_actual }}</p>
-                <p>id_cliente_nuevo = {{ id_cliente_nuevo }} </p>
+                    <select v-model="id_cliente_nuevo" class="select select-bordered w-full max-w-xs">
+                        <option disabled selected>
+                            {{ this.items[0].Nombre }}
+                        </option>
+                        <option v-for="cliente in clientes" :key="cliente.id" :value="cliente.id">
+                            {{ cliente.nombre }}
+                        </option>
+                    </select>
+                </div>
 
                 <!-- Estado -->
-                <div class="label">
-                    <span class="label-text font-bold">Estado</span>
+                <div>
+                    <div class="label">
+                        <span class="label-text font-bold">Estado</span>
+                    </div>
+                    <select v-model="estado_actual" class="select select-bordered w-full max-w-xs">
+                        <option disabled selected>
+                            {{ this.items[0].Estado }}
+                        </option>
+                        <option v-for="estado in estados">{{ estado }}</option>
+                    </select>
                 </div>
-                <select v-model="estado_actual" class="select select-bordered w-full max-w-xs">
-                    <option disabled selected> {{ this.items[0].Estado }} </option>
-                    <option v-for="estado in estados"> {{ estado }} </option>
-                </select>
-                <p>estado_actual = {{ estado_actual }}</p>
 
                 <!-- Pagado -->
-                <div class="label">
-                    <span class="label-text font-bold">Pagado</span>
+                <div>
+                    <div class="label">
+                        <span class="label-text font-bold">Pagado</span>
+                    </div>
+                    <select v-model="pagado" class="select select-bordered w-full max-w-xs">
+                        <option disabled selected>
+                            {{ this.items[0].Pagado }}
+                        </option>
+                        <option v-for="pagado in pagado_options">
+                            {{ pagado }}
+                        </option>
+                    </select>
                 </div>
-                <select v-model="pagado" class="select select-bordered w-full max-w-xs">
-                    <option disabled selected> {{ this.items[0].Pagado }}</option>
-                    <option v-for="pagado in pagado_options"> {{ pagado }} </option>
-                </select>
-                <p>pagado = {{ pagado }}</p>
 
                 <!-- Medio de Pago -->
-                <div class="label">
-                    <span class="label-text font-bold">Medio de Pago</span>
+                <div>
+                    <div class="label">
+                        <span class="label-text font-bold">Medio de Pago</span>
+                    </div>
+                    <select v-model="mediopago" class="select select-bordered w-full max-w-xs">
+                        <option disabled selected>
+                            {{ this.items[0].Pagado }}
+                        </option>
+                        <option v-for="pago in mediopago_options">
+                            {{ pago }}
+                        </option>
+                    </select>
                 </div>
-                <select v-model="mediopago" class="select select-bordered w-full max-w-xs">
-                    <option disabled selected> {{ this.items[0].Pagado }}</option>
-                    <option v-for="pago in mediopago_options"> {{ pago }}</option>
-                </select>
-                <p>mediopago = {{ mediopago }}</p>
 
                 <!-- Fecha de Entrega -->
-                <div class="label">
-                    <span class="label-text font-bold">Fecha de Entrega</span>
+                <div>
+                    <div class="label">
+                        <span class="label-text font-bold">Fecha de Entrega</span>
+                    </div>
+                    <VCalendar v-model="fechaentrega" />
                 </div>
-                <VCalendar v-model="fechaentrega"/>
-                <p>fechaentrega = {{ fechaentrega }} </p>
 
-                <p>detallepedido = {{ detallepedido }} </p>
+                <!-- Todos los productos -->
+                <div>
+                    <div class="label">
+                        <span class="label-text font-bold">Productos</span>
+                    </div>
+
+                    <select v-model="producto_seleccionado" class="select select-bordered w-full max-w-xs">
+                        <option v-for="(producto, index) in productos" :key="index" :value="index">
+                            {{ producto.descripcion }} - ${{ producto.precio }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Cantidad -->
+                <div>
+                    <div class="label">
+                        <span class="label-text font-bold">Cantidad</span>
+                    </div>
+                    <input v-model="cantidad" type="number" placeholder="1"
+                        class="input input-bordered w-full max-w-xs" />
+                    <label class="btn btn-outline btn-success m-1" @click="agregarProducto()">Añadir</label>
+                </div>
 
                 <!-- Detalles -->
+                <div>
                     <div class="label">
                         <span class="label-text font-bold">Productos actualmente en este pedido</span>
                     </div>
 
                     <div class="overflow-x-auto">
                         <table class="table">
-                            <!-- head -->
+                            <!-- cabecera -->
                             <thead>
                                 <tr>
                                     <th>Cantidad</th>
@@ -88,12 +129,30 @@
                                     <th></th>
                                 </tr>
                             </thead>
+                            <!-- Cuerpo -->
                             <tbody>
                                 <tr v-for="(detalle, index) in detallepedido" :key="index" :value="index">
                                     <th>{{ detalle.Cantidad }}</th>
                                     <th>{{ detalle.Descripcion }}</th>
                                     <td>{{ detalle.Precio }}</td>
                                     <td>{{ detalle.Total }}</td>
+                                    <!-- Botones de acción -->
+                                    <!-- Más uno -->
+                                    <button class="btn btn-outline btn-success m-1" @click="masUno(index)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M12 4.5v15m7.5-7.5h-15" />
+                                        </svg>
+                                    </button>
+                                    <!-- Menos uno -->
+                                    <button class="btn btn-outline btn-warning m-1" @click="menosUno(index)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+                                        </svg>
+                                    </button>
+                                    <!-- Eliminar -->
                                     <button class="btn btn-outline btn-error m-1" @click="borrarProducto(index)">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -106,13 +165,14 @@
                         </table>
                     </div>
                     <div class="label">
-                        <span class="label-text font-bold">Total: {{ total }}</span>
+                        <span class="label-text font-bold">Total: {{ suma }}</span>
                     </div>
-                
+                </div>
+
                 <!-- Botones del modal -->
                 <div class="modal-action">
                     <label :for="label" class="btn">Salir</label>
-                    <button class="btn btn-outline btn-warning" @click="editarCliente(id)">
+                    <button class="btn btn-outline btn-warning" @click="editarPedido()">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -145,61 +205,40 @@ export default {
             //Arrays para guardar datos de la API
             items: [],
             clientes: [],
-            id_cliente_actual: '',
-            id_cliente_nuevo: '',
-            estado_actual: '',
-            estados: ['Agendado', 'Entregado', 'Rechazado'],
-            pagado: '',
-            pagado_options: ['Si', 'No'],
-            mediopago: '',
-            mediopago_options: ['Efectivo', 'Tarjeta de Débito', 'Tarjeta de Crédito', 'Transferencia'],
-            fechaentrega: '',
+            productos: [],
+            id_cliente_actual: "",
+            id_cliente_nuevo: "",
+            estado_actual: "",
+            estados: ["Agendado", "Entregado", "Rechazado"],
+            pagado: "",
+            pagado_options: ["Si", "No"],
+            mediopago: "",
+            mediopago_options: ["Efectivo", "Tarjeta de Débito", "Tarjeta de Crédito", "Transferencia"],
+            fechaentrega: "",
             detallepedido: [],
+            suma: "",
+            producto_seleccionado: "",
+            cantidad: 1,
+            id_repartidor: 1,
         };
     },
 
     methods: {
+        //Sumar el total del pedido
+        adicion() {
+            let adicion = this.detallepedido.reduce((total, pedido) => {
+                return total + parseInt(pedido.Total, 10);
+            }, 0);
+            this.suma = adicion;
+        },
         //GET detalle del pedido en base al IDPEDIDO
         leerDetalles(id) {
-            let url = `https://nuestrocampo.cl/api/pedidos/read-detail.php?id=${id}`
+            let url = `https://nuestrocampo.cl/api/pedidos/read-detail.php?id=${id}`;
 
             axios.get(url).then((response) => (this.items = response.data));
 
-
-            //Mueve los productos seleccionados del array de todos los productos, a un array vacío
-            //los cuales irán finalmente a la base de datos
-            /*
-            if (this.producto_seleccionado !== null) {
-                //Nuevo proxy en base al index
-                const nuevoArray = this.productos[this.producto_seleccionado];
-
-                //De proxy a objeto
-                let spread = { ...nuevoArray }
-
-                //Calcular el total por cantidad de productos
-                let total = this.cantidad * spread.precio;
-
-                //Añadir cantidad y total al objeto
-                spread['cantidad'] = this.cantidad;
-                spread['total'] = total;
-                //Añadir pedido
-                spread['id_pedido'] = this.items[0].id
-
-                //Añadir el objeto al array (y a la tabla)
-                this.productos_elegidos.push(spread);
-
-                //Sumar el total de todos los productos.
-                let totalSum = this.productos_elegidos.reduce((accumulator, currentItem) => {
-                    return accumulator + currentItem.total;
-                }, 0);
-
-                this.total = totalSum;
-            }
-                */
-            
-        
-
             setTimeout(() => {
+                //Base de datos => Variables locales
                 this.id_cliente_actual = this.items[0].IDCliente;
                 this.id_cliente_nuevo = this.items[0].Nombre;
                 this.estado_actual = this.items[0].Estado;
@@ -207,26 +246,131 @@ export default {
                 this.mediopago = this.items[0].MedioPago;
                 this.fechaentrega = this.items[0].FechaEntrega;
 
+                //Rellenar array DETALLEPEDIDO
                 for (let i = 0; i < this.items.length; i++) {
+                    let articulo = {};
+                    articulo["IDPedido"] = this.items[i].IDPedido;
+                    articulo["IDProducto"] = this.items[i].IDProducto;
+                    articulo["Descripcion"] = this.items[i].Descripcion;
+                    articulo["Cantidad"] = this.items[i].Cantidad;
+                    articulo["Precio"] = this.items[i].Precio;
+                    articulo["Total"] = this.items[i].Total;
 
-                let articulo = {}
-                articulo['IDProducto'] = this.items[i].IDProducto
-                articulo['Descripcion'] = this.items[i].Descripcion
-                articulo['Cantidad'] = this.items[i].Cantidad
-                articulo['Precio'] = this.items[i].Precio
-                articulo['Total'] = this.items[i].Total
-                
+                    this.detallepedido.push(articulo);
 
-                this.detallepedido.push(articulo);
-                
-                console.log(this.detallepedido)
-            }
+                    this.adicion();
+                }
             }, 1000);
-            
-            let url2 = `https://nuestrocampo.cl/api/clientes/read.php`
 
+            //GET clientes
+            let url2 = `https://nuestrocampo.cl/api/clientes/read.php`;
             axios.get(url2).then((response) => (this.clientes = response.data));
 
+            //GET productos
+            let url3 = `https://nuestrocampo.cl/api/productos/read.php`;
+            axios.get(url3).then((response) => (this.productos = response.data));
+        },
+        //Suma 1 a la cantidad de productos en el array DETALLEPEDIDO
+        masUno(i) {
+            this.detallepedido[i].Cantidad++;
+            this.detallepedido[i].Total =
+                this.detallepedido[i].Cantidad * this.detallepedido[i].Precio;
+            this.adicion();
+
+            let idp = this.detallepedido[i].IDPedido;
+            let idpro = this.detallepedido[i].IDProducto;
+            let c = this.detallepedido[i].Cantidad;
+            let t = this.detallepedido[i].Total;
+
+            let url = `https://nuestrocampo.cl/api/pedidos/update-detail.php?idpedido=${idp}&idproducto=${idpro}&cantidad=${c}&total=${t}`;
+            axios.put(url).then(function (response) {
+                console.log(response.data);
+            });
+        },
+        //Resta 1 a la cantidad de productos en el array DETALLEPEDIDO
+        menosUno(i) {
+            this.detallepedido[i].Cantidad--;
+            this.detallepedido[i].Total =
+                this.detallepedido[i].Cantidad * this.detallepedido[i].Precio;
+            if (this.detallepedido[i].Cantidad === 0) {
+                this.borrarProducto(i);
+            } else {
+                let idp = this.detallepedido[i].IDPedido;
+                let idpro = this.detallepedido[i].IDProducto;
+                let c = this.detallepedido[i].Cantidad;
+                let t = this.detallepedido[i].Total;
+
+                let url = `https://nuestrocampo.cl/api/pedidos/update-detail.php?idpedido=${idp}&idproducto=${idpro}&cantidad=${c}&total=${t}`;
+                axios.put(url).then(function (response) {
+                    console.log(response.data);
+                });
+            }
+            this.adicion();
+        },
+        //Borra el producto seleccionado del array DETALLEPEDIDO
+        borrarProducto(i) {
+            //Elimina el producto del detalle de la base de datos
+            let idp = this.detallepedido[i].IDPedido;
+            let c = this.detallepedido[i].Cantidad;
+
+            let url = `https://nuestrocampo.cl/api/pedidos/delete-detail.php?id=${idp}&cantidad=${c}`;
+            axios.delete(url).then(function (response) {
+                console.log(response.data);
+            });
+
+            this.detallepedido.splice(i, 1);
+        },
+        //Agrega productos y cantidad al array DETALLEPEDIDOD
+        agregarProducto() {
+            let ps = this.producto_seleccionado;
+            let articulo = {};
+            articulo["IDPedido"] = this.items[0].IDPedido;
+            articulo["IDProducto"] = this.productos[ps].id;
+            articulo["Descripcion"] = this.productos[ps].descripcion;
+            articulo["Cantidad"] = this.cantidad;
+            articulo["Precio"] = this.productos[ps].precio;
+            articulo["Total"] = this.cantidad * this.productos[ps].precio;
+
+            this.detallepedido.push(articulo);
+
+            //Sumar
+            this.adicion();
+
+            //Enviar el producto a la base de datos
+            let idp = this.items[0].IDPedido;
+            let idpro = this.productos[ps].id;
+            let c = this.cantidad;
+            let t = this.cantidad * this.productos[ps].precio;
+
+            let url = `https://nuestrocampo.cl/api/pedidos/create-detail.php?id_pedido=${idp}&id_producto=${idpro}&cantidad=${c}&total=${t}`;
+            axios.post(url).then(function (response) {
+                console.log(response.data);
+            });
+        },
+        //Guarda todos los cambios
+        editarPedido() {
+            //PUT pedidos
+            let idc = "";
+
+            if (this.id_cliente_actual === this.items[0].IDCliente) {
+                // Si el cliente es el mismo
+                idc = this.id_cliente_actual;
+            } else {
+                // Si el cliente es otro
+                idc = this.id_cliente_nuevo;
+            }
+
+            let idp = this.items[0].IDPedido;
+            let idr = this.id_repartidor;
+            let e = this.estado_actual;
+            let p = this.pagado;
+            let mp = this.mediopago;
+            let fe = this.fechaentrega;
+
+            let url = `https://nuestrocampo.cl/api/pedidos/update.php?id=${idp}&idcliente=${idc}&idrepartidor=${idr}&estado=${e}&pagado=${p}&mediopago=${mp}&fechaentrega=${fe}`;
+            axios.put(url).then(function (response) {
+                console.log(response.data);
+            });
         },
     },
 
