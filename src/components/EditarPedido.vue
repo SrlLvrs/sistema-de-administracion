@@ -12,7 +12,9 @@
     <input type="checkbox" :id="label" class="modal-toggle" />
     <div class="modal" role="dialog">
         <div class="modal-box modal-pedido">
-            <h3 class="text-lg font-bold mb-2 text-center">Editar pedido {{ id }}</h3>
+            <h3 class="text-lg font-bold mb-2 text-center">
+                Editar pedido {{ id }}
+            </h3>
 
             <!-- Loading Spinner, sólo aparece hasta que se rellene el array PRODUCTOS -->
             <div v-if="productos.length === 0">
@@ -119,7 +121,7 @@
 
                     <div class="overflow-x-auto">
                         <table class="table">
-                            <!-- cabecera -->
+                            <!-- Cabecera -->
                             <thead>
                                 <tr>
                                     <th>Cantidad</th>
@@ -136,7 +138,7 @@
                                     <th>{{ detalle.Descripcion }}</th>
                                     <td>{{ detalle.Precio }}</td>
                                     <td>{{ detalle.Total }}</td>
-                                    <!-- Botones de acción -->
+                                    <!-- Botones -->
                                     <!-- Más uno -->
                                     <button class="btn btn-outline btn-success m-1" @click="masUno(index)">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -171,7 +173,7 @@
 
                 <!-- Botones del modal -->
                 <div class="modal-action">
-                    <label :for="label" class="btn">Salir</label>
+                    <label :for="label" class="btn" @click="limpiar()">Salir</label>
                     <button class="btn btn-outline btn-warning" @click="editarPedido()">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
@@ -268,7 +270,9 @@ export default {
 
             //GET productos
             let url3 = `https://nuestrocampo.cl/api/productos/read.php`;
-            axios.get(url3).then((response) => (this.productos = response.data));
+            axios
+                .get(url3)
+                .then((response) => (this.productos = response.data));
         },
         //Suma 1 a la cantidad de productos en el array DETALLEPEDIDO
         masUno(i) {
@@ -371,6 +375,11 @@ export default {
             axios.put(url).then(function (response) {
                 console.log(response.data);
             });
+            location.reload();
+        },
+        //Limpia los arrays al salir
+        limpiar(){
+            this.detallepedido = []
         },
     },
 

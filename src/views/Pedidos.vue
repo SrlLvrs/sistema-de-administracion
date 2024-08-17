@@ -4,13 +4,11 @@
     <div class="prose max-w-none">
         <div class="grid grid-cols-1">
             <h1 class="text-center p-4 m-0">Todos los pedidos</h1>
-            <div class="flex justify-center">
-                <!-- Nuevo Pedido -->
+            <div class="flex justify-center mb-4">
                 
-
                 <!-- INPUT FILTRAR -->
                 <label class="input input-bordered flex items-center gap-2 ml-2">
-                    <input v-model="filterText" type="text" class="grow" placeholder="Nombre o dirección..." />
+                    <input v-model="filterText" type="text" class="grow" placeholder="Nombre del cliente" />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                         class="h-4 w-4 opacity-70">
                         <path fill-rule="evenodd"
@@ -24,7 +22,7 @@
     <!-- RESULTADOS -->
     <div class="overflow-x-auto">
         <table class="table">
-            <!-- head w-11/12 -->
+            <!-- Encabezado -->
             <thead>
                 <tr>
                     <th>Número de pedido</th>
@@ -44,9 +42,9 @@
                 <!-- el nombre del array es FILTEREDITEMS, que es una función que toma el JSON y lo convierte en array, para poder filtrarlo -->
                 <!-- Los resultados deben recorrerse dentro del TR -->
                 <tr v-for="item in filteredItems" :key="item.id">
-                    <td> {{ item.id }}</td>
-                    <td> {{ item.cliente }}</td>
-                    <td class="badge-info"> {{ item.estado }}</td>
+                    <th> {{ item.id }}</th>
+                    <th> {{ item.cliente }}</th>
+                    <td> {{ item.estado }}</td>
                     <td> {{ item.pagado }}</td>
                     <td> {{ item.medio_pago }}</td>
                     <td> {{ item.fecha_entrega }}</td>

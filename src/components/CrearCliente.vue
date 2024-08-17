@@ -1,5 +1,6 @@
 <template>
-    <button class="btn btn-outline btn-success mb-4" onclick="crearSectorModal.showModal()">
+    <!-- Botón CREAR NUEVO CLIENTE -->
+    <button class="btn btn-outline btn-success mr-2 mb-4" onclick="crearClienteModal.showModal()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -7,19 +8,20 @@
 
         Crear nuevo cliente
     </button>
-    <!-- Modal CREAR NUEVO SECTOR -->
 
-    <dialog id="crearSectorModal" class="modal">
+    <!-- Modal CREAR NUEVO CLIENTE -->
+    <dialog id="crearClienteModal" class="modal">
         <div class="modal-box">
-
             <h3 class="text-lg font-bold mb-2 text-center">Nuevo cliente</h3>
 
+            <!-- Nombre del cliente -->
             <div class="label">
                 <span class="label-text font-bold">Nombre</span>
             </div>
             <input v-model="nombre" type="text" placeholder="Ingresa el nombre del cliente"
                 class="input input-bordered w-full max-w-xs mb-2" />
 
+            <!-- Comuna -->
             <div class="label">
                 <span class="label-text font-bold">Comuna</span>
             </div>
@@ -27,6 +29,7 @@
                 <option v-for="ciudad in ciudades" :key="ciudad" :value="ciudad">{{ ciudad }}</option>
             </select>
 
+            <!-- Sector -->
             <div class="label">
                 <span class="label-text font-bold">Sector</span>
             </div>
@@ -36,6 +39,7 @@
             </select>
             <p v-if="diaReparto">Día de reparto sugerido: {{ diaReparto }}</p>
 
+            <!-- Día de reparto -->
             <div class="label">
                 <span class="label-text font-bold">Día de reparto excepcional</span>
             </div>
@@ -45,30 +49,35 @@
                 </option>
             </select>
 
+            <!-- Dirección -->
             <div class="label">
                 <span class="label-text font-bold">Dirección</span>
             </div>
             <input v-model="direccion" type="text" placeholder="Ingresa la dirección del cliente"
                 class="input input-bordered w-full max-w-xs mb-2">
 
+            <!-- Teléfono -->
             <div class="label">
                 <span class="label-text font-bold">Teléfono</span>
             </div>
             <input v-model="telefono" type="text" placeholder="Ej. 56922446688"
                 class="input input-bordered w-full max-w-xs mb-2">
 
+            <!-- Teléfono 2 -->
             <div class="label">
                 <span class="label-text font-bold">Teléfono 2</span>
             </div>
             <input v-model="telefono2" type="text" placeholder="Ej. 56922446688"
                 class="input input-bordered w-full max-w-xs mb-2">
 
+            <!-- Link de Google Maps -->
             <div class="label">
                 <span class="label-text font-bold">Link de Google Maps</span>
             </div>
             <input v-model="linkmaps" type="text" placeholder="https://maps.app.goo.gl/..."
                 class="input input-bordered w-full max-w-xs mb-2">
 
+            <!-- Frecuencia -->
             <div class="label">
                 <span class="label-text font-bold">Frecuencia</span>
             </div>
@@ -78,12 +87,14 @@
                 </option>
             </select>
 
+            <!-- Observaciones -->
             <div class="label">
                 <span class="label-text font-bold">Observaciones</span>
             </div>
             <input v-model="observaciones" type="text" placeholder="Casa esquina. Árbol afuera."
                 class="input input-bordered w-full max-w-xs mb-2">
 
+            <!-- Preferencia de productos -->
             <div class="label">
                 <span class="label-text font-bold">Preferencia</span>
             </div>
@@ -91,6 +102,7 @@
                 <option v-for="producto in productos" :key="producto" :value="producto.id">{{ producto.descripcion }}</option>
             </select>
 
+            <!-- Acciones del modal -->
             <div class="modal-action">
                 <form method="dialog">
                     <button class="btn btn-outline btn-success mr-2" @click="crearCliente()">

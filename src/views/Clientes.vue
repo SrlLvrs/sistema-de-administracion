@@ -9,7 +9,7 @@
                 <CrearCliente />
 
                 <!-- INPUT FILTRAR -->
-                <label class="input input-bordered flex items-center gap-2 ml-2">
+                <label class="input input-bordered flex items-center gap-2">
                     <input v-model="filterText" type="text" class="grow" placeholder="Nombre o dirección..." />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                         class="h-4 w-4 opacity-70">
@@ -24,19 +24,11 @@
     <!-- RESULTADOS -->
     <div class="overflow-x-auto">
         <table class="table">
-            <!-- head w-11/12 -->
+            <!-- Head -->
             <thead>
                 <tr>
-                    <!-- 
-                        <th>index</th>
-                        <th>ID</th>
-                        -->
                     <th>Nombre</th>
                     <th>Dirección</th>
-                    <!-- 
-                        <th>Sector</th>
-                        <th>Comuna</th>
-                        -->
                     <th>Teléfono</th>
                     <th>Teléfono 2</th>
                     <th>Frecuencia</th>
@@ -49,15 +41,11 @@
             <!-- Body -->
             <tbody>
                 <!-- GET -->
-                <!-- el nombre del array es SECTORES, que debe ser el mismo que se define en DATA() RETURN -->
+                <!-- el nombre del array es ITEMS, que debe ser el mismo que se define en DATA() RETURN -->
                 <!-- Los resultados deben recorrerse dentro del TR -->
                 <tr v-for="item in filteredItems" :key="item.id">
                     <th> {{ item.nombre }}</th>
                     <td> {{ item.direccion }}, {{ item.nombresector }}, {{ item.comuna }}</td>
-                    <!-- 
-                        <td> {{ item.nombresector }}</td>
-                        <td> {{ item.comuna }}</td>
-                        -->
                     <td> {{ item.telefono }}</td>
                     <td> {{ item.telefono2 }}</td>
                     <td> {{ item.frecuencia }}</td>

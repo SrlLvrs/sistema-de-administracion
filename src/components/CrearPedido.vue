@@ -93,7 +93,7 @@
 
                     <div class="overflow-x-auto">
                         <table class="table">
-                            <!-- head -->
+                            <!-- Cabecera -->
                             <thead>
                                 <tr>
                                     <th>Cantidad</th>
@@ -103,6 +103,7 @@
                                     <th></th>
                                 </tr>
                             </thead>
+                            <!-- Cuerpo -->
                             <tbody>
                                 <tr v-for="(producto, index) in productos_elegidos" :key="index" :value="index">
                                     <th>{{ producto.cantidad }}</th>
@@ -179,12 +180,22 @@ export default {
     },
 
     methods: {
+        /** Sumar el total */
+        adicion() {
+            let totalSum = this.productos_elegidos.reduce((accumulator, currentItem) => {
+                return accumulator + currentItem.total;
+            }, 0);
+
+            this.total = totalSum;
+        },
         /** Crea un pedido vacío con valores por defecto al inicializar el componente */
         crearPedido() {
             //POST nuevo pedido
             let idc = this.cliente;
             let url = `https://nuestrocampo.cl/api/pedidos/create.php?id_cliente=${idc}`
-            axios.post(url);
+            axios.post(url).then(function (response) {
+                console.log(response.data);
+            });
 
             //GET último pedido
             let url2 = "https://nuestrocampo.cl/api/pedidos/read-last.php";
@@ -234,11 +245,7 @@ export default {
                 this.productos_elegidos.push(spread);
 
                 //Sumar el total de todos los productos.
-                let totalSum = this.productos_elegidos.reduce((accumulator, currentItem) => {
-                    return accumulator + currentItem.total;
-                }, 0);
-
-                this.total = totalSum;
+                this.adicion();
             }
         },
         /** Elimina los productos de la tabla de productos seleccionados */
@@ -246,11 +253,7 @@ export default {
             this.productos_elegidos.splice(i, 1);
 
             //Sumar el total de todos los productos restantes.
-            let totalSum = this.productos_elegidos.reduce((accumulator, currentItem) => {
-                return accumulator + currentItem.total;
-            }, 0);
-
-            this.total = totalSum;
+            this.adicion();
         },
         /** Inserta los productos de la tabla en la base de datos y modifica la fecha */
         crearPedido_Producto() {
@@ -264,7 +267,9 @@ export default {
             let f = this.fecha_reparto_local
 
             let url = `https://nuestrocampo.cl/api/pedidos/update.php?id=${id}&idcliente=${idc}&idrepartidor=${idr}&estado=${e}&pagado=${p}&mediopago=${m}&fechaentrega=${f}`
-            axios.put(url);
+            axios.put(url).then(function (response) {
+                console.log(response.data);
+            });
 
             //Envía todos los productos del array, usando un ciclo for.
             let array = this.productos_elegidos;
@@ -276,7 +281,9 @@ export default {
                 let total = array[i].total;
 
                 let url = `https://nuestrocampo.cl/api/pedidos/create-detail.php?id_pedido=${pedido}&id_producto=${producto}&cantidad=${cantidad}&total=${total}`
-                axios.post(url);
+                axios.post(url).then(function (response) {
+                    console.log(response.data)
+                })
                 location.reload();
             }
         },
