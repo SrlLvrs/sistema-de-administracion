@@ -31,7 +31,6 @@
                     <th>Frecuencia</th>
                     <th>Día de reparto</th>
                     <th>Observaciones</th>
-                    <th>Preferencias</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -42,16 +41,17 @@
                 <!-- Los resultados deben recorrerse dentro del TR -->
                 <tr v-for="item in filteredItems" :key="item.id">
                     <th> {{ item.nombre }}</th>
-                    <td> {{ item.direccion }}, {{ item.nombresector }}, {{ item.comuna }}</td>
+                    <td> {{ item.direccion }}, {{ item.sector }}, {{ item.comuna }}</td>
                     <td> {{ item.telefono }}</td>
                     <td> {{ item.telefono2 }}</td>
                     <td> {{ item.frecuencia }}</td>
-                    <td> {{ item.diadereparto }}</td>
+                    <td> {{ item.reparto }}</td>
                     <td> {{ item.observacion }}</td>
-                    <td> {{ item.preferencia }}</td>
                     <td>
                         <!-- Detalle cliente -->
-
+                         <DetalleCliente 
+                         :id="item.id"
+                         :label="item.id + 'detail'"/>
                     </td>
                 </tr>
             </tbody>
@@ -62,14 +62,12 @@
 <script>
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
-import CrearCliente from "../components/CrearCliente.vue";
-import EliminarCliente from "../components/EliminarCliente.vue";
-import EditarCliente from "../components/EditarCliente.vue";
-import CrearPedido from "../components/CrearPedido.vue";
+import DetalleCliente from "../components/DetalleCliente.vue"
+
 
 export default {
     //Nombre del componente
-    name: "Clientes",
+    name: "Clientes-Deudores",
 
     data() {
         return {
@@ -103,6 +101,6 @@ export default {
         axios.get(url).then((response) => (this.items = response.data));
     },
 
-    components: { CrearCliente, EliminarCliente, EditarCliente, CrearPedido },
+    components: { DetalleCliente },
 }
 </script>
