@@ -18,6 +18,18 @@
                             clip-rule="evenodd" />
                     </svg>
                 </label>
+
+                <!-- SELECT Filtro de días -->
+                <select v-model="selectedDay" class="select select-bordered max-w-xs ml-2">
+                    <option value="">Filtrar por día</option>
+                    <option v-for="dia in dias"> {{ dia }} </option>
+                </select>
+
+                <!-- SELECT Filtro de Suscripción -->
+                <select v-model="selectedSus" class="select select-bordered max-w-xs ml-2">
+                    <option value="">Filtrar por suscripción</option>
+                    <option v-for="suscripcion in suscripciones"> {{ suscripcion }} </option>
+                </select>
             </div>
         </div>
     </div>
@@ -100,7 +112,11 @@ export default {
         return {
             //Array para guardar datos de la API
             items: [],
+            dias: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+            suscripciones: ['Ninguna', 'Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', '1 vez al mes'],
             filterText: '',
+            selectedDay: '',
+            selectedSus: '',
         };
     },
 
@@ -108,23 +124,35 @@ export default {
     },
 
     computed: {
-        //Esta función filtra el array en base a el NOMBRE o la DIRECCION del cliente
         filteredItems() {
             const normalizeText = (text) => {
                 return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
             };
 
-            return this.items.filter(item => {
-                const filterTextNormalized = normalizeText(this.filterText);
+            const filterTextNormalized = normalizeText(this.filterText);
+            const selectedDayNormalized = normalizeText(this.selectedDay);
+            const selectedSusNormalized = normalizeText(this.selectedSus);
 
-                return normalizeText(item.nombre).includes(filterTextNormalized) ||
+            return this.items.filter(item => {
+                const matchesText =
+                    !filterTextNormalized ||
+                    normalizeText(item.nombre).includes(filterTextNormalized) ||
                     normalizeText(item.direccion).includes(filterTextNormalized) ||
                     normalizeText(item.nombresector).includes(filterTextNormalized) ||
                     normalizeText(item.comuna).includes(filterTextNormalized);
-                // item.edad.toString().includes(filterTextNormalized); // esta línea filtra INTs (sin cambios)
+
+                const matchesDay =
+                    !selectedDayNormalized ||
+                    normalizeText(item.diadereparto) === selectedDayNormalized;
+
+                const matchesSus =
+                    !selectedSusNormalized ||
+                    normalizeText(item.frecuencia) === selectedSusNormalized;
+
+                // Devuelve los elementos que coincidan con todos los filtros activos
+                return matchesText && matchesDay && matchesSus;
             });
         }
-
     },
 
     //Método para llamar a la API cuando se cree la instancia
