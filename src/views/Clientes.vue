@@ -54,7 +54,7 @@
                     <td> {{ item.preferencia }}</td>
                     <td>
                         <!-- Crear Pedido -->
-                        <CrearPedido :id="item.id + 'pdd'" :cliente="item.id"/>
+                        <CrearPedido :id="item.id + 'pdd'" :cliente="item.id" />
                         <!-- BOTÓN MAPS -->
                         <button class="btn btn-outline btn-info mr-2">
                             <a :href="item.linkmaps" target="_blank">
@@ -110,14 +110,21 @@ export default {
     computed: {
         //Esta función filtra el array en base a el NOMBRE o la DIRECCION del cliente
         filteredItems() {
-            return this.items.filter(item => {
-                return item.nombre.toLowerCase().includes(this.filterText.toLowerCase()) || //esta linea filtra texto
-                    item.direccion.toLowerCase().includes(this.filterText.toLowerCase());
-                //item.edad.toString().includes(this.filterText); //esta linea filtra INTs
-                //hay que añadir una de estas 2 tipos de lineas, para cada una de las columnas a filtrar
+            const normalizeText = (text) => {
+                return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            };
 
+            return this.items.filter(item => {
+                const filterTextNormalized = normalizeText(this.filterText);
+
+                return normalizeText(item.nombre).includes(filterTextNormalized) ||
+                    normalizeText(item.direccion).includes(filterTextNormalized) ||
+                    normalizeText(item.nombresector).includes(filterTextNormalized) ||
+                    normalizeText(item.comuna).includes(filterTextNormalized);
+                // item.edad.toString().includes(filterTextNormalized); // esta línea filtra INTs (sin cambios)
             });
         }
+
     },
 
     //Método para llamar a la API cuando se cree la instancia
