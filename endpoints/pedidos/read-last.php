@@ -14,12 +14,13 @@ $db = $database->getConnection();
 // PEDIDOS: ID, IDCliente, IDRepartidor, Estado, Pagado, MedioPago, FechaEntrega HoraCreacion, HoraCierre, Visible
 // CLIENTES: ID, Nombre, Direccion, IDSector, Telefono, Telefono2, LinkMaps, Frecuencia, DiaRepartoExcepcional, Preferencia, Observacion, Visible
 
-$query = "SELECT p.ID, p.IDCliente, c.Nombre, p.IDRepartidor, p.Estado, p.Pagado, p.MedioPago, p.FechaEntrega, p.HoraCreacion, p.HoraCierre
-        FROM pedidos p
-        JOIN clientes c ON p.IDCliente = c.ID
-        WHERE p.Visible = 1
-        ORDER BY p.ID DESC
-        LIMIT 1";
+$query = "  SELECT p.ID, p.IDCliente, c.Nombre, c.Direccion, s.NombreSector, s.Comuna, COALESCE (c.DiaRepartoExcepcional, s.DiaReparto) AS DiaReparto, p.IDRepartidor, p.FechaEntrega
+            FROM pedidos p
+            JOIN clientes c ON p.IDCliente = c.ID
+            JOIN sector s ON c.IDSector = s.ID
+            WHERE p.Visible = 1
+            ORDER BY p.ID DESC
+            LIMIT 1";
 
 $stmt = $db->prepare($query);
 
@@ -44,13 +45,12 @@ if ($num > 0) {
             "id" => $row["ID"],
             "id_cliente" => $row["IDCliente"],
             "cliente" => $row["Nombre"],
+            "direccion" => $row["Direccion"],
+            "sector" => $row["NombreSector"],
+            "comuna" => $row["Comuna"],
+            "dia_reparto" => $row["DiaReparto"],
             "id_repartidor" => $row["IDRepartidor"],
-            "estado" => $row["Estado"],
-            "pagado" => $row["Pagado"],
-            "medio_pago" => $row["MedioPago"],
             "fecha_entrega" => $row["FechaEntrega"],
-            "hora_creacion" => $row["HoraCreacion"],
-            "hora_cierre" => $row["HoraCierre"],
         );
 
         // Se agrega el pedido actual al array de pedidos.

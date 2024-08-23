@@ -46,7 +46,9 @@
                     <th>Frecuencia</th>
                     <th>Día de reparto</th>
                     <th>Observaciones</th>
-                    <th>Preferencias</th>
+                    <!-- 
+                        <th>Preferencias</th>
+                    -->
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -63,7 +65,9 @@
                     <td> {{ item.frecuencia }}</td>
                     <td> {{ item.diadereparto }}</td>
                     <td> {{ item.observacion }}</td>
+                    <!-- 
                     <td> {{ item.preferencia }}</td>
+                    -->
                     <td>
                         <!-- Crear Pedido -->
                         <CrearPedido :id="item.id + 'pdd'" :cliente="item.id" />

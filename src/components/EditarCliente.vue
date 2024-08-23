@@ -101,15 +101,17 @@
                 class="input input-bordered w-full max-w-xs mb-2">
 
             <!-- Preferencia -->
-            <div class="label">
-                <span class="label-text font-bold">Preferencia</span>
-            </div>
-            <select v-model="producto_seleccionado" class="select select-bordered w-full max-w-xs">
-                <option disabled selected> {{ producto_preferido }}</option>
-                <option v-for="producto in productos" :key="producto.id" :value="producto.id">
-                    {{ producto.descripcion }}
-                </option>
-            </select>
+            <!-- 
+                <div class="label">
+                    <span class="label-text font-bold">Preferencia</span>
+                </div>
+                <select v-model="producto_seleccionado" class="select select-bordered w-full max-w-xs">
+                    <option disabled selected> {{ producto_preferido }}</option>
+                    <option v-for="producto in productos" :key="producto.id" :value="producto.id">
+                        {{ producto.descripcion }}
+                    </option>
+                </select>
+                -->
 
             <!-- Botones del modal -->
             <div class="modal-action">

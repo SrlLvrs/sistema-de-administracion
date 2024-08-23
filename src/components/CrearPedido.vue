@@ -19,37 +19,62 @@
                 <span class="loading loading-spinner loading-md"></span>
             </div>
             <div v-else>
-                <div v-for="item in items">
-                    <!-- Nombre del cliente -->
+                <!-- Pedidos previamente agendados -->
+                <!-- Sólo aparece si el pedidos_agendados tiene elementos -->
+                <div v-if="pedidos_agendados.length > 0" class="border-2 border-sky-500">
+                    <p class="mt-3 font-bold text-red-500">Este cliente tiene pedidos previamente agendados!</p>
+                    <p>Revisa esta información y evita crear pedidos repetidos</p>
+                    <!-- Detalle -->
                     <div>
                         <div class="label">
-                            <span class="label-text font-bold">Nombre del Cliente</span>
+                            <span class="label-text font-bold mt-3">Pedidos previamente agendados</span>
                         </div>
-                        <p> {{ item.cliente }} </p>
+
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <!-- head -->
+                                <thead>
+                                    <tr>
+                                        <th>ID Pedido</th>
+                                        <th>Estado</th>
+                                        <th>Pagado</th>
+                                        <th>Total del Pedido</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(pedido, index) in pedidos_agendados" :key="index" :value="index">
+                                        <th>{{ pedido.IDPedido }}</th>
+                                        <th>{{ pedido.Estado }}</th>
+                                        <td>{{ pedido.Pagado }}</td>
+                                        <td>{{ pedido.Total_Pedido }}</td>
+                                        <td>
+                                            <!-- Detalle Pedido -->
+                                            <DetallePedido :label="pedido.IDPedido + 'detail'" :id="pedido.IDPedido" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <button class="btn" @click="descartar()">Descartar información y continuar con el pedido</button>
+                </div>
+
+                <div v-for="item in items">
+                    <!-- Cliente -->
+                    <div>
+                        <div class="label">
+                            <span class="label-text font-bold">Cliente</span>
+                        </div>
+                        <p> {{ item.cliente }} - {{ item.direccion }}, {{ item.sector }}, {{ item.comuna }}</p>
                     </div>
 
-                    <!-- Estado del pedido -->
-                    <div class="mt-2">
+                    <!-- Día de reparto -->
+                    <div>
                         <div class="label">
-                            <span class="label-text font-bold">Estado</span>
+                            <span class="label-text font-bold">Dia de reparto</span>
                         </div>
-                        <p> {{ item.estado }}</p>
-                    </div>
-
-                    <!-- Pagado -->
-                    <div class="mt-2">
-                        <div class="label">
-                            <span class="label-text font-bold">Pagado</span>
-                        </div>
-                        <p> {{ item.pagado }}</p>
-                    </div>
-
-                    <!-- Medio de Pago -->
-                    <div class="mt-2">
-                        <div class="label">
-                            <span class="label-text font-bold">Medio de Pago</span>
-                        </div>
-                        <p> {{ item.medio_pago }}</p>
+                        <p>{{ item.dia_reparto }}</p>
                     </div>
 
                     <!-- Fecha de entrega -->
@@ -153,6 +178,7 @@
 <script>
 import axios from "axios";
 import VCalendar from "../components/VCalendar.vue";
+import DetallePedido from "../components/DetallesPedido.vue";
 
 export default {
     //Nombre del componente
@@ -169,6 +195,7 @@ export default {
             productos: [],
             producto_seleccionado: '',
             productos_elegidos: [],
+            pedidos_agendados: [],
             cantidad: 1,
             total: '',
             fecha_reparto_local: '',
@@ -206,6 +233,10 @@ export default {
             //GET todos los productos
             let url3 = "https://nuestrocampo.cl/api/productos/read.php";
             axios.get(url3).then((response) => (this.productos = response.data));
+
+            //Get pedidos previamente agendados
+            let url4 = `https://nuestrocampo.cl/api/clientes/read-previous-order.php?id=${idc}`;
+            axios.get(url4).then((response) => (this.pedidos_agendados = response.data));
 
             //Fecha de hoy
             const obtenerFechaFormateada = () => {
@@ -293,8 +324,12 @@ export default {
             axios.delete(url);
             location.reload();
         },
+        /** Descartar información de pedidos anteriores */
+        descartar(){
+            this.pedidos_agendados = []
+        }
     },
 
-    components: { VCalendar },
+    components: { VCalendar, DetallePedido },
 }
 </script>

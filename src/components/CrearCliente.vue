@@ -95,12 +95,14 @@
                 class="input input-bordered w-full max-w-xs mb-2">
 
             <!-- Preferencia de productos -->
-            <div class="label">
-                <span class="label-text font-bold">Preferencia</span>
-            </div>
-            <select v-model="productoSeleccionado" class="select select-bordered w-full max-w-xs">
-                <option v-for="producto in productos" :key="producto" :value="producto.id">{{ producto.descripcion }}</option>
-            </select>
+            <!-- 
+                <div class="label">
+                    <span class="label-text font-bold">Preferencia</span>
+                </div>
+                <select v-model="productoSeleccionado" class="select select-bordered w-full max-w-xs">
+                    <option v-for="producto in productos" :key="producto" :value="producto.id">{{ producto.descripcion }}</option>
+                </select>
+                -->
 
             <!-- Acciones del modal -->
             <div class="modal-action">
@@ -201,9 +203,9 @@ export default {
         let url = "https://nuestrocampo.cl/api/sectores/read.php";
 
         axios.get(url).then((response) => (this.sectores = response.data));
-        
+
         let url2 = "https://nuestrocampo.cl/api/productos/read.php";
-        
+
         axios.get(url2).then((response) => (this.productos = response.data));
     },
 };
