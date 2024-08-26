@@ -16,11 +16,15 @@ $id = isset($_GET['id']) ? $_GET['id'] : ''; // NOT NULL
 // Verifica si el ID no está vacío
 if (!empty($id)) {
     // Se prepara la consulta SQL para seleccionar el registro correspondiente al ID proporcionado.
-    $query = "  SELECT pp.ID AS IDPedidoProducto, p.ID AS IDPedido, c.ID AS IDCliente, c.Nombre, pp.IDProducto, pro.Precio, pro.Descripcion, pp.Cantidad, pp.Total, p.Estado, p.Pagado, p.MedioPago, p.FechaEntrega, p.HoraCreacion, p.HoraCierre
+    $query = "  SELECT pp.ID AS IDPedidoProducto, p.ID AS IDPedido, c.ID AS IDCliente, 
+                c.Nombre, pp.IDProducto, pro.Precio, pro.Descripcion, pp.Cantidad, pp.Total, 
+                p.Estado, p.Pagado, p.MedioPago, p.FechaEntrega, p.HoraCreacion, p.HoraCierre,
+                c.Direccion, s.NombreSector, s.Comuna, COALESCE (c.DiaRepartoExcepcional, s.DiaReparto) AS Dia_Reparto
                 FROM pedidos p
                 JOIN clientes c ON c.ID = p.IDCliente
                 JOIN pedidos_productos pp ON pp.IDPedido = p.ID
                 JOIN productos pro ON pro.ID = pp.IDProducto
+                JOIN sector s ON s.ID = c.IDSector
                 WHERE p.ID = :id";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $id);

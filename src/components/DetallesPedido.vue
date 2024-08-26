@@ -15,7 +15,7 @@
             <h3 class="text-lg font-bold mb-2 text-center">Detalle del pedido {{ id }}</h3>
 
             <!-- Loading Spinner en Renderización condicional -->
-            <div v-if="items.length === 0">
+            <div v-if="suma === null">
                 <span class="loading loading-spinner loading-md"></span>
             </div>
 
@@ -23,13 +23,19 @@
                 <div>
                     <!-- Cliente -->
                     <div class="label">
-                        <span class="label-text font-bold">Nombre del cliente</span>
+                        <span class="label-text font-bold">Cliente</span>
                     </div>
-                    <p> {{ items[0].Nombre }} </p>
+                    <p> {{ items[0].Nombre }} - {{ items[0].Direccion }}, {{ items[0].NombreSector }}, {{ items[0].Comuna }}</p>
+
+                    <!-- Dia de reparto -->
+                    <div class="label">
+                        <span class="label-text font-bold">Día de reparto asignado</span>
+                    </div>
+                    <p> {{ items[0].Dia_Reparto }}</p>
 
                     <!-- Estado -->
                     <div class="label">
-                        <span class="label-text font-bold">Estado</span>
+                        <span class="label-text font-bold">Estado del pedido</span>
                     </div>
                     <p> {{ items[0].Estado }}</p>
 
@@ -107,8 +113,10 @@ export default {
 
     data() {
         return {
-            items: [],
-            suma: '',
+            items: [{
+                "Nombre": '',
+            }],
+            suma: null,
         };
     },
 
@@ -125,8 +133,8 @@ export default {
                 let adicion = this.items.reduce((total, pedido) => {
                     return total + parseInt(pedido.Total, 10);
                 }, 0);
-                console.log(adicion)
                 this.suma = adicion
+                console.log(this.suma)
             }, 1000);
 
         },
