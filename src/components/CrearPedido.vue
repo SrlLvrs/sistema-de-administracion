@@ -21,9 +21,9 @@
             <div v-else>
                 <!-- Pedidos previamente agendados -->
                 <!-- Sólo aparece si el pedidos_agendados tiene elementos -->
-                <div v-if="pedidos_agendados.length > 0" class="border-2 border-sky-500">
-                    <p class="mt-3 font-bold text-red-500">Este cliente tiene pedidos previamente agendados!</p>
-                    <p>Revisa esta información y evita crear pedidos repetidos</p>
+                <div v-if="pedidos_agendados.length > 0" class="border-2 border-red-500 m-4 rounded-md">
+                    <p class="mt-4 font-bold text-red-500 text-center">Este cliente tiene pedidos previamente agendados!</p>
+                    <p class="text-center">Revisa esta información y evita crear pedidos repetidos</p>
                     <!-- Detalle -->
                     <div>
                         <div class="label">
@@ -42,6 +42,7 @@
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
+                                <!-- body -->
                                 <tbody>
                                     <tr v-for="(pedido, index) in pedidos_agendados" :key="index" :value="index">
                                         <th>{{ pedido.IDPedido }}</th>
@@ -57,7 +58,9 @@
                             </table>
                         </div>
                     </div>
-                    <button class="btn" @click="descartar()">Descartar información y continuar con el pedido</button>
+                    <div class="flex justify-center mb-4">
+                        <button class="btn" @click="descartar()">Descartar información y continuar con el pedido</button>
+                    </div>
                 </div>
 
                 <div v-for="item in items">
@@ -288,13 +291,13 @@ export default {
         },
         /** Inserta los productos de la tabla en la base de datos y modifica la fecha */
         crearPedido_Producto() {
-            //Editar campos en tabla PEDIDOS (Por v-model, va solo la fecha)
+            //Editar campos en tabla PEDIDOS
             let id = this.items[0].id
             let idc = this.items[0].id_cliente
             let idr = this.items[0].id_repartidor
-            let e = this.items[0].estado
-            let p = this.items[0].pagado
-            let m = this.items[0].medio_pago
+            let e = 'Agendado'
+            let p = 'No'
+            let m = 'No definido'
             let f = this.fecha_reparto_local
 
             let url = `https://nuestrocampo.cl/api/pedidos/update.php?id=${id}&idcliente=${idc}&idrepartidor=${idr}&estado=${e}&pagado=${p}&mediopago=${m}&fechaentrega=${f}`
