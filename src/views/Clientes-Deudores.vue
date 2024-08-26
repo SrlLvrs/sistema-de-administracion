@@ -62,7 +62,7 @@
 <script>
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
-import DetalleCliente from "../components/DetalleCliente.vue"
+import DetalleCliente from "../components/DetalleClienteDeudor.vue"
 
 
 export default {

@@ -12,10 +12,10 @@
     <input type="checkbox" :id="label" class="modal-toggle" />
     <div class="modal" role="dialog">
         <div class="modal-box modal-pedido">
-            <h3 class="text-lg font-bold mb-2 text-center">Detalle del cliente {{ id }}</h3>
+            <h3 class="text-lg font-bold mb-2 text-center">Detalle de deudas del cliente</h3>
 
             <!-- Loading Spinner en Renderización condicional -->
-            <div v-if="items.length === 0">
+            <div v-if="suma === null">
                 <span class="loading loading-spinner loading-md"></span>
             </div>
 
@@ -23,51 +23,58 @@
                 <div v-for="(item, index) in items" :key="index" :value="index">
                     <!-- Cliente -->
                     <div class="label">
-                        <span class="label-text font-bold">Nombre del cliente</span>
+                        <span class="label-text font-bold">Cliente</span>
                     </div>
-                    <p> {{ item.Nombre }} </p>
+                    <p> {{ item.Nombre }} - {{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</p>
 
-                    <!-- Dirección completa -->
+                    <!-- Dirección completa 
                     <div class="label">
                         <span class="label-text font-bold">Dirección</span>
                     </div>
                     <p> {{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</p>
+                    -->
 
-                    <!-- Teléfono -->
+                    <!-- Teléfono 
                     <div class="label">
                         <span class="label-text font-bold">Teléfono</span>
                     </div>
                     <p>{{ item.Telefono }}</p>
+                    -->
 
-                    <!-- Teléfono2 -->
+                    <!-- Teléfono2 
                     <div class="label">
                         <span class="label-text font-bold">Teléfono 2</span>
                     </div>
                     <p>{{ item.Telefono2 }}</p>
+                    -->
 
-                    <!-- Frecuencia -->
+                    <!-- Frecuencia
                     <div class="label">
                         <span class="label-text font-bold">Frecuencia</span>
                     </div>
                     <p> {{ item.Frecuencia }}</p>
+                    -->
 
-                    <!-- Día de Reparto -->
+                    <!-- Día de Reparto
                     <div class="label">
                         <span class="label-text font-bold">Día de reparto</span>
                     </div>
                     <p> {{ item.Dia_de_Reparto }}</p>
+                    -->
 
-                    <!-- Producto Preferido -->
+                    <!-- Producto Preferido
                     <div class="label">
                         <span class="label-text font-bold">Preferencia</span>
                     </div>
                     <p> {{ item.Producto_Preferido }}</p>
+                    -->
 
-                    <!-- Observaciones -->
+                    <!-- Observaciones 
                     <div class="label">
                         <span class="label-text font-bold">Observaciones</span>
                     </div>
                     <p> {{ item.Observacion }}</p>
+                    -->
                 </div>
 
                 <!-- Detalle -->
@@ -86,6 +93,7 @@
                                     <th>Pagado</th>
                                     <th>Medio de Pago</th>
                                     <th>Total del Pedido</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -95,6 +103,11 @@
                                     <td>{{ pedido.Pagado }}</td>
                                     <td>{{ pedido.MedioPago }}</td>
                                     <td>{{ pedido.Total_Pedido }}</td>
+                                    <td>
+                                        <PagarPedido 
+                                        :id="pedido.IDPedido"
+                                        :label="pedido.IDPedido + 'label' "/>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -116,6 +129,7 @@
 <script>
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
+import PagarPedido from "../components/PagarPedido.vue"
 
 export default {
     //Nombre del componente
@@ -130,7 +144,7 @@ export default {
         return {
             items: [],
             detalle: [],
-            suma: '',
+            suma: null,
         };
     },
 
@@ -145,8 +159,17 @@ export default {
             let url2 = `https://nuestrocampo.cl/api/clientes/read-order-detail.php?id=${idc}`
             axios.get(url2).then((response) => (this.detalle = response.data));
 
-
+            //Sumar el total
+            setTimeout(() => {
+                let adicion = this.detalle.reduce((total, pedido) => {
+                    return total + parseInt(pedido.Total_Pedido, 10);
+                }, 0);
+                this.suma = adicion
+                console.log(this.suma)
+            }, 1000);
         },
     },
+
+    components: { PagarPedido },
 };
 </script>
