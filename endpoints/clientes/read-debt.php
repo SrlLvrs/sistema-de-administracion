@@ -17,7 +17,8 @@ $query = "  SELECT c.ID, c.Nombre, c.Direccion, c.IDSector, s.NombreSector, s.Co
             JOIN sector s ON c.IDSector = s.ID
             JOIN pedidos p ON c.ID = p.IDCliente
             JOIN pedidos_productos pro ON p.ID = pro.IDPedido
-            WHERE p.Pagado = 'No' AND p.Estado = 'Entregado' ";
+            WHERE p.Pagado = 'No' AND p.Estado = 'Entregado'
+            GROUP BY c.ID ";
 
 $stmt = $db->prepare($query);
 

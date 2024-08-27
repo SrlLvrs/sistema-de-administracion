@@ -1,6 +1,6 @@
 <template>
     <!-- Botón para abrir el modal -->
-    <label :for="label" class="btn btn-outline btn-success mr-2" @click="pagarPedido()">
+    <label :for="label" class="btn btn-outline btn-warning mr-2">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -19,7 +19,7 @@
             <!-- Acciones -->
             <div class="modal-action">
                 <label :for="label" class="btn btn-outline btn-error mr-2">No!</label>
-                <label class="btn btn-outline btn-success mr-2">Si, marcar como pagado</label>
+                <label class="btn btn-outline btn-success mr-2" @click="pagarPedido()">Si, marcar como pagado</label>
             </div>
         </div>
     </div>
@@ -47,8 +47,12 @@ export default {
     methods: {
         //Obtiene el detalle del pedido desde la Base de Datos
         pagarPedido() {
-            console.log('pedido pagado!')
-            console.log(this.id)
+            let idp = this.id
+            let url = `https://nuestrocampo.cl/api/pedidos/pay-order.php?id=${idp}`
+            axios.put(url).then(function (response) {
+                console.log(response.data)
+            })
+            location.reload()
         },
     },
 };

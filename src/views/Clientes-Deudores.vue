@@ -26,6 +26,7 @@
                 <tr>
                     <th>Nombre</th>
                     <th>Dirección</th>
+                    <th>Deuda Total</th>
                     <th>Teléfono</th>
                     <th>Teléfono 2</th>
                     <th>Frecuencia</th>
@@ -42,6 +43,7 @@
                 <tr v-for="item in filteredItems" :key="item.id">
                     <th> {{ item.nombre }}</th>
                     <td> {{ item.direccion }}, {{ item.sector }}, {{ item.comuna }}</td>
+                    <td> {{ item.deuda }}</td>
                     <td> {{ item.telefono }}</td>
                     <td> {{ item.telefono2 }}</td>
                     <td> {{ item.frecuencia }}</td>

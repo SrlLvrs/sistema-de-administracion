@@ -106,7 +106,10 @@
                                     <td>
                                         <PagarPedido 
                                         :id="pedido.IDPedido"
-                                        :label="pedido.IDPedido + 'label' "/>
+                                        :label="pedido.IDPedido + 'pagar' "/>
+                                        <DetallesPedido
+                                        :id="pedido.IDPedido"
+                                        :label="pedido.IDPedido + 'detalle' "/>
                                     </td>
                                 </tr>
                             </tbody>
@@ -120,6 +123,9 @@
 
             <!-- Acciones -->
             <div class="modal-action">
+                <DeudaWhatsapp
+                :id="123"
+                :label="1234" />
                 <label :for="label" class="btn">Salir</label>
             </div>
         </div>
@@ -130,6 +136,8 @@
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
 import PagarPedido from "../components/PagarPedido.vue"
+import DetallesPedido from "../components/DetallesPedido.vue"
+import DeudaWhatsapp from "../components/DeudaWhatsapp.vue"
 
 export default {
     //Nombre del componente
@@ -170,6 +178,6 @@ export default {
         },
     },
 
-    components: { PagarPedido },
+    components: { PagarPedido, DetallesPedido, DeudaWhatsapp },
 };
 </script>
