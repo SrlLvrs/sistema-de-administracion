@@ -91,7 +91,9 @@
                                     <th>ID Pedido</th>
                                     <th>Estado</th>
                                     <th>Pagado</th>
-                                    <th>Medio de Pago</th>
+                                    <!-- 
+                                        <th>Medio de Pago</th>
+                                        -->
                                     <th>Total del Pedido</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -101,32 +103,29 @@
                                     <th>{{ pedido.IDPedido }}</th>
                                     <th>{{ pedido.Estado }}</th>
                                     <td>{{ pedido.Pagado }}</td>
-                                    <td>{{ pedido.MedioPago }}</td>
+                                    <!-- 
+                                        <td>{{ pedido.MedioPago }}</td>
+                                        -->
                                     <td>{{ pedido.Total_Pedido }}</td>
                                     <td>
-                                        <PagarPedido 
-                                        :id="pedido.IDPedido"
-                                        :label="pedido.IDPedido + 'pagar' "/>
-                                        <DetallesPedido
-                                        :id="pedido.IDPedido"
-                                        :label="pedido.IDPedido + 'detalle' "/>
+                                        <PagarPedidoEfectivo :id="pedido.IDPedido" :label="pedido.IDPedido + 'cash'" />
+                                        <PagarPedidoTransferencia :id="pedido.IDPedido"
+                                            :label="pedido.IDPedido + 'wire'" />
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="label">
-                        <span class="label-text font-bold">Total: {{ suma }}</span>
+                        <span class="label-text font-bold">Total adeudado: {{ suma }}</span>
                     </div>
                 </div>
-            </div>
-
-            <!-- Acciones -->
-            <div class="modal-action">
-                <DeudaWhatsapp
-                :id="123"
-                :label="1234" />
-                <label :for="label" class="btn">Salir</label>
+                
+                <!-- Acciones -->
+                <div class="modal-action ">
+                    <DeudaWhatsapp :id="123" :label="1234" />
+                    <label :for="label" class="btn">Salir</label>
+                </div>
             </div>
         </div>
     </div>
@@ -135,8 +134,8 @@
 <script>
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
-import PagarPedido from "../components/PagarPedido.vue"
-import DetallesPedido from "../components/DetallesPedido.vue"
+import PagarPedidoEfectivo from "../components/PagarPedidoEfectivo.vue"
+import PagarPedidoTransferencia from "../components/PagarPedidoTransferencia.vue"
 import DeudaWhatsapp from "../components/DeudaWhatsapp.vue"
 
 export default {
@@ -178,6 +177,6 @@ export default {
         },
     },
 
-    components: { PagarPedido, DetallesPedido, DeudaWhatsapp },
+    components: { PagarPedidoEfectivo, PagarPedidoTransferencia, DeudaWhatsapp },
 };
 </script>

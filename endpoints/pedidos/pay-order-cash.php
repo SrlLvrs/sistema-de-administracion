@@ -22,8 +22,7 @@ $id = isset($_GET['id']) ? $_GET['id'] : ''; //NOT NULL
 // Verifica que los campos no estén vacíos
 if (!empty($id)) {
     // Se prepara la consulta SQL para actualizar el cliente.
-    $query = "  UPDATE pedidos p
-                SET p.Pagado = 'Si'
+    $query = "  UPDATE pedidos p SET p.Pagado = 'Si', p.MedioPago = 'Efectivo'
                 WHERE p.ID = :id";
 
     // Se prepara la consulta para su ejecución.
