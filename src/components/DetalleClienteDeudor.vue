@@ -108,6 +108,7 @@
                                         -->
                                     <td>{{ pedido.Total_Pedido }}</td>
                                     <td>
+                                        <DetallePedidoMinimal :id="pedido.IDPedido" :label="pedido.IDPedido + 'detail'" />
                                         <PagarPedidoEfectivo :id="pedido.IDPedido" :label="pedido.IDPedido + 'cash'" />
                                         <PagarPedidoTransferencia :id="pedido.IDPedido"
                                             :label="pedido.IDPedido + 'wire'" />
@@ -144,6 +145,7 @@
 import axios from "axios";
 import PagarPedidoEfectivo from "../components/PagarPedidoEfectivo.vue"
 import PagarPedidoTransferencia from "../components/PagarPedidoTransferencia.vue"
+import DetallePedidoMinimal from "../components/DetallesPedidoMinimal.vue"
 
 export default {
     //Nombre del componente
@@ -222,6 +224,6 @@ export default {
         }
     },
 
-    components: { PagarPedidoEfectivo, PagarPedidoTransferencia },
+    components: { PagarPedidoEfectivo, PagarPedidoTransferencia, DetallePedidoMinimal },
 };
 </script>

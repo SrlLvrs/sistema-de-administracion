@@ -7,6 +7,9 @@
     margin-right: auto;
 }
 
+.metamodal {
+    max-height: calc(80vh - 5em);
+}
 .modal-pedido {
-    max-width: 40rem;
+    max-width: 45rem;
 }
