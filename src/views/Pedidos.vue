@@ -8,7 +8,7 @@
                 
                 <!-- INPUT FILTRAR -->
                 <label class="input input-bordered flex items-center gap-2 ml-2">
-                    <input v-model="filterText" type="text" class="grow" placeholder="Nombre del cliente" />
+                    <input v-model="filterText" type="text" class="grow" placeholder="Cliente o ID de pedido" />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                         class="h-4 w-4 opacity-70">
                         <path fill-rule="evenodd"
@@ -95,12 +95,20 @@ export default {
     computed: {
         //Esta función filtra el array en base a el NOMBRE o la DIRECCION del cliente
         filteredItems() {
-            return this.items.filter(item => {
-                return item.cliente.toLowerCase().includes(this.filterText.toLowerCase()) //esta linea filtra texto, para añadir más, usar || al final
-                //    item.direccion.toLowerCase().includes(this.filterText.toLowerCase());
-                //item.edad.toString().includes(this.filterText); //esta linea filtra INTs
-                //hay que añadir una de estas 2 tipos de lineas, para cada una de las columnas a filtrar
+            const normalizeText = (text) => {
+                return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            };
 
+            const filterTextNormalized = normalizeText(this.filterText);
+
+            return this.items.filter(item => {
+                const matchesText =
+                    !filterTextNormalized ||
+                    normalizeText(item.id).includes(filterTextNormalized) ||
+                    normalizeText(item.cliente).includes(filterTextNormalized);
+
+                // Devuelve los elementos que coincidan con todos los filtros activos
+                return matchesText;
             });
         }
     },
