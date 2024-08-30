@@ -85,12 +85,22 @@ export default {
     computed: {
         //Esta función filtra el array en base a el NOMBRE o la DIRECCION del cliente
         filteredItems() {
-            return this.items.filter(item => {
-                return item.nombre.toLowerCase().includes(this.filterText.toLowerCase()) || //esta linea filtra texto
-                    item.direccion.toLowerCase().includes(this.filterText.toLowerCase());
-                //item.edad.toString().includes(this.filterText); //esta linea filtra INTs
-                //hay que añadir una de estas 2 tipos de lineas, para cada una de las columnas a filtrar
+            const normalizeText = (text) => {
+                return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            };
 
+            const filterTextNormalized = normalizeText(this.filterText);
+
+            return this.items.filter(item => {
+                const matchesText =
+                    !filterTextNormalized ||
+                    normalizeText(item.nombre).includes(filterTextNormalized) ||
+                    normalizeText(item.direccion).includes(filterTextNormalized) ||
+                    normalizeText(item.sector).includes(filterTextNormalized) ||
+                    normalizeText(item.comuna).includes(filterTextNormalized);
+
+                // Devuelve los elementos que coincidan con todos los filtros activos
+                return matchesText;
             });
         }
     },
