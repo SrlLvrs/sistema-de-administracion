@@ -22,7 +22,8 @@
                 <!-- Pedidos previamente agendados -->
                 <!-- Sólo aparece si el pedidos_agendados tiene elementos -->
                 <div v-if="pedidos_agendados.length > 0" class="border-2 border-red-500 m-4 rounded-md">
-                    <p class="mt-4 font-bold text-red-500 text-center">Este cliente tiene pedidos previamente agendados!</p>
+                    <p class="mt-4 font-bold text-red-500 text-center">Este cliente tiene pedidos previamente agendados!
+                    </p>
                     <p class="text-center">Revisa esta información y evita crear pedidos repetidos</p>
                     <!-- Detalle -->
                     <div>
@@ -30,6 +31,7 @@
                             <span class="label-text font-bold mt-3">Pedidos previamente agendados</span>
                         </div>
 
+                        <!-- Tabla -->
                         <div class="overflow-x-auto">
                             <table class="table">
                                 <!-- head -->
@@ -51,7 +53,8 @@
                                         <td>{{ pedido.Total_Pedido }}</td>
                                         <td>
                                             <!-- Detalle Pedido -->
-                                            <DetallePedido :label="pedido.IDPedido + 'detail'" :id="pedido.IDPedido" />
+                                            <DetallePedidoMinimal :label="pedido.IDPedido + 'detail'"
+                                                :id="pedido.IDPedido" />
                                         </td>
                                     </tr>
                                 </tbody>
@@ -59,7 +62,8 @@
                         </div>
                     </div>
                     <div class="flex justify-center mb-4">
-                        <button class="btn" @click="descartar()">Descartar información y continuar con el pedido</button>
+                        <button class="btn" @click="descartar()">Descartar información y continuar con el
+                            pedido</button>
                     </div>
                 </div>
 
@@ -181,7 +185,7 @@
 <script>
 import axios from "axios";
 import VCalendar from "../components/VCalendar.vue";
-import DetallePedido from "../components/DetallesPedido.vue";
+import DetallePedidoMinimal from "../components/DetallesPedidoMinimal.vue";
 
 export default {
     //Nombre del componente
@@ -202,11 +206,8 @@ export default {
             cantidad: 1,
             total: '',
             fecha_reparto_local: '',
+            fecha_creacion_local: '',
         };
-    },
-
-    computed: {
-
     },
 
     methods: {
@@ -220,9 +221,13 @@ export default {
         },
         /** Crea un pedido vacío con valores por defecto al inicializar el componente */
         crearPedido() {
+            // Fecha de hoy para creación
+            this.fecha_creacion_local = new Date();
+
             //POST nuevo pedido
             let idc = this.cliente;
-            let url = `https://nuestrocampo.cl/api/pedidos/create.php?id_cliente=${idc}`
+            let h = this.fecha_creacion_local;
+            let url = `https://nuestrocampo.cl/api/pedidos/create.php?id_cliente=${idc}&hora_creacion=${h}`
             axios.post(url).then(function (response) {
                 console.log(response.data);
             });
@@ -241,19 +246,7 @@ export default {
             let url4 = `https://nuestrocampo.cl/api/clientes/read-previous-order.php?id=${idc}`;
             axios.get(url4).then((response) => (this.pedidos_agendados = response.data));
 
-            //Fecha de hoy
-            const obtenerFechaFormateada = () => {
-                const fecha = new Date();
-
-                const año = fecha.getFullYear();
-                const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-                const dia = String(fecha.getDate()).padStart(2, '0');
-
-                return `${año}-${mes}-${dia}`;
-            };
-
-            console.log(obtenerFechaFormateada());
-            this.fecha_reparto_local = obtenerFechaFormateada();
+            this.fecha_reparto_local = new Date();
         },
         /** Copia los productos del array de todos los productos, a un array vacío */
         agregarProducto() {
@@ -328,11 +321,11 @@ export default {
             location.reload();
         },
         /** Descartar información de pedidos anteriores */
-        descartar(){
+        descartar() {
             this.pedidos_agendados = []
         }
     },
 
-    components: { VCalendar, DetallePedido },
+    components: { VCalendar, DetallePedidoMinimal },
 }
 </script>

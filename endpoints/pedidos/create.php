@@ -11,19 +11,21 @@ $database = new Database();
 $db = $database->getConnection();
 
 /*
-Obtiene por url sólo el parámetro de ID de cliente, lo demás se rellena por valores default.
+Obtiene por url el ID de cliente y la fecha de creación, lo demás se rellena por default.
 */
 $id_cliente = isset($_GET['id_cliente']) ? $_GET['id_cliente'] : '';
+$hora_creacion = isset($_GET['hora_creacion']) ? $_GET['hora_creacion'] : '';
 
 //Comprueba que las variables NO estén vacías
-if (!empty($id_cliente) /*&& !empty($direccion) && !empty($idsector) && !empty($telefono)*/) {
-    $query = "INSERT INTO pedidos 
-            SET IDCliente=:id";
+if (!empty($id_cliente) && !empty($hora_creacion)) {
+    $query = "  INSERT INTO pedidos 
+                SET IDCliente=:id, HoraCreacion=:hora";
 
     $stmt = $db->prepare($query);
 
     //Bindear las variables usando bindParam
     $stmt->bindParam(":id", $id_cliente);
+    $stmt->bindParam(":hora", $hora_creacion);
     
     if ($stmt->execute()) {
         http_response_code(201);
