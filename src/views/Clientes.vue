@@ -71,6 +71,8 @@
                     <td>
                         <!-- Crear Pedido -->
                         <CrearPedido :id="item.id + 'pdd'" :cliente="item.id" />
+                        <!-- Crear Pedido Auto -->
+                        <CrearPedidoAuto :id="item.id + 'auto'" :cliente="item.id" />
                         <!-- BOTÓN MAPS -->
                         <button class="btn btn-outline btn-info mr-2">
                             <a :href="item.linkmaps" target="_blank">
@@ -107,6 +109,7 @@ import CrearCliente from "../components/CrearCliente.vue";
 import EliminarCliente from "../components/EliminarCliente.vue";
 import EditarCliente from "../components/EditarCliente.vue";
 import CrearPedido from "../components/CrearPedido.vue";
+import CrearPedidoAuto from "../components/CrearPedidoAuto.vue";
 
 export default {
     //Nombre del componente
@@ -167,6 +170,6 @@ export default {
         axios.get(url).then((response) => (this.items = response.data));
     },
 
-    components: { CrearCliente, EliminarCliente, EditarCliente, CrearPedido },
+    components: { CrearCliente, EliminarCliente, EditarCliente, CrearPedido, CrearPedidoAuto },
 }
 </script>

@@ -14,20 +14,24 @@ $db = $database->getConnection();
 Obtiene por url el ID de cliente y la fecha de creación, lo demás se rellena por default.
 */
 $id_cliente = isset($_GET['id_cliente']) ? $_GET['id_cliente'] : '';
-$hora_creacion = isset($_GET['hora_creacion']) ? $_GET['hora_creacion'] : '';
-$fecha_reparto = isset($_GET['fecha_reparto']) ? $_GET['fecha_reparto'] : '';
+$id_producto = isset($_GET['id_producto']) ? $_GET['id_producto'] : '';
+$cantidad = isset($_GET['cantidad']) ? $_GET['cantidad'] : '';
+$ultimo_pedido = isset($_GET['ultimo_pedido']) ? $_GET['ultimo_pedido'] : '';
+$frecuencia = isset($_GET['frecuencia']) ? $_GET['frecuencia'] : '';
 
 //Comprueba que las variables NO estén vacías
-if (!empty($id_cliente) && !empty($hora_creacion)) {
-    $query = "  INSERT INTO pedidos 
-                SET IDCliente = :id, HoraCreacion = :hora, FechaEntrega = :fecha";
+if (!empty($id_cliente)) {
+    $query = "  INSERT INTO pedidos_automaticos 
+                SET IDCliente = :idc, IDProducto = :idp, Cantidad = :c, UltimoPedido = :up, Frecuencia = :f";
 
     $stmt = $db->prepare($query);
 
     //Bindear las variables usando bindParam
-    $stmt->bindParam(":id", $id_cliente);
-    $stmt->bindParam(":hora", $hora_creacion);
-    $stmt->bindParam(":fecha", $fecha_reparto);
+    $stmt->bindParam(":idc", $id_cliente);
+    $stmt->bindParam(":idp", $id_producto);
+    $stmt->bindParam(":c", $cantidad);
+    $stmt->bindParam(":up", $ultimo_pedido);
+    $stmt->bindParam(":f", $frecuencia);
     
     if ($stmt->execute()) {
         http_response_code(201);

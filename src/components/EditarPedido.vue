@@ -74,7 +74,7 @@
                     </div>
                     <select v-model="mediopago" class="select select-bordered w-full max-w-xs">
                         <option disabled selected>
-                            {{ this.items[0].Pagado }}
+                            {{ this.items[0].MedioPago }}
                         </option>
                         <option v-for="pago in mediopago_options">
                             {{ pago }}
@@ -215,7 +215,7 @@ export default {
             pagado: "",
             pagado_options: ["Si", "No"],
             mediopago: "",
-            mediopago_options: ["Efectivo", "Tarjeta de Débito", "Tarjeta de Crédito", "Transferencia"],
+            mediopago_options: ["Efectivo", "Transferencia"],
             fechaentrega: "",
             detallepedido: [],
             suma: "",

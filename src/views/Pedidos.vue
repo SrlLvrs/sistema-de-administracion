@@ -5,7 +5,7 @@
         <div class="grid grid-cols-1">
             <h1 class="text-center p-4 m-0">Todos los pedidos</h1>
             <div class="flex justify-center mb-4">
-                
+
                 <!-- INPUT FILTRAR -->
                 <label class="input input-bordered flex items-center gap-2 ml-2">
                     <input v-model="filterText" type="text" class="grow" placeholder="Cliente o ID de pedido" />
@@ -52,17 +52,13 @@
                     <td> {{ item.hora_cierre }}</td>
                     <td>
                         <!-- Detalle Pedido -->
-                        <DetallePedido 
-                        :label="item.id + 'detail'"
-                        :id="item.id"/>
+                        <DetallePedido :label="item.id + 'detail'" :id="item.id" />
 
                         <!-- Editar Pedido -->
-                        <EditarPedido
-                        :label="item.id + 'edit'"
-                        :id="item.id"/>
+                        <EditarPedido :label="item.id + 'edit'" :id="item.id" />
 
                         <!-- Eliminar Pedido -->
-                        <EliminarPedido :id="item.id"/>
+                        <EliminarPedido :id="item.id" />
                     </td>
                 </tr>
             </tbody>
@@ -90,6 +86,46 @@ export default {
     },
 
     methods: {
+        //Formato para Hora de Creación
+        formatearHora(hora) {
+            const fecha = new Date(hora);
+
+            const año = fecha.getFullYear();
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            const horas = String(fecha.getHours()).padStart(2, '0');
+            const minutos = String(fecha.getMinutes()).padStart(2, '0');
+
+            return `${horas}:${minutos} - ${dia}/${mes}/${año}`;
+        },
+        //Formato para Fecha de entrega
+        formatearFecha(entrega) {
+            const fecha = new Date(entrega);
+
+            const año = fecha.getFullYear();
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            const horas = String(fecha.getHours()).padStart(2, '0');
+            const minutos = String(fecha.getMinutes()).padStart(2, '0');
+
+            return `${dia}/${mes}/${año}`;
+        },
+        //Actualizar fecha con formato hora_creacion
+        actualizarHoras() {
+            setTimeout(() => {
+                this.items.forEach(item => {
+                    item.hora_creacion = this.formatearHora(item.hora_creacion);
+                });
+            }, 1000);
+        },
+        //Actualizar fecha con formato fecha de entrega
+        actualizarFechas() {
+            setTimeout(() => {
+                this.items.forEach(item => {
+                    item.fecha_entrega = this.formatearFecha(item.fecha_entrega);
+                });
+            }, 1000);
+        },
     },
 
     computed: {
@@ -110,7 +146,7 @@ export default {
                 // Devuelve los elementos que coincidan con todos los filtros activos
                 return matchesText;
             });
-        }
+        },
     },
 
     //Método para llamar a la API cuando se cree la instancia
@@ -119,6 +155,9 @@ export default {
         let url = "https://nuestrocampo.cl/api/pedidos/read.php";
 
         axios.get(url).then((response) => (this.items = response.data));
+
+        this.actualizarHoras();
+        this.actualizarFechas();
     },
 
     components: { EliminarPedido, DetallePedido, EditarPedido },
