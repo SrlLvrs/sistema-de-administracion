@@ -44,6 +44,8 @@
                                 {{ item }}
                             </option>
                         </select>
+                        {{ frecuencia_seleccionada }}
+                        {{ intervalo }}
                     </div>
 
                     <!-- Fecha de entrega -->
@@ -123,22 +125,18 @@
                 </div>
 
                 <!-- Progreso -->
-                 <div v-if="progreso">
-                     <div class="label">
+                <!-- Sólo aparece si progreso > 0 -->
+                <div v-if="progreso">
+                    <div class="label">
                         <span class="label-text font-bold">Creando pedidos</span>
                     </div>
-                    <progress class="progress progress-success w-56" :value="progreso" max="37"></progress>
+                    <progress class="progress progress-success w-56" :value="progreso" max="41"></progress>
                 </div>
 
                 <!-- Acciones -->
                 <div class="modal-action">
                     <!-- Descartar pedido -->
-                    <button class="btn btn-outline btn-error" @click="descartarPedido(items[0].id)">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                        </svg>
-                        Descartar Pedido</button>
+                    <label class="btn" :for="id">Descartar Pedido Automático</label>
 
                     <!-- Crear pedido -->
                     <button class="btn btn-outline btn-success" @click="crear()">
@@ -146,7 +144,7 @@
                             stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                         </svg>
-                        Crear Pedido
+                        Crear Pedido Automático
                     </button>
                 </div>
             </div>
@@ -157,7 +155,6 @@
 <script>
 import axios from "axios";
 import VCalendar from "../components/VCalendar.vue";
-import DetallePedidoMinimal from "../components/DetallesPedidoMinimal.vue";
 
 export default {
     //Nombre del componente
@@ -176,12 +173,12 @@ export default {
             productos_elegidos: [],
             cantidad: 1,
             total: '',
-            fecha_reparto_local: '',
+            fecha_reparto_local: 'papas',
             frecuencias: ['Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', 'Cada 4 semanas'],
             frecuencia_seleccionada: 'Cada 1 semana',
             ultimo_pedido: [],
             progreso: 0,
-            fecha_ultimo_pedido: '',
+            ultimo_id: [{ "ID": "0" }],
         };
     },
 
@@ -194,7 +191,7 @@ export default {
 
             this.total = totalSum;
         },
-        /** Crea un pedido vacío con valores por defecto al inicializar el componente */
+        /** Obtiene info del clientes, todos los productos y asigna la fecha de hoy a Vcalendar al iniciar componente */
         crearPedido() {
             //GET detalle cliente
             let idc = this.cliente
@@ -241,11 +238,12 @@ export default {
             //Sumar el total de todos los productos restantes.
             this.adicion();
         },
-        // Esperar un tiempo especificado (en milisegundos)
+        /** Esperar un tiempo especificado (en milisegundos). Para usarlo, hay que usar async-await */
         esperar(ms) {
             console.log('esperando...')
             return new Promise(resolve => setTimeout(resolve, ms));
         },
+        /** Crea un pedido automático, crea pedidos base, crea detalles de pedido y actualiza la fecha del último pedido  */
         async crear() {
             //1. POST pedidos_automaticos
             //Crea la info necesaria para crear nuevos pedidos en el futuro.
@@ -256,6 +254,7 @@ export default {
             //2. POST pedidos
             //Crea los 4 pedidos, usando la fecha_reparto_local como base, luego suma 7 días por cada uno.
             let f = new Date(this.fecha_reparto_local)
+            let dias = this.intervalo
 
             for (let i = 0; i < 4; i++) {
                 //Post pedidos
@@ -283,14 +282,29 @@ export default {
                 //esperar
                 await this.esperar(1000)
                 this.progreso = this.progreso + 1
-                //Actualizar fecha
-                console.log('Actualizando fecha...')
-                this.progreso = this.progreso + 1
-                f.setDate(f.getDate() + 7);
+                if (i <= 2) {
+                    //Actualizar fecha
+                    console.log('Actualizando variable de fecha...')
+                    this.progreso = this.progreso + 1
+                    f.setDate(f.getDate() + dias);
+                }
                 console.log('fin del ciclo')
                 this.progreso = this.progreso + 1
             }
+
+            //3. PUT pedidos_automaticos
+            //Actualiza la fecha del último pedido
+            console.log(f)
+            this.actualizarFecha(f)
+            this.progreso = this.progreso + 1
+
+            //esperar
+            await this.esperar(1000)
+
+            //Recargar
+            location.reload()
         },
+        /** Crea los pedidos base */
         crearTodoslosPedidos(fecha) {
             //POST nuevo pedido
             let idc = this.cliente;
@@ -300,6 +314,7 @@ export default {
                 console.log(response.data);
             });
         },
+        /** Crea los pedidos automáticos, info necesaria para futuros pedidos */
         crearPedido_Auto() {
             //POST pedido_automático
             let array = this.productos_elegidos
@@ -336,26 +351,47 @@ export default {
                 })
             }
         },
+        /** Obtiene el último pedido */
         getUltimoPedido() {
             //GET último pedido
             let url = "https://nuestrocampo.cl/api/pedidos/read-last.php";
             axios.get(url).then((response) => (this.ultimo_pedido = response.data));
         },
-        actualizarFecha() {
+        /** Obtiene el id del último pedido automático y actualiza el campo UltimoPedido  */
+        async actualizarFecha(fecha) {
+            //GET ultimo id de pedidos automaticos
             let url = `https://nuestrocampo.cl/api/pedidos/read-last-auto.php`
-            axios.get(url).then((response) => (this.fecha_ultimo_pedido = response.data));
-            console.log(this.fecha_ultimo_)
-            //ACA SE RECIBE EL ID DEL ULTIMO PEDIDO AUTOMATICO
-            //ACTUALIZAR VARIABLE
-        },
-        /** BORRA el pedido vacío */
-        descartarPedido(i) {
-            let url = `https://nuestrocampo.cl/api/pedidos/delete-empty.php?id=${i}`
-            axios.delete(url);
-            location.reload();
+            axios.get(url).then((response) => (this.ultimo_id = response.data));
+            console.log('Obteniendo último ID de pedido')
+            //Esperar
+            await this.esperar(1000)
+            let last = this.ultimo_id[0].ID
+            //Actualizar por fecha
+            let url2 = `https://nuestrocampo.cl/api/pedidos/update-auto-date.php?id_pedido=${last}&ultimo_pedido=${fecha}`
+            axios.put(url2).then(function (response) {
+                console.log(response.data);
+            });
+            console.log('Actualizada fecha del último pedido')
         },
     },
 
-    components: { VCalendar, DetallePedidoMinimal },
+    components: { VCalendar },
+
+    computed: {
+        intervalo() {
+            switch (this.frecuencia_seleccionada) {
+                case "Cada 1 semana":
+                    return 7; // 7 días
+                case "Cada 2 semanas":
+                    return 14; // 14 días
+                case "Cada 3 semanas":
+                    return 21; // 21 días
+                case "Cada 4 semanas":
+                    return 28; // 28 días
+                default:
+                    return null; // Valor por defecto si no coincide con ningún caso
+            }
+        }
+    },
 }
 </script>
