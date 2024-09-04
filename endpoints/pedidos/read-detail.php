@@ -26,6 +26,7 @@ if (!empty($id)) {
                 JOIN productos pro ON pro.ID = pp.IDProducto
                 JOIN sector s ON s.ID = c.IDSector
                 WHERE p.ID = :id";
+                
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
