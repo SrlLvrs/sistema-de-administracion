@@ -252,7 +252,7 @@ export default {
             console.log('Creando pedido automático')
 
             //2. POST pedidos
-            //Crea los 4 pedidos, usando la fecha_reparto_local como base, luego suma 7 días por cada uno.
+            //Crea los 4 pedidos, usando la fecha_reparto_local como base, luego suma x días en base a cada intervalo.
             let f = new Date(this.fecha_reparto_local)
             let dias = this.intervalo
 
