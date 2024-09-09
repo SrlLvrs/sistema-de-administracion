@@ -8,6 +8,7 @@ const router = createRouter({
         { path: "/clientes/deudores", component: () => import("../views/Clientes-Deudores.vue")},
         { path: "/productos", component: () => import("../views/Productos.vue")},
         { path: "/pedidos", component: () => import("../views/Pedidos.vue")},
+        { path: "/pedidos/automaticos", component: () => import("../views/Pedidos-auto.vue")},
         { path: "/produccion", component: () => import("../views/Produccion.vue")},
         { path: "/admin", component: () => import("../views/Admin.vue")},
         { path: "/sectores", component: () => import("../views/Sectores.vue")},

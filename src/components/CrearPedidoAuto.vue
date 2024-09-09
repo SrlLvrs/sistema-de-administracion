@@ -1,5 +1,5 @@
 <template>
-    <!-- Modal CREAR NUEVO PEDIDO-->
+    <!-- Modal CREAR NUEVO PEDIDO AUTOMATICO -->
     <!-- Botón para abrir el modal -->
     <label :for="id" class="btn btn-outline btn-success mr-2" @click="crearPedido()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -44,8 +44,6 @@
                                 {{ item }}
                             </option>
                         </select>
-                        {{ frecuencia_seleccionada }}
-                        {{ intervalo }}
                     </div>
 
                     <!-- Fecha de entrega -->
@@ -139,7 +137,7 @@
                     <label class="btn" :for="id">Descartar Pedido Automático</label>
 
                     <!-- Crear pedido -->
-                    <button class="btn btn-outline btn-success" @click="crear()">
+                    <button class="btn btn-outline btn-success" @click="pruebas()">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -173,20 +171,22 @@ export default {
             productos_elegidos: [],
             cantidad: 1,
             total: '',
-            fecha_reparto_local: 'papas',
+            fecha_reparto_local: '',
             frecuencias: ['Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', 'Cada 4 semanas'],
             frecuencia_seleccionada: 'Cada 1 semana',
             ultimo_pedido: [],
             progreso: 0,
             ultimo_id: [{ "ID": "0" }],
+            last_idpa: '',
+            cantidad_pedidos: 0,
         };
     },
 
     methods: {
         /** Sumar el total */
         adicion() {
-            let totalSum = this.productos_elegidos.reduce((accumulator, currentItem) => {
-                return accumulator + currentItem.total;
+            let totalSum = this.productos_elegidos.reduce((acumulador, itemActual) => {
+                return acumulador + itemActual.total;
             }, 0);
 
             this.total = totalSum;
@@ -204,7 +204,7 @@ export default {
 
             this.fecha_reparto_local = new Date();
         },
-        /** Copia los productos del array de todos los productos, a un array vacío */
+        /** Copia 1 producto del array de todos los productos, a un array vacío [productos seleccionados] */
         agregarProducto() {
             //Mueve los productos seleccionados del array de todos los productos, a un array vacío
             //los cuales irán finalmente a la base de datos
@@ -243,44 +243,117 @@ export default {
             console.log('esperando...')
             return new Promise(resolve => setTimeout(resolve, ms));
         },
-        /** Crea un pedido automático, crea pedidos base, crea detalles de pedido y actualiza la fecha del último pedido  */
-        async crear() {
-            //1. POST pedidos_automaticos
-            //Crea la info necesaria para crear nuevos pedidos en el futuro.
-            this.crearPedido_Auto()
-            this.progreso = this.progreso + 1
-            console.log('Creando pedido automático')
+        /** Calcula la cantidad de pedidos que se crearán en base a cada frecuencia */
+        calcularCantidadPedidos(d) {
+            if (d === 7) {
+                this.cantidad_pedidos = 4
+            } else if (d === 14) {
+                this.cantidad_pedidos = 2
+            } else if (d === 21) {
+                this.cantidad_pedidos = 2
+            } else if (d === 28) {
+                this.cantidad_pedidos = 1
+            }
+            console.log('los dias son ' + d + ' y la cantidad de pedidos es ' + this.cantidad_pedidos)
+        },
+        pruebas() {
+            //Crea el pedido automático y su detalle
+            //this.crearPedido_Auto()
 
-            //2. POST pedidos
-            //Crea los 4 pedidos, usando la fecha_reparto_local como base, luego suma x días en base a cada intervalo.
+            this.crearPedidos()
+        },
+        /** Crea los pedidos automáticos */
+        async crearPedido_Auto() {
+            //POST pedidos_automáticos
+            //1. guardar idcliente, ultimopedido y frecuencia
+            let idc = this.cliente
+            let up = this.fecha_reparto_local
+            let f = this.frecuencia_seleccionada
+
+            let idpa = ''
+
+            let url = `https://nuestrocampo.cl/api/pedidos/create-auto.php?id_cliente=${idc}&ultimo_pedido=${up}&frecuencia=${f}`
+            await axios.post(url).then(function (response) {
+                console.log(response.data);
+                idpa = response.data.id
+            });
+
+            //2. guardar idpa, idproducto, cantidad y total
+            this.crearDetallePedido_Auto(idpa)
+        },
+        /** Crea el detalle de pedidos automáticos */
+        async crearDetallePedido_Auto(idpedido) {
+            //POST pedidos_auto_productos
+            let array = this.productos_elegidos
+
+            for (let i = 0; i < array.length; i++) {
+                let idp = array[i].id
+                let c = array[i].cantidad
+                let t = array[i].total
+
+                let url = `https://nuestrocampo.cl/api/pedidos/create-auto-detail.php?idpa=${idpedido}&idproducto=${idp}&cantidad=${c}&total=${t}`
+                await axios.post(url).then(function (response) {
+                    console.log(response.data);
+                });
+            }
+        },
+        /** Crea los pedidos base */
+        async crearTodoslosPedidos(fecha) {
+            //POST nuevo pedido
+            let idc = this.cliente;
+            let h = new Date();
+            let ultimoid = ''
+            let url = `https://nuestrocampo.cl/api/pedidos/create.php?id_cliente=${idc}&hora_creacion=${h}&fecha_reparto=${fecha}`
+            await axios.post(url).then(function (response) {
+                console.log(response.data);
+                ultimoid = response.data.id
+            });
+
+            //Crear detalle con el ultimo id
+            await this.crearDetalle(ultimoid)
+        },
+        /** Inserta los productos de la tabla en la base de datos en la tabla intermedia PEDIDOS_PRODUCTOS*/
+        async crearDetalle(id_pedido) {
+            //Envía todos los productos del array, usando un ciclo for.
+            let array = this.productos_elegidos;
+            for (let i = 0; i < array.length; i++) {
+                //Definir variables
+                let p = id_pedido;
+                let pro = array[i].id;
+                let c = array[i].cantidad;
+                let t = array[i].total;
+
+                let url = `https://nuestrocampo.cl/api/pedidos/create-detail.php?id_pedido=${p}&id_producto=${pro}&cantidad=${c}&total=${t}`
+                await axios.post(url).then(function (response) {
+                    console.log(response.data)
+                })
+            }
+        },
+        crearPedidos() {
+            //Obtener fecha, intervalo y cantidad de pedidos
             let f = new Date(this.fecha_reparto_local)
             let dias = this.intervalo
+            this.calcularCantidadPedidos(dias);
+
+            //Crear pedidos
+            for (let i = 0; i < this.cantidad_pedidos; i++) {
+                this.crearTodoslosPedidos(f)
+                f.setDate(f.getDate() + dias);
+            }
+        },
+
+
+
+
+
+
+
+        /** Crea un pedido automático, crea pedidos base, crea detalles de pedido y actualiza la fecha del último pedido  */
+        async crear() {
+            //2. POST pedidos
+            //Crea los 4 pedidos, usando la fecha_reparto_local como base, luego suma x días en base a cada intervalo.
 
             for (let i = 0; i < 4; i++) {
-                //Post pedidos
-                console.log('Creando pedido base ' + i)
-                this.crearTodoslosPedidos(f)
-                this.progreso = this.progreso + 1
-                //esperar
-                await this.esperar(1000)
-                this.progreso = this.progreso + 1
-                //get ultimo pedido
-                this.getUltimoPedido()
-                this.progreso = this.progreso + 1
-                console.log('Obteniendo ultimo pedido')
-                //esperar
-                await this.esperar(1000)
-                this.progreso = this.progreso + 1
-                //asignar id ultimo pedido a id
-                let idp = this.ultimo_pedido[0].id
-                this.progreso = this.progreso + 1
-                console.log('ID del último pedido: ' + idp)
-                //post pedidos_productos
-                this.crearDetalle(idp)
-                this.progreso = this.progreso + 1
-                console.log('Detalle creado')
-                //esperar
-                await this.esperar(1000)
                 this.progreso = this.progreso + 1
                 if (i <= 2) {
                     //Actualizar fecha
@@ -303,59 +376,6 @@ export default {
 
             //Recargar
             location.reload()
-        },
-        /** Crea los pedidos base */
-        crearTodoslosPedidos(fecha) {
-            //POST nuevo pedido
-            let idc = this.cliente;
-            let h = new Date();
-            let url = `https://nuestrocampo.cl/api/pedidos/create.php?id_cliente=${idc}&hora_creacion=${h}&fecha_reparto=${fecha}`
-            axios.post(url).then(function (response) {
-                console.log(response.data);
-            });
-        },
-        /** Crea los pedidos automáticos, info necesaria para futuros pedidos */
-        crearPedido_Auto() {
-            //POST pedido_automático
-            let array = this.productos_elegidos
-
-            for (let i = 0; i < array.length; i++) {
-                let idc = this.cliente
-                let idp = array[i].id
-                let c = array[i].cantidad
-                let up = this.fecha_reparto_local
-                let f = this.frecuencia_seleccionada
-
-                let url = `https://nuestrocampo.cl/api/pedidos/create-auto.php?id_cliente=${idc}&id_producto=${idp}&cantidad=${c}&ultimo_pedido=${up}&frecuencia=${f}`
-                axios.post(url).then(function (response) {
-                    console.log(response.data);
-                });
-            }
-
-            console.log('Pedido automático creado')
-        },
-        /** Inserta los productos de la tabla en la base de datos en la tabla intermedia PEDIDOS_PRODUCTOS*/
-        crearDetalle(id_pedido) {
-            //Envía todos los productos del array, usando un ciclo for.
-            let array = this.productos_elegidos;
-            for (let i = 0; i < array.length; i++) {
-                //Definir variables
-                let p = id_pedido;
-                let pro = array[i].id;
-                let c = array[i].cantidad;
-                let t = array[i].total;
-
-                let url = `https://nuestrocampo.cl/api/pedidos/create-detail.php?id_pedido=${p}&id_producto=${pro}&cantidad=${c}&total=${t}`
-                axios.post(url).then(function (response) {
-                    console.log(response.data)
-                })
-            }
-        },
-        /** Obtiene el último pedido */
-        getUltimoPedido() {
-            //GET último pedido
-            let url = "https://nuestrocampo.cl/api/pedidos/read-last.php";
-            axios.get(url).then((response) => (this.ultimo_pedido = response.data));
         },
         /** Obtiene el id del último pedido automático y actualiza el campo UltimoPedido  */
         async actualizarFecha(fecha) {

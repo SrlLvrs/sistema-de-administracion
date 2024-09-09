@@ -30,8 +30,11 @@ if (!empty($id_cliente) && !empty($hora_creacion)) {
     $stmt->bindParam(":fecha", $fecha_reparto);
     
     if ($stmt->execute()) {
+        //Obtener ultimo id
+        $last_id = $db->lastInsertId();
+
         http_response_code(201);
-        echo json_encode(array("message" => "El pedido fue creado."));
+        echo json_encode(array("message" => "Pedido creado", "id" => $last_id));
     } else {
         http_response_code(503);
         echo json_encode(array("message" => "No se puede crear el pedido. Revisa el log."));

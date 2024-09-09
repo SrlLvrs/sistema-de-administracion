@@ -13,33 +13,32 @@ $db = $database->getConnection();
 /*
 Obtiene por url el ID de cliente y la fecha de creación, lo demás se rellena por default.
 */
-$id_cliente = isset($_GET['id_cliente']) ? $_GET['id_cliente'] : '';
-$ultimo_pedido = isset($_GET['ultimo_pedido']) ? $_GET['ultimo_pedido'] : '';
-$frecuencia = isset($_GET['frecuencia']) ? $_GET['frecuencia'] : '';
+$idpa = isset($_GET['idpa']) ? $_GET['idpa'] : '';
+$idproducto = isset($_GET['idproducto']) ? $_GET['idproducto'] : '';
+$cantidad = isset($_GET['cantidad']) ? $_GET['cantidad'] : '';
+$total = isset($_GET['total']) ? $_GET['total'] : '';
 
 //Comprueba que las variables NO estén vacías
-if (!empty($id_cliente)) {
-    $query = "  INSERT INTO pedidos_automaticos 
-                SET IDCliente = :idc, UltimoPedido = :up, Frecuencia = :f";
+if (!empty($idpa)) {
+    $query = "  INSERT INTO pedidos_auto_productos
+                SET IDPedidoAuto = :idpa, IDProducto = :idp, Cantidad = :c, Total = :t";
 
     $stmt = $db->prepare($query);
 
     //Bindear las variables usando bindParam
-    $stmt->bindParam(":idc", $id_cliente);
-    $stmt->bindParam(":up", $ultimo_pedido);
-    $stmt->bindParam(":f", $frecuencia);
+    $stmt->bindParam(":idpa", $idpa);
+    $stmt->bindParam(":idp", $idproducto);
+    $stmt->bindParam(":c", $cantidad);
+    $stmt->bindParam(":t", $total);
     
     if ($stmt->execute()) {
-        //Obtener ultimo id
-        $last_id = $db->lastInsertId();
-
-        http_response_code(201); // 201 Created
-        echo json_encode(array("message" => "Insert successful", "id" => $last_id));        
+        http_response_code(201);
+        echo json_encode(array("message" => "El producto " . $idproducto . " fue añadido al detalle."));
     } else {
         http_response_code(503);
         echo json_encode(array("message" => "No se puede crear el pedido. Revisa el log."));
     }
 } else {
     http_response_code(400);
-    echo json_encode(array("message" => "Falta información"));
+    echo json_encode(array("message" => "Falta información. IDPedidoAutomatico es obligatorio"));
 }
