@@ -15,7 +15,13 @@
         <div class="modal-box modal-pedido">
             <h3 class="text-lg font-bold text-center">Nuevo Pedido Automático</h3>
 
-            <div>
+            <!-- Renderización condicional del loading spinner-->
+            <div v-if="items.length === 0">
+                <span class="loading loading-spinner loading-md"></span>
+            </div>
+            
+            <!-- Contenido del modal -->
+            <div v-else>
                 <div v-for="item in items">
                     <!-- Cliente -->
                     <div>
@@ -120,6 +126,14 @@
                     <div class="label">
                         <span class="label-text font-bold">Total: {{ total }}</span>
                     </div>
+                </div>
+
+                <!-- Progreso -->
+                <div v-if="last_idpa">
+                    <div class="label">
+                        <span class="label-text font-bold">Creando pedidos...</span>
+                    </div>
+                    <progress class="progress w-56"></progress>
                 </div>
 
                 <!-- Acciones -->
@@ -366,7 +380,7 @@ export default {
             await axios.put(url).then(function (response) {
                 console.log(response.data);
             });
-        },       
+        },
     },
 
     components: { VCalendar },

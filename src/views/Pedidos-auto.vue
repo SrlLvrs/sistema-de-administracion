@@ -28,8 +28,6 @@
                     <th>Número de pedido automático</th>
                     <th>Cliente</th>
                     <th>Direccion</th>
-                    <th>Cantidad</th>
-                    <th>Producto</th>
                     <th>Frecuencia</th>
                     <th>Último Pedido Agendado</th>
                     <th>Acciones</th>
@@ -44,13 +42,11 @@
                     <th> {{ item.ID }}</th>
                     <th> {{ item.Nombre }}</th>
                     <td> {{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</td>
-                    <td> {{ item.Cantidad }}</td>
-                    <td> {{ item.Producto }}</td>
                     <td> {{ item.Frecuencia }}</td>
                     <td> {{ item.UltimoPedido }}</td>
                     <td>
                         <!-- Detalle Pedido -->
-                        <DetallePedido :label="item.id + 'detail'" :id="item.id" />
+                        <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
 
                         <!-- Editar Pedido -->
                         <EditarPedido :label="item.id + 'edit'" :id="item.id" />
@@ -69,7 +65,7 @@
 import axios from "axios";
 import CrearPedidoAutoProgramar from "../components/CrearPedidoAutoProgramar.vue"
 import EliminarPedido from "../components/EliminarPedido.vue";
-import DetallePedido from "../components/DetallesPedido.vue";
+import DetallePedido from "../components/DetallesPedidoAutoMinimal.vue";
 import EditarPedido from "../components/EditarPedido.vue";
 
 export default {
@@ -85,26 +81,7 @@ export default {
     },
 
     methods: {
-        //Formato para Fecha de entrega
-        formatearFecha(entrega) {
-            const fecha = new Date(entrega);
-
-            const año = fecha.getFullYear();
-            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-            const dia = String(fecha.getDate()).padStart(2, '0');
-            const horas = String(fecha.getHours()).padStart(2, '0');
-            const minutos = String(fecha.getMinutes()).padStart(2, '0');
-
-            return `${dia}/${mes}/${año}`;
-        },
-        //Actualizar fecha con formato fecha de entrega
-        actualizarFechas() {
-            setTimeout(() => {
-                this.items.forEach(item => {
-                    item.UltimoPedido = this.formatearFecha(item.UltimoPedido);
-                });
-            }, 1000);
-        },
+        //Nada por aquí...
     },
 
     computed: {
@@ -136,8 +113,6 @@ export default {
         let url = "https://nuestrocampo.cl/api/pedidos/read-auto.php";
 
         axios.get(url).then((response) => (this.items = response.data));
-
-        this.actualizarFechas();
     },
 
     components: { EliminarPedido, DetallePedido, EditarPedido, CrearPedidoAutoProgramar },

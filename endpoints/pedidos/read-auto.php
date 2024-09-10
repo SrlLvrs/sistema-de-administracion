@@ -11,12 +11,10 @@ $database = new Database();
 $db = $database->getConnection();
 
 // Se prepara la consulta SQL para seleccionar todos los registros de la tabla 'pedidos'.
-$query = "  SELECT pa.ID, pa.IDCliente, c.Nombre, c.Direccion, s.NombreSector, s.Comuna, pa.IDProducto, p.Descripcion AS Producto, pa.Cantidad, pa.UltimoPedido, pa.Frecuencia
+$query = "  SELECT pa.ID, pa.IDCliente, c.Nombre, c.Direccion, s.NombreSector, s.Comuna, DATE_FORMAT(pa.UltimoPedido, '%d/%m/%Y') AS UltimoPedido, pa.Frecuencia
             FROM pedidos_automaticos pa
             JOIN clientes c ON pa.IDCliente = c.ID
-            JOIN sector s ON c.IDSector = s.ID
-            JOIN productos p ON pa.IDProducto = p.ID
-            ORDER BY pa.ID DESC";
+            JOIN sector s ON c.IDSector = s.ID";
 
 $stmt = $db->prepare($query);
 
