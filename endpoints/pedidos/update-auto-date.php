@@ -17,28 +17,28 @@ $db = $database->getConnection();
 /*
 Obtener los parámetros por url
 */
-$id_pedido = isset($_GET['id_pedido']) ? $_GET['id_pedido'] : ''; //NOT NULL
-$ultimo_pedido = isset($_GET['ultimo_pedido']) ? $_GET['ultimo_pedido'] : '';
+$id = isset($_GET['id']) ? $_GET['id'] : ''; //NOT NULL
+$fecha = isset($_GET['fecha']) ? $_GET['fecha'] : '';
 
 // Verifica que los campos no estén vacíos
-if (!empty($id_pedido)) {
-    // Se prepara la consulta SQL para actualizar el cliente.
-    $query = "  UPDATE pedidos_automaticos SET UltimoPedido = :up
+if (!empty($id)) {
+    // Se prepara la consulta SQL para actualizar la fecha del último pedido.
+    $query = "  UPDATE pedidos_automaticos SET UltimoPedido = :f
                 WHERE ID = :id";
 
     // Se prepara la consulta para su ejecución.
     $stmt = $db->prepare($query);
 
     //Bindear las variables usando bindParam
-    $stmt->bindParam(":id", $id_pedido);
-    $stmt->bindParam(":up", $ultimo_pedido);
+    $stmt->bindParam(":id", $id);
+    $stmt->bindParam(":f", $fecha);
 
     // Se ejecuta la consulta.
     if ($stmt->execute()) {
         // Si la ejecución es exitosa, se establece el código de respuesta a 200 OK.
         http_response_code(200);
         // Se envía una respuesta JSON indicando que el pedido fue actualizado.
-        echo json_encode(array("message" => "El pedido " . $id_pedido. " con la fecha " . $ultimo_pedido . " fue actualizado."));
+        echo json_encode(array("message" => "El pedido " . $id. " con la fecha " . $fecha . " fue actualizado."));
     } else {
         // Si la ejecución falla, se establece el código de respuesta a 503 Service Unavailable.
         http_response_code(503);

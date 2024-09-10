@@ -1,7 +1,7 @@
 <template>
     <!-- Modal CREAR NUEVO PEDIDO AUTOMATICO -->
     <!-- Botón para abrir el modal -->
-    <label :for="id" class="btn btn-outline btn-success mr-2" @click="crearPedido()">
+    <label :for="id" class="btn btn-outline btn-success mr-2" @click="getDetalle()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -122,22 +122,13 @@
                     </div>
                 </div>
 
-                <!-- Progreso -->
-                <!-- Sólo aparece si progreso > 0 -->
-                <div v-if="progreso">
-                    <div class="label">
-                        <span class="label-text font-bold">Creando pedidos</span>
-                    </div>
-                    <progress class="progress progress-success w-56" :value="progreso" max="41"></progress>
-                </div>
-
                 <!-- Acciones -->
                 <div class="modal-action">
                     <!-- Descartar pedido -->
                     <label class="btn" :for="id">Descartar Pedido Automático</label>
 
                     <!-- Crear pedido -->
-                    <button class="btn btn-outline btn-success" @click="pruebas()">
+                    <button class="btn btn-outline btn-success" @click="GuardarTodo()">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -176,7 +167,6 @@ export default {
             frecuencia_seleccionada: 'Cada 1 semana',
             ultimo_pedido: [],
             progreso: 0,
-            ultimo_id: [{ "ID": "0" }],
             last_idpa: '',
             cantidad_pedidos: 0,
         };
@@ -191,8 +181,25 @@ export default {
 
             this.total = totalSum;
         },
+        /** Formatear fecha para mysql */
+        formatToMySQLDateTime(dateString) {
+            // Crea un objeto Date a partir del Date String
+            const date = new Date(dateString);
+
+            // Extrae los componentes de la fecha
+            const year = date.getFullYear(); // Año (YYYY)
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Mes (MM)
+            const day = String(date.getDate()).padStart(2, '0'); // Día (DD)
+
+            // Extrae los componentes de la hora
+            const hours = String(date.getHours()).padStart(2, '0'); // Horas (HH)
+            const minutes = String(date.getMinutes()).padStart(2, '0'); // Minutos (MM)
+
+            // Retorna la fecha en formato compatible con MySQL DATETIME
+            return `${year}-${month}-${day} ${hours}:${minutes}:00`;
+        },
         /** Obtiene info del clientes, todos los productos y asigna la fecha de hoy a Vcalendar al iniciar componente */
-        crearPedido() {
+        getDetalle() {
             //GET detalle cliente
             let idc = this.cliente
             let url = `https://nuestrocampo.cl/api/clientes/read-detail.php?id=${idc}`;
@@ -238,11 +245,6 @@ export default {
             //Sumar el total de todos los productos restantes.
             this.adicion();
         },
-        /** Esperar un tiempo especificado (en milisegundos). Para usarlo, hay que usar async-await */
-        esperar(ms) {
-            console.log('esperando...')
-            return new Promise(resolve => setTimeout(resolve, ms));
-        },
         /** Calcula la cantidad de pedidos que se crearán en base a cada frecuencia */
         calcularCantidadPedidos(d) {
             if (d === 7) {
@@ -256,18 +258,23 @@ export default {
             }
             console.log('los dias son ' + d + ' y la cantidad de pedidos es ' + this.cantidad_pedidos)
         },
-        pruebas() {
+        /** Ejecuta las funciones principales */
+        async GuardarTodo() {
             //Crea el pedido automático y su detalle
-            //this.crearPedido_Auto()
+            await this.crearPedido_Auto()
 
-            this.crearPedidos()
+            //Crea el pedido base y su detalle
+            await this.crearPedidos()
+
+            //Recargar
+            location.reload()
         },
-        /** Crea los pedidos automáticos */
+        /** 1. Crea los pedidos automáticos */
         async crearPedido_Auto() {
             //POST pedidos_automáticos
             //1. guardar idcliente, ultimopedido y frecuencia
             let idc = this.cliente
-            let up = this.fecha_reparto_local
+            let up = this.formatToMySQLDateTime(this.fecha_reparto_local)
             let f = this.frecuencia_seleccionada
 
             let idpa = ''
@@ -279,9 +286,10 @@ export default {
             });
 
             //2. guardar idpa, idproducto, cantidad y total
+            this.last_idpa = idpa
             this.crearDetallePedido_Auto(idpa)
         },
-        /** Crea el detalle de pedidos automáticos */
+        /** 2. Crea el detalle de pedidos automáticos */
         async crearDetallePedido_Auto(idpedido) {
             //POST pedidos_auto_productos
             let array = this.productos_elegidos
@@ -297,22 +305,42 @@ export default {
                 });
             }
         },
-        /** Crea los pedidos base */
+        /** 3. Calcula la cantidad de pedidos y los crea*/
+        async crearPedidos() {
+            //Obtener fecha, intervalo y cantidad de pedidos
+            let f = new Date(this.fecha_reparto_local)
+            let dias = this.intervalo
+            this.calcularCantidadPedidos(dias);
+
+            //Crear pedidos
+            for (let i = 0; i < this.cantidad_pedidos; i++) {
+                //Formatea la fecha para mysql
+                let fmysql = this.formatToMySQLDateTime(f)
+                //Crea un pedido con la fecha actual
+                await this.crearTodoslosPedidos(fmysql)
+                //Actualiza la fecha del ultimo pedido
+                this.actualizarFecha(fmysql)
+                //Suma el intervalo a la fecha actual
+                f.setDate(f.getDate() + dias);
+            }
+        },
+        /** 4. Crea los pedidos base */
         async crearTodoslosPedidos(fecha) {
             //POST nuevo pedido
             let idc = this.cliente;
             let h = new Date();
+            let hsql = this.formatToMySQLDateTime(h)
             let ultimoid = ''
-            let url = `https://nuestrocampo.cl/api/pedidos/create.php?id_cliente=${idc}&hora_creacion=${h}&fecha_reparto=${fecha}`
+            let url = `https://nuestrocampo.cl/api/pedidos/create.php?id_cliente=${idc}&hora_creacion=${hsql}&fecha_reparto=${fecha}`
             await axios.post(url).then(function (response) {
                 console.log(response.data);
                 ultimoid = response.data.id
             });
 
             //Crear detalle con el ultimo id
-            await this.crearDetalle(ultimoid)
+            this.crearDetalle(ultimoid)
         },
-        /** Inserta los productos de la tabla en la base de datos en la tabla intermedia PEDIDOS_PRODUCTOS*/
+        /** 5. Inserta los productos de la tabla en la base de datos en la tabla intermedia PEDIDOS_PRODUCTOS*/
         async crearDetalle(id_pedido) {
             //Envía todos los productos del array, usando un ciclo for.
             let array = this.productos_elegidos;
@@ -329,70 +357,16 @@ export default {
                 })
             }
         },
-        crearPedidos() {
-            //Obtener fecha, intervalo y cantidad de pedidos
-            let f = new Date(this.fecha_reparto_local)
-            let dias = this.intervalo
-            this.calcularCantidadPedidos(dias);
-
-            //Crear pedidos
-            for (let i = 0; i < this.cantidad_pedidos; i++) {
-                this.crearTodoslosPedidos(f)
-                f.setDate(f.getDate() + dias);
-            }
-        },
-
-
-
-
-
-
-
-        /** Crea un pedido automático, crea pedidos base, crea detalles de pedido y actualiza la fecha del último pedido  */
-        async crear() {
-            //2. POST pedidos
-            //Crea los 4 pedidos, usando la fecha_reparto_local como base, luego suma x días en base a cada intervalo.
-
-            for (let i = 0; i < 4; i++) {
-                this.progreso = this.progreso + 1
-                if (i <= 2) {
-                    //Actualizar fecha
-                    console.log('Actualizando variable de fecha...')
-                    this.progreso = this.progreso + 1
-                    f.setDate(f.getDate() + dias);
-                }
-                console.log('fin del ciclo')
-                this.progreso = this.progreso + 1
-            }
-
-            //3. PUT pedidos_automaticos
-            //Actualiza la fecha del último pedido
-            console.log(f)
-            this.actualizarFecha(f)
-            this.progreso = this.progreso + 1
-
-            //esperar
-            await this.esperar(1000)
-
-            //Recargar
-            location.reload()
-        },
-        /** Obtiene el id del último pedido automático y actualiza el campo UltimoPedido  */
+        /** 6. Obtiene el id del último pedido automático y actualiza el campo UltimoPedido  */
         async actualizarFecha(fecha) {
-            //GET ultimo id de pedidos automaticos
-            let url = `https://nuestrocampo.cl/api/pedidos/read-last-auto.php`
-            axios.get(url).then((response) => (this.ultimo_id = response.data));
-            console.log('Obteniendo último ID de pedido')
-            //Esperar
-            await this.esperar(1000)
-            let last = this.ultimo_id[0].ID
             //Actualizar por fecha
-            let url2 = `https://nuestrocampo.cl/api/pedidos/update-auto-date.php?id_pedido=${last}&ultimo_pedido=${fecha}`
-            axios.put(url2).then(function (response) {
+            let idp = this.last_idpa
+
+            let url = `https://nuestrocampo.cl/api/pedidos/update-auto-date.php?id=${idp}&fecha=${fecha}`
+            await axios.put(url).then(function (response) {
                 console.log(response.data);
             });
-            console.log('Actualizada fecha del último pedido')
-        },
+        },       
     },
 
     components: { VCalendar },
