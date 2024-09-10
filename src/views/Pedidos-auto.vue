@@ -48,9 +48,6 @@
                         <!-- Detalle Pedido -->
                         <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
 
-                        <!-- Editar Pedido -->
-                        <EditarPedido :label="item.id + 'edit'" :id="item.id" />
-
                         <!-- Eliminar Pedido -->
                         <EliminarPedido :id="item.ID" />
                     </td>
@@ -66,7 +63,6 @@ import axios from "axios";
 import CrearPedidoAutoProgramar from "../components/CrearPedidoAutoProgramar.vue"
 import EliminarPedido from "../components/EliminarPedidoAuto.vue";
 import DetallePedido from "../components/DetallesPedidoAutoMinimal.vue";
-import EditarPedido from "../components/EditarPedido.vue";
 
 export default {
     //Nombre del componente
@@ -115,6 +111,6 @@ export default {
         axios.get(url).then((response) => (this.items = response.data));
     },
 
-    components: { EliminarPedido, DetallePedido, EditarPedido, CrearPedidoAutoProgramar },
+    components: { EliminarPedido, DetallePedido, CrearPedidoAutoProgramar },
 }
 </script>
