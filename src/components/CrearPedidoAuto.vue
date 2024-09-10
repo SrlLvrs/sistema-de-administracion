@@ -344,8 +344,9 @@ export default {
             let idc = this.cliente;
             let h = new Date();
             let hsql = this.formatToMySQLDateTime(h)
+            let idpa = this.last_idpa;
             let ultimoid = ''
-            let url = `https://nuestrocampo.cl/api/pedidos/create.php?id_cliente=${idc}&hora_creacion=${hsql}&fecha_reparto=${fecha}`
+            let url = `https://nuestrocampo.cl/api/pedidos/create-w-idpa.php?id_cliente=${idc}&hora_creacion=${hsql}&fecha_reparto=${fecha}&idpa=${idpa}`
             await axios.post(url).then(function (response) {
                 console.log(response.data);
                 ultimoid = response.data.id

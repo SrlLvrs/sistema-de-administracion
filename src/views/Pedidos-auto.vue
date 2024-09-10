@@ -52,7 +52,7 @@
                         <EditarPedido :label="item.id + 'edit'" :id="item.id" />
 
                         <!-- Eliminar Pedido -->
-                        <EliminarPedido :id="item.id" />
+                        <EliminarPedido :id="item.ID" />
                     </td>
                 </tr>
             </tbody>
@@ -64,7 +64,7 @@
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
 import CrearPedidoAutoProgramar from "../components/CrearPedidoAutoProgramar.vue"
-import EliminarPedido from "../components/EliminarPedido.vue";
+import EliminarPedido from "../components/EliminarPedidoAuto.vue";
 import DetallePedido from "../components/DetallesPedidoAutoMinimal.vue";
 import EditarPedido from "../components/EditarPedido.vue";
 
