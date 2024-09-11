@@ -16,7 +16,7 @@ $id = isset($_GET['id']) ? $_GET['id'] : ''; // NOT NULL
 // Verifica si el ID no está vacío
 if (!empty($id)) {
     // Se prepara la consulta SQL para seleccionar el registro correspondiente al ID proporcionado.
-    $query = "  SELECT pa.ID, c.Nombre, c.Direccion, s.NombreSector, s.Comuna, pap.Cantidad, p.Descripcion, pap.Total
+    $query = "  SELECT pa.ID, c.Nombre, c.Direccion, s.NombreSector, s.Comuna, pap.Cantidad, p.ID AS IDProducto, p.Descripcion, pap.Total
                 FROM pedidos_automaticos pa
                 JOIN pedidos_auto_productos pap ON pa.ID = pap.IDPedidoAuto
                 JOIN productos p ON pap.IDProducto = p.ID
