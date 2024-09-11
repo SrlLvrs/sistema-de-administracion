@@ -180,7 +180,6 @@ export default {
             frecuencias: ['Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', 'Cada 4 semanas'],
             frecuencia_seleccionada: 'Cada 1 semana',
             ultimo_pedido: [],
-            progreso: 0,
             last_idpa: '',
             cantidad_pedidos: 0,
         };

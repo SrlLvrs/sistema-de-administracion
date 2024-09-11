@@ -1,7 +1,7 @@
 <template>
     <!-- Modal PROGRAMAR PEDIDOS-->
     <!-- Botón para abrir el modal -->
-    <label for="programar" class="btn btn-outline btn-success mr-2" @click="crearPedidos()">
+    <label for="programar" class="btn btn-outline btn-success mr-2" @click="prueba()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -24,7 +24,7 @@
                     <div class="label">
                         <span class="label-text font-bold">Creando pedidos</span>
                     </div>
-                    <progress class="progress progress-success w-56" :value="progreso" max="41"></progress>
+                    <progress class="progress w-56"></progress>
                     <p>
                         {{ fecha_ultimo_pedido }}
                     </p>
@@ -34,6 +34,12 @@
                     <p>
                         {{ items }}
                     </p>
+                    <p>
+                        {{ detalle_auto }}
+                    </p>
+                    <p v-for="i in detalle_auto">
+                        {{  i.Nombre }}
+                    </p>
                 </div>
 
                 <!-- Acciones -->
@@ -42,7 +48,7 @@
                     <label class="btn" for="programar">Descartar Pedido Automático</label>
 
                     <!-- Crear pedido -->
-                    <button class="btn btn-outline btn-success" @click="crear()">
+                    <button class="btn btn-outline btn-success" @click="prueba()">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -66,6 +72,8 @@ export default {
     data() {
         return {
             items: [],
+            detalle_auto: [],
+            OTROS: ['_______________________________________________________'],
             fecha_ultimo_pedido: '',
             freq: '',
             cliente: '',
@@ -75,26 +83,51 @@ export default {
             productos_elegidos: [],
             cantidad: 1,
             total: '',
-            fecha_reparto_local: 'papas',
+            fecha_reparto_local: '',
             frecuencias: ['Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', 'Cada 4 semanas'],
             frecuencia_seleccionada: 'Cada 1 semana',
             ultimo_pedido: [],
-            progreso: 0,
             ultimo_id: [{ "ID": "0" }],
         };
     },
 
     methods: {
-        /** Esperar un tiempo especificado (en milisegundos). Para usarlo, hay que usar async-await */
-        esperar(ms) {
-            console.log('esperando...')
-            return new Promise(resolve => setTimeout(resolve, ms));
+        async prueba() {
+            //El ciclo for debe hacerse por cada PA
+
+            //1. GET pedidos_automaticos
+            await this.getPedidosAuto()
+
+            //2. GET detalle pedidos_automaticos
+            let array = this.items
+            for (let i = 0; i < array.length; i++) {
+                console.log(i)
+                this.getDetallePedidosAuto(array[i].ID)
+            }
+
+            //3. POST pedido base
+
+            //4. POST detalle pedido
+
+            //5. PUT nueva fecha UltimoPedido
         },
-        /** Obtiene todos los pedidos automáticos */
-        getPedidosAuto() {
+        /** 1. Obtiene todos los pedidos automáticos */
+        async getPedidosAuto() {
             //GET pedidos automaticos
             let url = `https://nuestrocampo.cl/api/pedidos/read-auto.php`;
-            axios.get(url).then((response) => (this.items = response.data));
+            await axios.get(url).then((response) => (this.items = response.data));
+        },
+        /** 2. Obtiene el detalle de todos los pedidos automáticos */
+        async getDetallePedidosAuto(id) {
+            //GET pedidos automaticos
+            let url = `https://nuestrocampo.cl/api/pedidos/read-detail-auto.php?id=${id}`;
+            await axios.get(url).then(response => {
+                const data = response.data;
+
+                data.forEach(elemento => {
+                    this.detalle_auto.push(elemento);
+                });
+            })
         },
         /** Calcula la cantidad de pedidos que se crearán en base a cada frecuencia */
         calcularCantidadPedidos(d) {
@@ -200,7 +233,7 @@ export default {
             }
         },
         /** Crea un pedido automático, crea pedidos base, crea detalles de pedido y actualiza la fecha del último pedido  */
-        async crear() {
+        async prueba2() {
             //1. POST pedidos_automaticos
             //Crea la info necesaria para crear nuevos pedidos en el futuro.
             this.crearPedido_Auto()

@@ -10,7 +10,7 @@ include_once '../config/db.php';
 $database = new Database();
 $db = $database->getConnection();
 
-// Se prepara la consulta SQL para seleccionar todos los registros de la tabla 'pedidos'.
+// Se prepara la consulta SQL para seleccionar los registros de PEDIDOS_AUTOMATICOS.
 $query = "  SELECT pa.ID, pa.IDCliente, c.Nombre, c.Direccion, s.NombreSector, s.Comuna, DATE_FORMAT(pa.UltimoPedido, '%d/%m/%Y') AS UltimoPedido, pa.Frecuencia
             FROM pedidos_automaticos pa
             JOIN clientes c ON pa.IDCliente = c.ID
