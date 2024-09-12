@@ -57,25 +57,25 @@
                 <!-- GET -->
                 <!-- el nombre del array es ITEMS, que debe ser el mismo que se define en DATA() RETURN -->
                 <!-- Los resultados deben recorrerse dentro del TR -->
-                <tr v-for="item in filteredItems" :key="item.id">
-                    <th> {{ item.nombre }}</th>
-                    <td> {{ item.direccion }}, {{ item.nombresector }}, {{ item.comuna }}</td>
-                    <td> {{ item.telefono }}</td>
-                    <td> {{ item.telefono2 }}</td>
-                    <td> {{ item.frecuencia }}</td>
-                    <td> {{ item.diadereparto }}</td>
-                    <td> {{ item.observacion }}</td>
+                <tr v-for="item in filteredItems" :key="item.ID">
+                    <th> {{ item.Nombre }}</th>
+                    <td> {{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</td>
+                    <td> {{ item.Telefono }}</td>
+                    <td> {{ item.Telefono2 }}</td>
+                    <td> {{ item.Freq }}</td>
+                    <td> {{ item.diaDeReparto }}</td>
+                    <td> {{ item.Observacion }}</td>
                     <!-- 
                     <td> {{ item.preferencia }}</td>
                     -->
                     <td>
                         <!-- Crear Pedido -->
-                        <CrearPedido :id="item.id + 'pdd'" :cliente="item.id" />
+                        <CrearPedido :id="item.ID + 'pdd'" :cliente="item.ID" />
                         <!-- Crear Pedido Auto -->
-                        <CrearPedidoAuto :id="item.id + 'auto'" :cliente="item.id" />
+                        <CrearPedidoAuto :id="item.ID + 'auto'" :cliente="item.ID" />
                         <!-- BOTÓN MAPS -->
                         <button class="btn btn-outline btn-info mr-2">
-                            <a :href="item.linkmaps" target="_blank">
+                            <a :href="item.LinkMaps" target="_blank">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -87,14 +87,14 @@
                         </button>
 
                         <!-- Editar Cliente -->
-                        <EditarCliente :id="item.id" :nombre="item.nombre" :comuna="item.comuna"
-                            :sector="item.nombresector" :id_sector="item.id_sector" :dia="item.diadereparto"
-                            :direccion="item.direccion" :telefono="item.telefono" :telefono2="item.telefono2"
-                            :linkmaps="item.linkmaps" :frecuencia="item.frecuencia" :observaciones="item.observacion"
-                            :producto_preferido="item.preferencia" :id_producto_preferido="item.id_producto" />
+                        <EditarCliente :id="item.ID" :nombre="item.Nombre" :comuna="item.Comuna"
+                            :sector="item.NombreSector" :id_sector="item.IDSector" :dia="item.diaDeReparto"
+                            :direccion="item.Direccion" :telefono="item.Telefono" :telefono2="item.Telefono2"
+                            :linkmaps="item.LinkMaps" :frecuencia="item.freq" :observaciones="item.Observacion"
+                            producto_preferido="no" id_producto_preferido="noid" />
 
                         <!-- Eliminar Cliente -->
-                        <EliminarCliente :id="item.id" />
+                        <EliminarCliente :id="item.ID + 'eliminar'" />
                     </td>
                 </tr>
             </tbody>
@@ -120,7 +120,7 @@ export default {
             //Array para guardar datos de la API
             items: [],
             dias: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
-            suscripciones: ['Ninguna', 'Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', '1 vez al mes'],
+            suscripciones: ['Ninguna', 'Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', 'Cada 4 semanas'],
             filterText: '',
             selectedDay: '',
             selectedSus: '',
@@ -143,18 +143,18 @@ export default {
             return this.items.filter(item => {
                 const matchesText =
                     !filterTextNormalized ||
-                    normalizeText(item.nombre).includes(filterTextNormalized) ||
-                    normalizeText(item.direccion).includes(filterTextNormalized) ||
-                    normalizeText(item.nombresector).includes(filterTextNormalized) ||
-                    normalizeText(item.comuna).includes(filterTextNormalized);
+                    normalizeText(item.Nombre).includes(filterTextNormalized) ||
+                    normalizeText(item.Direccion).includes(filterTextNormalized) ||
+                    normalizeText(item.NombreSector).includes(filterTextNormalized) ||
+                    normalizeText(item.Comuna).includes(filterTextNormalized);
 
                 const matchesDay =
                     !selectedDayNormalized ||
-                    normalizeText(item.diadereparto) === selectedDayNormalized;
+                    normalizeText(item.diaDeReparto) === selectedDayNormalized;
 
                 const matchesSus =
                     !selectedSusNormalized ||
-                    normalizeText(item.frecuencia) === selectedSusNormalized;
+                    normalizeText(item.Freq) === selectedSusNormalized;
 
                 // Devuelve los elementos que coincidan con todos los filtros activos
                 return matchesText && matchesDay && matchesSus;
