@@ -77,32 +77,12 @@
             <input v-model="linkmaps" type="text" placeholder="https://maps.app.goo.gl/..."
                 class="input input-bordered w-full max-w-xs mb-2">
 
-            <!-- Frecuencia -->
-            <div class="label">
-                <span class="label-text font-bold">Frecuencia</span>
-            </div>
-            <select v-model="frecuenciaSeleccionada" class="select select-bordered w-full max-w-xs">
-                <option v-for="frecuencia in frecuencias">
-                    {{ frecuencia }}
-                </option>
-            </select>
-
             <!-- Observaciones -->
             <div class="label">
                 <span class="label-text font-bold">Observaciones</span>
             </div>
             <input v-model="observaciones" type="text" placeholder="Casa esquina. Árbol afuera."
                 class="input input-bordered w-full max-w-xs mb-2">
-
-            <!-- Preferencia de productos -->
-            <!-- 
-                <div class="label">
-                    <span class="label-text font-bold">Preferencia</span>
-                </div>
-                <select v-model="productoSeleccionado" class="select select-bordered w-full max-w-xs">
-                    <option v-for="producto in productos" :key="producto" :value="producto.id">{{ producto.descripcion }}</option>
-                </select>
-                -->
 
             <!-- Acciones del modal -->
             <div class="modal-action">
@@ -146,8 +126,6 @@ export default {
             linkmaps: "",
             diareparto: '', //dre
             observaciones: '',
-            frecuenciaSeleccionada: "Ninguna",
-            frecuencias: ['Ninguna', 'Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', '1 vez al mes'],
             diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
             ciudadSeleccionada: null,
             sectorSeleccionado: null, //ID del sector
@@ -178,23 +156,16 @@ export default {
             let t = this.telefono;
             let t2 = this.telefono2;
             let l = this.linkmaps;
-            let f = this.frecuenciaSeleccionada;
             let o = this.observaciones;
-            let p = this.productoSeleccionado;
             let dre = this.diareparto;
 
-            if (dre === "") {
-                // Si diareparto está vacío, ejecuta el código aquí
-                let url = `https://nuestrocampo.cl/api/clientes/create.php?nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}&preferencia=${p}`
-                axios.post(url);
-                location.reload();
-            } else {
-                // Si diareparto no está vacío, ejecuta el código aquí
-                let url = `https://nuestrocampo.cl/api/clientes/create.php?nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}&preferencia=${p}&dre=${dre}`
-                console.log("diareparto no está vacío");
-                axios.post(url);
-                location.reload();
+            let url = `https://nuestrocampo.cl/api/clientes/create.php?nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&observacion=${o}`;
+            if (dre !== "") {
+              // Si diareparto no está vacío, ejecuta el código aquí  
+              url += `&dre=${dre}`;
             }
+            axios.post(url);
+            location.reload();
         },
     },
 

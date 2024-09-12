@@ -11,8 +11,7 @@ $database = new Database();
 $db = $database->getConnection();
 
 /*
-Obtener los parámetros por url
-//CLIENTES: ID, Nombre, Direccion, IDSector, Telefono, Telefono2, LinkMaps, Frecuencia, DiaRepartoExcepcional, Observacion, Preferencia, Visible
+Obtener los parámetros para crear cliente
 */
 $nombre = isset($_GET['nombre']) ? $_GET['nombre'] : '';
 $direccion = isset($_GET['direccion']) ? $_GET['direccion'] : '';
@@ -20,15 +19,13 @@ $idsector = isset($_GET['idsector']) ? $_GET['idsector'] : '';
 $telefono = isset($_GET['telefono']) ? $_GET['telefono'] : '';
 $telefono2 = isset($_GET['telefono2']) ? $_GET['telefono2'] : '';
 $linkmaps = isset($_GET['linkmaps']) ? $_GET['linkmaps'] : '';
-$frecuencia = isset($_GET['frecuencia']) ? $_GET['frecuencia'] : '';
 $observacion = isset($_GET['observacion']) ? $_GET['observacion'] : '';
-$preferencia = isset($_GET['preferencia']) ? $_GET['preferencia'] : '';
 $dre = isset($_GET['dre']) ? $_GET['dre'] : NULL;
 
 //Comprueba que las variables NO estén vacías
-if (!empty($nombre) /*&& !empty($direccion) && !empty($idsector) && !empty($telefono)*/) {
+if (!empty($nombre)) {
     $query = "INSERT INTO clientes 
-            SET Nombre=:n, Direccion=:d, IDSector=:ids, Telefono=:t, Telefono2=:t2, LinkMaps=:l, Frecuencia=:f, Observacion=:o, Preferencia=:p, DiaRepartoExcepcional=:dre";
+            SET Nombre=:n, Direccion=:d, IDSector=:ids, Telefono=:t, Telefono2=:t2, LinkMaps=:l, Observacion=:o, DiaRepartoExcepcional=:dre";
 
     $stmt = $db->prepare($query);
 
@@ -39,9 +36,7 @@ if (!empty($nombre) /*&& !empty($direccion) && !empty($idsector) && !empty($tele
     $stmt->bindParam(":t", $telefono);
     $stmt->bindParam(":t2", $telefono2);
     $stmt->bindParam(":l", $linkmaps);
-    $stmt->bindParam(":f", $frecuencia);
     $stmt->bindParam(":o", $observacion);
-    $stmt->bindParam(":p", $preferencia);
     $stmt->bindParam(":dre", $dre);
     
     if ($stmt->execute()) {
