@@ -41,15 +41,27 @@
                 <!-- GET -->
                 <!-- el nombre del array es FILTEREDITEMS, que es una función que toma el JSON y lo convierte en array, para poder filtrarlo -->
                 <!-- Los resultados deben recorrerse dentro del TR -->
-                <tr v-for="item in filteredItems" :key="item.id">
-                    <th> {{ item.id }}</th>
-                    <th> {{ item.cliente }}</th>
-                    <td> {{ item.estado }}</td>
-                    <td> {{ item.pagado }}</td>
-                    <td> {{ item.medio_pago }}</td>
-                    <td> {{ item.fecha_entrega }}</td>
-                    <td> {{ item.hora_creacion }}</td>
-                    <td> {{ item.hora_cierre }}</td>
+                <tr v-for="item in filteredItems" :key="item.ID">
+                    <th>
+                        <div>
+                            {{ item.ID }}
+                        </div>
+                        <div v-if="item.IDPA" class="tooltip tooltip-right"
+                            data-tip="Pedido creado automáticamente">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+                            </svg>
+                        </div>
+                    </th>
+                    <th> {{ item.Nombre }}</th>
+                    <td> {{ item.Estado }}</td>
+                    <td> {{ item.Pagado }}</td>
+                    <td> {{ item.MedioPago }}</td>
+                    <td> {{ item.FechaEntrega }}</td>
+                    <td> {{ item.HoraCreacion }}</td>
+                    <td> {{ item.HoraCierre }}</td>
                     <td>
                         <!-- Detalle Pedido -->
                         <DetallePedido :label="item.id + 'detail'" :id="item.id" />
@@ -86,50 +98,11 @@ export default {
     },
 
     methods: {
-        //Formato para Hora de Creación
-        formatearHora(hora) {
-            const fecha = new Date(hora);
-
-            const año = fecha.getFullYear();
-            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-            const dia = String(fecha.getDate()).padStart(2, '0');
-            const horas = String(fecha.getHours()).padStart(2, '0');
-            const minutos = String(fecha.getMinutes()).padStart(2, '0');
-
-            return `${horas}:${minutos} - ${dia}/${mes}/${año}`;
-        },
-        //Formato para Fecha de entrega
-        formatearFecha(entrega) {
-            const fecha = new Date(entrega);
-
-            const año = fecha.getFullYear();
-            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-            const dia = String(fecha.getDate()).padStart(2, '0');
-            const horas = String(fecha.getHours()).padStart(2, '0');
-            const minutos = String(fecha.getMinutes()).padStart(2, '0');
-
-            return `${dia}/${mes}/${año}`;
-        },
-        //Actualizar fecha con formato hora_creacion
-        actualizarHoras() {
-            setTimeout(() => {
-                this.items.forEach(item => {
-                    item.hora_creacion = this.formatearHora(item.hora_creacion);
-                });
-            }, 1000);
-        },
-        //Actualizar fecha con formato fecha de entrega
-        actualizarFechas() {
-            setTimeout(() => {
-                this.items.forEach(item => {
-                    item.fecha_entrega = this.formatearFecha(item.fecha_entrega);
-                });
-            }, 1000);
-        },
+        //Nada por aquí...
     },
 
     computed: {
-        //Esta función filtra el array en base a el NOMBRE o la DIRECCION del cliente
+        //Esta función filtra el array en base a la ID o el Nombre del cliente
         filteredItems() {
             const normalizeText = (text) => {
                 return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -140,8 +113,8 @@ export default {
             return this.items.filter(item => {
                 const matchesText =
                     !filterTextNormalized ||
-                    normalizeText(item.id).includes(filterTextNormalized) ||
-                    normalizeText(item.cliente).includes(filterTextNormalized);
+                    normalizeText(item.ID).includes(filterTextNormalized) ||
+                    normalizeText(item.Nombre).includes(filterTextNormalized);
 
                 // Devuelve los elementos que coincidan con todos los filtros activos
                 return matchesText;
@@ -155,9 +128,6 @@ export default {
         let url = "https://nuestrocampo.cl/api/pedidos/read.php";
 
         axios.get(url).then((response) => (this.items = response.data));
-
-        this.actualizarHoras();
-        this.actualizarFechas();
     },
 
     components: { EliminarPedido, DetallePedido, EditarPedido },
