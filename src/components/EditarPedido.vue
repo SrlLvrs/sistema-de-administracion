@@ -34,7 +34,7 @@
                             {{ this.items[0].Nombre }}
                         </option>
                         <option v-for="cliente in clientes" :key="cliente.id" :value="cliente.id">
-                            {{ cliente.nombre }}
+                            {{ cliente.Nombre }}
                         </option>
                     </select>
                 </div>
@@ -234,35 +234,32 @@ export default {
             this.suma = adicion;
         },
         //GET detalle del pedido en base al IDPEDIDO
-        leerDetalles(id) {
+        async leerDetalles(id) {
             let url = `https://nuestrocampo.cl/api/pedidos/read-detail.php?id=${id}`;
+            await axios.get(url).then((response) => (this.items = response.data));
 
-            axios.get(url).then((response) => (this.items = response.data));
+            //Base de datos => Variables locales
+            this.id_cliente_actual = this.items[0].IDCliente;
+            this.id_cliente_nuevo = this.items[0].Nombre;
+            this.estado_actual = this.items[0].Estado;
+            this.pagado = this.items[0].Pagado;
+            this.mediopago = this.items[0].MedioPago;
+            this.fechaentrega = this.items[0].FechaEntrega;
 
-            setTimeout(() => {
-                //Base de datos => Variables locales
-                this.id_cliente_actual = this.items[0].IDCliente;
-                this.id_cliente_nuevo = this.items[0].Nombre;
-                this.estado_actual = this.items[0].Estado;
-                this.pagado = this.items[0].Pagado;
-                this.mediopago = this.items[0].MedioPago;
-                this.fechaentrega = this.items[0].FechaEntrega;
+            //Rellenar array DETALLEPEDIDO
+            for (let i = 0; i < this.items.length; i++) {
+                let articulo = {};
+                articulo["IDPedido"] = this.items[i].IDPedido;
+                articulo["IDProducto"] = this.items[i].IDProducto;
+                articulo["Descripcion"] = this.items[i].Descripcion;
+                articulo["Cantidad"] = this.items[i].Cantidad;
+                articulo["Precio"] = this.items[i].Precio;
+                articulo["Total"] = this.items[i].Total;
 
-                //Rellenar array DETALLEPEDIDO
-                for (let i = 0; i < this.items.length; i++) {
-                    let articulo = {};
-                    articulo["IDPedido"] = this.items[i].IDPedido;
-                    articulo["IDProducto"] = this.items[i].IDProducto;
-                    articulo["Descripcion"] = this.items[i].Descripcion;
-                    articulo["Cantidad"] = this.items[i].Cantidad;
-                    articulo["Precio"] = this.items[i].Precio;
-                    articulo["Total"] = this.items[i].Total;
+                this.detallepedido.push(articulo);
 
-                    this.detallepedido.push(articulo);
-
-                    this.adicion();
-                }
-            }, 1000);
+                this.adicion();
+            }
 
             //GET clientes
             let url2 = `https://nuestrocampo.cl/api/clientes/read.php`;
@@ -378,7 +375,7 @@ export default {
             location.reload();
         },
         //Limpia los arrays al salir
-        limpiar(){
+        limpiar() {
             this.detallepedido = []
         },
     },

@@ -64,13 +64,13 @@
                     <td> {{ item.HoraCierre }}</td>
                     <td>
                         <!-- Detalle Pedido -->
-                        <DetallePedido :label="item.id + 'detail'" :id="item.id" />
+                        <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
 
                         <!-- Editar Pedido -->
-                        <EditarPedido :label="item.id + 'edit'" :id="item.id" />
+                        <EditarPedido :label="item.ID + 'edit'" :id="item.ID" />
 
                         <!-- Eliminar Pedido -->
-                        <EliminarPedido :id="item.id" />
+                        <EliminarPedido :id="item.ID" />
                     </td>
                 </tr>
             </tbody>

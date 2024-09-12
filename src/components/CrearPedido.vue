@@ -219,6 +219,23 @@ export default {
 
             this.total = totalSum;
         },
+        /** Formatear fecha para mysql */
+        formatToMySQLDateTime(dateString) {
+            // Crea un objeto Date a partir del Date String
+            const date = new Date(dateString);
+
+            // Extrae los componentes de la fecha
+            const year = date.getFullYear(); // Año (YYYY)
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Mes (MM)
+            const day = String(date.getDate()).padStart(2, '0'); // Día (DD)
+
+            // Extrae los componentes de la hora
+            const hours = String(date.getHours()).padStart(2, '0'); // Horas (HH)
+            const minutes = String(date.getMinutes()).padStart(2, '0'); // Minutos (MM)
+
+            // Retorna la fecha en formato compatible con MySQL DATETIME
+            return `${year}-${month}-${day} ${hours}:${minutes}:00`;
+        },
         /** Crea un pedido vacío con valores por defecto al inicializar el componente */
         crearPedido() {
             // Fecha de hoy para creación
@@ -227,7 +244,8 @@ export default {
             //POST nuevo pedido
             let idc = this.cliente;
             let h = this.fecha_creacion_local;
-            let url = `https://nuestrocampo.cl/api/pedidos/create.php?id_cliente=${idc}&hora_creacion=${h}`
+            let hmysql = this.formatToMySQLDateTime(h);
+            let url = `https://nuestrocampo.cl/api/pedidos/create.php?id_cliente=${idc}&hora_creacion=${hmysql}`
             axios.post(url).then(function (response) {
                 console.log(response.data);
             });
@@ -292,8 +310,9 @@ export default {
             let p = 'No'
             let m = 'No definido'
             let f = this.fecha_reparto_local
+            let fmysql = this.formatToMySQLDateTime(f);
 
-            let url = `https://nuestrocampo.cl/api/pedidos/update.php?id=${id}&idcliente=${idc}&idrepartidor=${idr}&estado=${e}&pagado=${p}&mediopago=${m}&fechaentrega=${f}`
+            let url = `https://nuestrocampo.cl/api/pedidos/update.php?id=${id}&idcliente=${idc}&idrepartidor=${idr}&estado=${e}&pagado=${p}&mediopago=${m}&fechaentrega=${fmysql}`
             axios.put(url).then(function (response) {
                 console.log(response.data);
             });
