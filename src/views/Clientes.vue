@@ -35,7 +35,7 @@
     </div>
     <!-- RESULTADOS -->
     <div class="overflow-x-auto">
-        <table class="table">
+        <table v-if="filteredItems.length > 0" class="table">
             <!-- Head -->
             <thead>
                 <tr>
@@ -109,6 +109,9 @@
                 </tr>
             </tbody>
         </table>
+        <div v-else class="flex justify-center items-center h-screen">
+          <p class="text-center">No se encontraron clientes con el filtro de búsqueda</p>
+        </div>
     </div>
 </template>
 
@@ -142,34 +145,39 @@ export default {
 
     computed: {
         filteredItems() {
-            const normalizeText = (text) => {
-                return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-            };
-
-            const filterTextNormalized = normalizeText(this.filterText);
-            const selectedDayNormalized = normalizeText(this.selectedDay);
-            const selectedSusNormalized = normalizeText(this.selectedSus);
-
-            return this.items.filter(item => {
-                const matchesText =
-                    !filterTextNormalized ||
-                    normalizeText(item.Nombre).includes(filterTextNormalized) ||
-                    normalizeText(item.Direccion).includes(filterTextNormalized) ||
-                    normalizeText(item.NombreSector).includes(filterTextNormalized) ||
-                    normalizeText(item.Comuna).includes(filterTextNormalized);
-
-                const matchesDay =
-                    !selectedDayNormalized ||
-                    normalizeText(item.diaDeReparto) === selectedDayNormalized;
-
-                const matchesSus =
-                    !selectedSusNormalized ||
-                    normalizeText(item.Freq) === selectedSusNormalized;
-
-                // Devuelve los elementos que coincidan con todos los filtros activos
-                return matchesText && matchesDay && matchesSus;
-            });
-        }
+          // Normaliza el texto de búsqueda y los campos de los clientes
+          const normalizeText = (text) => {
+            return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+          };
+        
+          // Obtiene el texto de búsqueda normalizado
+          const filterTextNormalized = normalizeText(this.filterText);
+        
+          // Obtiene el día y la suscripción seleccionados normalizados
+          const selectedDayNormalized = normalizeText(this.selectedDay);
+          const selectedSusNormalized = normalizeText(this.selectedSus);
+        
+          // Filtra los elementos de la lista de clientes según los criterios de filtrado
+          return this.items.filter((item) => {
+            const matchesText =
+              !filterTextNormalized ||
+              normalizeText(item.Nombre).includes(filterTextNormalized) ||
+              normalizeText(item.Direccion).includes(filterTextNormalized) ||
+              normalizeText(item.NombreSector).includes(filterTextNormalized) ||
+              normalizeText(item.Comuna).includes(filterTextNormalized);
+        
+            const matchesDay =
+              !selectedDayNormalized ||
+              normalizeText(item.diaDeReparto) === selectedDayNormalized;
+        
+            const matchesSus =
+              !selectedSusNormalized ||
+              normalizeText(item.Freq) === selectedSusNormalized;
+        
+            // Devuelve los elementos que cumplen con todos los criterios de filtrado
+            return matchesText && matchesDay && matchesSus;
+          });
+        },
     },
 
     //Método para llamar a la API cuando se cree la instancia
