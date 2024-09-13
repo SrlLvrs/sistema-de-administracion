@@ -12,13 +12,31 @@ $db = $database->getConnection();
 
 // Se prepara la consulta SQL para seleccionar todos los clientes con deuda.
 
-$query = "  SELECT c.ID, c.Nombre, c.Direccion, c.IDSector, s.NombreSector, s.Comuna, c.Telefono, c.Telefono2, c.LinkMaps, c.Frecuencia, c.Observacion, COALESCE(c.DiaRepartoExcepcional, s.DiaReparto) AS diaDeReparto, SUM(pro.Total) AS Deuda_Total
-            FROM clientes c
-            JOIN sector s ON c.IDSector = s.ID
-            JOIN pedidos p ON c.ID = p.IDCliente
-            JOIN pedidos_productos pro ON p.ID = pro.IDPedido
-            WHERE p.Pagado = 'No' AND p.Estado = 'Entregado'
-            GROUP BY c.ID ";
+$query = "  SELECT
+                c.ID,
+                c.Nombre,
+                c.Direccion,
+                c.IDSector,
+                s.NombreSector,
+                s.Comuna,
+                c.Telefono,
+                c.Telefono2,
+                c.LinkMaps,
+                c.Observacion,
+                COALESCE(
+                    c.DiaRepartoExcepcional, s.DiaReparto
+                ) AS diaDeReparto,
+                SUM(pro.Total) AS Deuda_Total
+            FROM
+                clientes c
+                JOIN sector s ON c.IDSector = s.ID
+                JOIN pedidos p ON c.ID = p.IDCliente
+                JOIN pedidos_productos pro ON p.ID = pro.IDPedido
+            WHERE
+                p.Pagado = 'No'
+                AND p.Estado = 'Entregado'
+            GROUP BY
+                c.ID ";
 
 $stmt = $db->prepare($query);
 
