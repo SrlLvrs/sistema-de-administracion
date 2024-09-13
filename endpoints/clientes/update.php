@@ -15,8 +15,7 @@ $database = new Database();
 $db = $database->getConnection();
 
 /*
-Obtener los parámetros por url
-//CLIENTES: ID, Nombre, Direccion, IDSector, Telefono, Telefono2, LinkMaps, Frecuencia, Observacion, DiaRepartoExcepcional, Visible
+Obtener los parámetros por url para editar un cliente
 */
 $id = isset($_GET['id']) ? $_GET['id'] : ''; //NOT NULL
 $nombre = isset($_GET['nombre']) ? $_GET['nombre'] : '';
@@ -25,16 +24,14 @@ $idsector = isset($_GET['idsector']) ? $_GET['idsector'] : ''; //NOT NULL
 $telefono = isset($_GET['telefono']) ? $_GET['telefono'] : '';
 $telefono2 = isset($_GET['telefono2']) ? $_GET['telefono2'] : '';
 $linkmaps = isset($_GET['linkmaps']) ? $_GET['linkmaps'] : '';
-$frecuencia = isset($_GET['frecuencia']) ? $_GET['frecuencia'] : '';
 $observacion = isset($_GET['observacion']) ? $_GET['observacion'] : '';
-$preferencia = isset($_GET['preferencia']) ? $_GET['preferencia'] : '';
 $dre = isset($_GET['dre']) ? $_GET['dre'] : NULL;
 
 // Verifica que los campos no estén vacíos
 if (!empty($id)) {
     // Se prepara la consulta SQL para actualizar el cliente.
     $query = "  UPDATE clientes 
-                SET Nombre=:n, Direccion=:d, IDSector=:ids, Telefono=:t, Telefono2=:t2, LinkMaps=:l, Frecuencia=:f, Observacion=:o, Preferencia=:p, DiaRepartoExcepcional=:dre 
+                SET Nombre=:n, Direccion=:d, IDSector=:ids, Telefono=:t, Telefono2=:t2, LinkMaps=:l, Observacion=:o, DiaRepartoExcepcional=:dre 
                 WHERE ID = :id";
 
     // Se prepara la consulta para su ejecución.
@@ -48,9 +45,7 @@ if (!empty($id)) {
     $stmt->bindParam(":t", $telefono);
     $stmt->bindParam(":t2", $telefono2);
     $stmt->bindParam(":l", $linkmaps);
-    $stmt->bindParam(":f", $frecuencia);
     $stmt->bindParam(":o", $observacion);
-    $stmt->bindParam(":p", $preferencia);
     $stmt->bindParam(":dre", $dre);
 
     // Se ejecuta la consulta.

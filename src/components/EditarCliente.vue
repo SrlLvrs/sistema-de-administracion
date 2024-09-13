@@ -82,36 +82,12 @@
             <input v-model="localLinkMaps" type="text" placeholder="https://maps.app.goo.gl/..."
                 class="input input-bordered w-full max-w-xs mb-2">
 
-            <!-- Frecuencia -->
-            <div class="label">
-                <span class="label-text font-bold">Frecuencia</span>
-            </div>
-            <select v-model="frecuenciaSeleccionada" class="select select-bordered w-full max-w-xs">
-                <option disabled selected> {{ frecuencia }} </option>
-                <option v-for="frecuencia in frecuencias">
-                    {{ frecuencia }}
-                </option>
-            </select>
-
             <!-- Observaciones -->
             <div class="label">
                 <span class="label-text font-bold">Observaciones</span>
             </div>
             <input v-model="localObservaciones" type="text" placeholder="Casa esquina. Árbol afuera."
                 class="input input-bordered w-full max-w-xs mb-2">
-
-            <!-- Preferencia -->
-            <!-- 
-                <div class="label">
-                    <span class="label-text font-bold">Preferencia</span>
-                </div>
-                <select v-model="producto_seleccionado" class="select select-bordered w-full max-w-xs">
-                    <option disabled selected> {{ producto_preferido }}</option>
-                    <option v-for="producto in productos" :key="producto.id" :value="producto.id">
-                        {{ producto.descripcion }}
-                    </option>
-                </select>
-                -->
 
             <!-- Botones del modal -->
             <div class="modal-action">
@@ -148,10 +124,7 @@ export default {
         telefono: String,
         telefono2: String,
         linkmaps: String,
-        frecuencia: String,
         observaciones: String,
-        producto_preferido: String,
-        id_producto_preferido: Number,
     },
 
     data() {
@@ -166,12 +139,9 @@ export default {
             localTelefono2: this.telefono2,
             localLinkMaps: this.linkmaps,
             localObservaciones: this.observaciones,
-            frecuenciaSeleccionada: this.frecuencia,
-            frecuencias: ['Ninguna', 'Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', '1 vez al mes'],
             diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
             ciudadSeleccionada: this.comuna,
             sectorSeleccionado: this.sector,
-            producto_seleccionado: this.producto_preferido,
         };
     },
 
@@ -183,9 +153,7 @@ export default {
             let t = this.localTelefono;
             let t2 = this.localTelefono2;
             let l = this.localLinkMaps;
-            let f = this.frecuenciaSeleccionada;
             let o = this.localObservaciones;
-            let p = '';
             let dre = this.diareparto;
 
             /** Este If compara el sector PROP con el sector DATA
@@ -199,26 +167,13 @@ export default {
                 ids = this.sectorSeleccionado;
             }
 
-            /**Este if hace lo mismo que arriba, pero para el producto preferido */
-            if (this.producto_preferido === this.producto_seleccionado) {
-                p = this.id_producto_preferido
-            } else {
-                p = this.producto_seleccionado;
+            let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&observacion=${o}`;
+            if (dre !== "") {
+              url += `&dre=${dre}`;
             }
-
-            if (dre === "") {
-                // Si diareparto está vacío, ejecuta el código aquí
-                let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}&preferencia=${p}`
-                console.log("diareparto está vacio")
-                axios.put(url);
-                location.reload();
-            } else {
-                // Si diareparto no está vacío, ejecuta el código aquí
-                let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&frecuencia=${f}&observacion=${o}&preferencia=${p}&dre=${dre}`
-                console.log("diareparto no está vacío");
-                axios.put(url);
-                location.reload();
-            }
+            console.log("Actualizando cliente...");
+            axios.put(url);
+            location.reload();
         },
     },
 
