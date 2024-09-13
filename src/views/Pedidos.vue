@@ -25,6 +25,7 @@
             <!-- Encabezado -->
             <thead>
                 <tr>
+                    <th></th>
                     <th>Número de pedido</th>
                     <th>Cliente</th>
                     <th>Estado</th>
@@ -43,9 +44,6 @@
                 <!-- Los resultados deben recorrerse dentro del TR -->
                 <tr v-for="item in filteredItems" :key="item.ID">
                     <th>
-                        <div>
-                            {{ item.ID }}
-                        </div>
                         <div v-if="item.IDPA" class="tooltip tooltip-right"
                             data-tip="Pedido creado automáticamente">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -55,6 +53,7 @@
                             </svg>
                         </div>
                     </th>
+                    <th> {{ item.ID }}</th>
                     <th> {{ item.Nombre }}</th>
                     <td> {{ item.Estado }}</td>
                     <td> {{ item.Pagado }}</td>
