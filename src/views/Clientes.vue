@@ -20,16 +20,25 @@
                 </label>
 
                 <!-- SELECT Filtro de días -->
-                <select v-model="selectedDay" class="select select-bordered max-w-xs ml-2">
+                <select id="day" v-model="selectedDay" class="select select-bordered max-w-xs ml-2">
                     <option value="">Filtrar por día</option>
                     <option v-for="dia in dias"> {{ dia }} </option>
                 </select>
 
                 <!-- SELECT Filtro de Suscripción -->
-                <select v-model="selectedSus" class="select select-bordered max-w-xs ml-2">
+                <select id="sus" v-model="selectedSus" class="select select-bordered max-w-xs ml-2">
                     <option value="">Filtrar por suscripción</option>
                     <option v-for="suscripcion in suscripciones"> {{ suscripcion }} </option>
                 </select>
+
+                <!-- BOTÓN PARA DESACTIVAR EL FILTRO -->
+                <button class="btn btn-outline btn-error ml-2" @click="borrarFiltros()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 9.75 14.25 12m0 0 2.25 2.25M14.25 12l2.25-2.25M14.25 12 12 14.25m-2.58 4.92-6.374-6.375a1.125 1.125 0 0 1 0-1.59L9.42 4.83c.21-.211.497-.33.795-.33H19.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25h-9.284c-.298 0-.585-.119-.795-.33Z" />
+                    </svg>
+                    Borrar todos los filtros</button>
             </div>
         </div>
     </div>
@@ -60,7 +69,8 @@
                 <!-- Los resultados deben recorrerse dentro del TR -->
                 <tr v-for="item in filteredItems" :key="item.ID">
                     <th>
-                        <div v-if="item.Deuda" class="text-red-500 tooltip tooltip-right" data-tip="Cliente con deuda pendiente">
+                        <div v-if="item.Deuda" class="text-red-500 tooltip tooltip-right"
+                            data-tip="Cliente con deuda pendiente">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -110,7 +120,7 @@
             </tbody>
         </table>
         <div v-else class="flex justify-center items-center h-screen">
-          <p class="text-center">No se encontraron clientes con el filtro de búsqueda</p>
+            <p class="text-center">No se encontraron clientes con el filtro de búsqueda</p>
         </div>
     </div>
 </template>
@@ -141,42 +151,47 @@ export default {
     },
 
     methods: {
+        borrarFiltros() {
+            this.filterText = '';
+            this.selectedDay = '';
+            this.selectedSus = '';
+        }
     },
 
     computed: {
         filteredItems() {
-          // Normaliza el texto de búsqueda y los campos de los clientes
-          const normalizeText = (text) => {
-            return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-          };
-        
-          // Obtiene el texto de búsqueda normalizado
-          const filterTextNormalized = normalizeText(this.filterText);
-        
-          // Obtiene el día y la suscripción seleccionados normalizados
-          const selectedDayNormalized = normalizeText(this.selectedDay);
-          const selectedSusNormalized = normalizeText(this.selectedSus);
-        
-          // Filtra los elementos de la lista de clientes según los criterios de filtrado
-          return this.items.filter((item) => {
-            const matchesText =
-              !filterTextNormalized ||
-              normalizeText(item.Nombre).includes(filterTextNormalized) ||
-              normalizeText(item.Direccion).includes(filterTextNormalized) ||
-              normalizeText(item.NombreSector).includes(filterTextNormalized) ||
-              normalizeText(item.Comuna).includes(filterTextNormalized);
-        
-            const matchesDay =
-              !selectedDayNormalized ||
-              normalizeText(item.diaDeReparto) === selectedDayNormalized;
-        
-            const matchesSus =
-              !selectedSusNormalized ||
-              normalizeText(item.Freq) === selectedSusNormalized;
-        
-            // Devuelve los elementos que cumplen con todos los criterios de filtrado
-            return matchesText && matchesDay && matchesSus;
-          });
+            // Normaliza el texto de búsqueda y los campos de los clientes
+            const normalizeText = (text) => {
+                return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            };
+
+            // Obtiene el texto de búsqueda normalizado
+            const filterTextNormalized = normalizeText(this.filterText);
+
+            // Obtiene el día y la suscripción seleccionados normalizados
+            const selectedDayNormalized = normalizeText(this.selectedDay);
+            const selectedSusNormalized = normalizeText(this.selectedSus);
+
+            // Filtra los elementos de la lista de clientes según los criterios de filtrado
+            return this.items.filter((item) => {
+                const matchesText =
+                    !filterTextNormalized ||
+                    normalizeText(item.Nombre).includes(filterTextNormalized) ||
+                    normalizeText(item.Direccion).includes(filterTextNormalized) ||
+                    normalizeText(item.NombreSector).includes(filterTextNormalized) ||
+                    normalizeText(item.Comuna).includes(filterTextNormalized);
+
+                const matchesDay =
+                    !selectedDayNormalized ||
+                    normalizeText(item.diaDeReparto) === selectedDayNormalized;
+
+                const matchesSus =
+                    !selectedSusNormalized ||
+                    normalizeText(item.Freq) === selectedSusNormalized;
+
+                // Devuelve los elementos que cumplen con todos los criterios de filtrado
+                return matchesText && matchesDay && matchesSus;
+            });
         },
     },
 
