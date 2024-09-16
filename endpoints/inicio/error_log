@@ -1,4 +1,0 @@
-[13-Sep-2024 18:34:47 America/Santiago] PHP Fatal error:  Call to undefined function execute() in /home/nuestrocampo/public_html/api/inicio/read.php on line 25
-[13-Sep-2024 18:43:52 America/Santiago] PHP Parse error:  syntax error, unexpected 'try' (T_TRY), expecting catch (T_CATCH) in /home/nuestrocampo/public_html/api/inicio/read.php on line 53
-[13-Sep-2024 18:43:56 America/Santiago] PHP Parse error:  syntax error, unexpected 'try' (T_TRY), expecting catch (T_CATCH) in /home/nuestrocampo/public_html/api/inicio/read.php on line 53
-[13-Sep-2024 18:44:57 America/Santiago] PHP Parse error:  syntax error, unexpected end of file, expecting catch (T_CATCH) in /home/nuestrocampo/public_html/api/inicio/read.php on line 53

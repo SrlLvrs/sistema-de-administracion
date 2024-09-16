@@ -15,9 +15,9 @@ try {
     $db->beginTransaction();
 
     // 1. Obtener total de clientes
-    $query = "SELECT 'Total Clientes' AS Nombre, COUNT(c.ID) AS Clientes_Totales
-FROM clientes c
-WHERE c.Visible = 1";
+    $query = "  SELECT 'Total Clientes' AS Nombre, COUNT(c.ID) AS Clientes_Totales
+                FROM clientes c
+                WHERE c.Visible = 1";
     $stmt = $db->prepare($query);
     $stmt->execute();
 
@@ -31,15 +31,17 @@ WHERE c.Visible = 1";
     $total = $result['Clientes_Totales'];
     $nombre = $result['Nombre'];
 
+    /************************************************************* */
+
     // 2. Obtener total de clientes deudores
-    $query2 = "SELECT 'Clientes Deudores' AS Nombre, COUNT(c.ID) AS Clientes_Deudores
- FROM clientes c
- WHERE c.Visible = 1
- AND EXISTS (SELECT 1
-             FROM pedidos
-             WHERE IDCliente = c.ID
-             AND Pagado = 'No'
-             AND Estado = 'Entregado')";
+    $query2 = " SELECT 'Clientes Deudores' AS Nombre, COUNT(c.ID) AS Clientes_Deudores
+                FROM clientes c
+                WHERE c.Visible = 1
+                AND EXISTS (SELECT 1
+                            FROM pedidos
+                            WHERE IDCliente = c.ID
+                            AND Pagado = 'No'
+                            AND Estado = 'Entregado')";
     $stmt2 = $db->prepare($query2);
     $stmt2->execute();
 
@@ -53,13 +55,15 @@ WHERE c.Visible = 1";
     $total2 = $result2['Clientes_Deudores'];
     $nombre2 = $result2['Nombre'];
 
+    /************************************************************* */
+
     // 3. Obtiene clientes con suscripción
-    $query3 = "SELECT 'Clientes Suscripcion' AS Nombre, COUNT(c.ID) AS Clientes_Suscripcion
- FROM clientes c
- WHERE c.ID IN ( SELECT pa.IDCliente 
-                 FROM pedidos_automaticos pa 
-                 WHERE pa.Visible = 1)
- AND c.Visible = 1";
+    $query3 = " SELECT 'Clientes Suscripcion' AS Nombre, COUNT(c.ID) AS Clientes_Suscripcion
+                FROM clientes c
+                WHERE c.ID IN ( SELECT pa.IDCliente 
+                                FROM pedidos_automaticos pa 
+                                WHERE pa.Visible = 1)
+                AND c.Visible = 1";
     $stmt3 = $db->prepare($query3);
     $stmt3->execute();
 
@@ -73,13 +77,15 @@ WHERE c.Visible = 1";
     $total3 = $result3['Clientes_Suscripcion'];
     $nombre3 = $result3['Nombre'];
 
+    /************************************************************* */
+
     // 4. Obtiene clientes libres
-    $query4 = "SELECT 'Clientes No Suscripcion' AS Nombre, COUNT(DISTINCT c.ID) AS Clientes_No_Suscripcion
- FROM clientes c
- WHERE c.ID NOT IN ( SELECT pa.IDCliente 
-                     FROM pedidos_automaticos pa 
-                     WHERE pa.Visible = 1)
- AND c.Visible = 1";
+    $query4 = " SELECT 'Clientes No Suscripcion' AS Nombre, COUNT(DISTINCT c.ID) AS Clientes_No_Suscripcion
+                FROM clientes c
+                WHERE c.ID NOT IN ( SELECT pa.IDCliente 
+                                    FROM pedidos_automaticos pa 
+                                    WHERE pa.Visible = 1)
+                AND c.Visible = 1";
     $stmt4 = $db->prepare($query4);
     $stmt4->execute();
 
@@ -93,10 +99,12 @@ WHERE c.Visible = 1";
     $total4 = $result4['Clientes_No_Suscripcion'];
     $nombre4 = $result4['Nombre'];
 
+    /************************************************************* */
+
     // 5. Obtiene cantidad de pedidos para hoy
-    $query5 = "SELECT 'Pedidos agendados para hoy' AS Nombre, COUNT(*) AS Pedidos_agendados_hoy
-FROM pedidos p
-WHERE DATE(p.FechaEntrega) = CURDATE()";
+    $query5 = " SELECT 'Pedidos agendados para hoy' AS Nombre, COUNT(*) AS Pedidos_agendados_hoy
+                FROM pedidos p
+                WHERE DATE(p.FechaEntrega) = CURDATE()";
     $stmt5 = $db->prepare($query5);
     $stmt5->execute();
 
@@ -109,6 +117,25 @@ WHERE DATE(p.FechaEntrega) = CURDATE()";
     $result5 = $stmt5->fetch(PDO::FETCH_ASSOC);
     $total5 = $result5['Pedidos_agendados_hoy'];
     $nombre5 = $result5['Nombre'];
+
+    /************************************************************* */
+
+    // 6. Obtiene cantidad de pedidos pendientes para hoy
+    $query6 = " SELECT 'Pedidos pendientes para hoy' AS Nombre, COUNT(*) AS Pedidos_pendientes_hoy
+                FROM pedidos p
+                WHERE DATE(p.FechaEntrega) = CURDATE() AND p.Estado = 'Agendado'";
+    $stmt6 = $db->prepare($query6);
+    $stmt6->execute();
+
+    // Verificar si la quinta consulta se ejecutó correctamente
+    if ($stmt6->errorCode() !== '00000') {
+    throw new PDOException($stmt6->errorInfo()[2]);
+    }
+
+    // Almacenar el valor de la quinta consulta en una variable
+    $result6 = $stmt6->fetch(PDO::FETCH_ASSOC);
+    $total6 = $result6['Pedidos_pendientes_hoy'];
+    $nombre6 = $result6['Nombre'];
 
 
     // Crear un array de objetos
@@ -132,6 +159,10 @@ WHERE DATE(p.FechaEntrega) = CURDATE()";
         array(
             "Nombre" => $nombre5,
             "Valor" => $total5
+        ),
+        array(
+            "Nombre" => $nombre6,
+            "Valor" => $total6
         )
     );
 
