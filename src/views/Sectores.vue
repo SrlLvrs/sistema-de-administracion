@@ -27,10 +27,6 @@
             <!-- head -->
             <thead>
                 <tr>
-                    <!-- 
-                        <th>index</th>
-                        <th>ID</th>
-                        -->
                     <th>Nombre del Sector</th>
                     <th>Comuna</th>
                     <th>Día de reparto</th>
@@ -45,10 +41,6 @@
                 <!-- Los resultados deben recorrerse dentro del TR 
                 -->
                 <tr v-for="item in filteredItems" :key="item.id">
-                        <!-- 
-                        <th> {{ index }}</th>
-                        <td> {{ sector.id }}</td>
-                        -->
                     <td> {{ item.nombreSector }}</td>
                     <td> {{ item.comuna }}</td>
                     <td> {{ item.diaReparto }}</td>
@@ -56,11 +48,11 @@
                     <td>
                         <!-- Botón EDITAR SECTOR -->
                         <editarSectorModal 
-                        :id="item.id" 
-                        :nombreSector="item.nombreSector" 
-                        :comuna="item.comuna" 
-                        :diareparto="item.diaReparto" 
-                        :orden="item.orden" />
+                            :id="item.id" 
+                            :nombreSector="item.nombreSector" 
+                            :comuna="item.comuna" 
+                            :diareparto="item.diaReparto" 
+                            :orden="item.orden" />
                         <!-- Botón BORRAR SECTOR -->
                         <eliminarSectorModal :id="item.id" />
                     </td>
