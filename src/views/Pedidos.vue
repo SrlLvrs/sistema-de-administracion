@@ -5,9 +5,8 @@
         <div class="grid grid-cols-1">
             <h1 class="text-center p-4 m-0">Todos los pedidos</h1>
             <div class="flex justify-center mb-4">
-
                 <!-- INPUT FILTRAR -->
-                <label class="input input-bordered flex items-center gap-2 ml-2">
+                <label class="input input-bordered flex items-center gap-2 mx-2">
                     <input v-model="filterText" type="text" class="grow" placeholder="Cliente o ID de pedido" />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                         class="h-4 w-4 opacity-70">
@@ -16,6 +15,9 @@
                             clip-rule="evenodd" />
                     </svg>
                 </label>
+
+                <!-- Botón Excel -->
+                <Excel :items="filteredItems" />
             </div>
         </div>
     </div>
@@ -83,6 +85,7 @@ import axios from "axios";
 import EliminarPedido from "../components/EliminarPedido.vue";
 import DetallePedido from "../components/DetallesPedido.vue";
 import EditarPedido from "../components/EditarPedido.vue";
+import Excel from "../components/Excel.vue";
 
 export default {
     //Nombre del componente
@@ -129,6 +132,6 @@ export default {
         axios.get(url).then((response) => (this.items = response.data));
     },
 
-    components: { EliminarPedido, DetallePedido, EditarPedido },
+    components: { EliminarPedido, DetallePedido, EditarPedido, Excel },
 }
 </script>

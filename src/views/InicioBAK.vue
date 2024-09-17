@@ -1,24 +1,89 @@
 <template>
-    <div role="alert" class="alert alert-info">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <span>Vista de inicio. Como el sistema aún está en construcción, algunos botones están en proceso. Por favor, no presionar ninguno.</span>
+    <!-- Estadísticas -->
+    <div class="stats shadow flex justify-center">
+        <div class="stat" v-for="item in items">
+            <div class="stat-title">{{ item.Nombre }}</div>
+            <div class="stat-value">{{ item.Valor }}</div>
+        </div>
     </div>
-    <div class="prose max-w-none">
-        <h1>Tareas Pendientes</h1>
-        <ul>
-            <li>Modal de confirmación de pedidos</li>
-            <li>Lista de clientes deudores</li>
-            <li>Obtener porcentaje de clientes fijos y libres</li>
-            <li>Listado de clientes fijos mensuales</li>
-            <li>Agendar mes completo en base a los días de reparto</li>
-            <li>Si un cliente debe más de un pedido, que aparezca una sola vez</li>
-            <li>Abrir el perfil del cliente cuando se abra la deuda</li>
-            <li>Crear botón con información de la deuda, para pegar directamente en whatsapp</li>
-            <li>Hamburguesa de Navbar cierre de dropdown</li>
-            <li>Revisar botones para evitar sobrecarga del sistema en CREATED()</li>
-        </ul>
+    <div class="flex h-screen prose max-w-none">
+        <div class="flex-1 px-4">
+            <h1 class="text-center p-8">Pedidos pendientes para hoy</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Direccion</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="pedido in pendientes" :key="pedido.ID">
+                        <td>{{ pedido.ID }}</td>
+                        <td>{{ pedido.Nombre }}</td>
+                        <td>{{ pedido.Direccion }}, {{ pedido.NombreSector }}, {{ pedido.Comuna }}</td>
+                        <td class="not-prose">
+                            <DetallesPedido :id="pedido.ID" :label="pedido.ID + 'label'"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="flex-1 px-4">
+            <h1 class="text-center p-8">Ultimas modificaciones</h1>
+            <p>Columna 2</p>
+        </div>
     </div>
 </template>
+
+<script>
+//Para usar axios, primero hay que instalarlo usando: 'npm install axios'
+import axios from "axios";
+import DetallesPedido from "../components/DetallesPedido.vue";
+
+export default {
+    //Nombre del componente
+    name: "Inicio",
+
+    data() {
+        return {
+            items: [],
+            pendientes: [],
+        };
+    },
+
+    methods: {
+        async llamadasConcurrentes() {
+            const urls = [
+                'https://nuestrocampo.cl/api/inicio/read.php',
+                'https://nuestrocampo.cl/api/inicio/read-pendientes.php',
+            ];
+
+            const promises = urls.map(url => axios.get(url));
+
+            try {
+                const resultados = await Promise.all(promises);
+                // resultados es un arreglo con las respuestas de cada endpoint
+                console.log(resultados);
+                this.items = resultados[0].data;
+                this.pendientes = resultados[1].data;
+
+            } catch (error) {
+                console.error(error);
+            }
+        },
+    },
+
+    computed: {
+        //Nada por acá...
+    },
+
+    //Método para llamar a la API cuando se cree la instancia
+    mounted() {
+        this.llamadasConcurrentes();
+    },
+
+    components: { DetallesPedido }
+}
+</script>

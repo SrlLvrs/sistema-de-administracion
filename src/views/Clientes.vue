@@ -8,6 +8,10 @@
                 <!-- Botón CREAR NUEVO CLIENTE -->
                 <CrearCliente />
 
+                <!-- BOTON Exportar a Excel -->
+                <Excel :items="filteredItems" />
+            </div>
+            <div class="flex justify-center">
                 <!-- INPUT FILTRAR -->
                 <label class="input input-bordered flex items-center gap-2">
                     <input v-model="filterText" type="text" class="grow" placeholder="Nombre o dirección..." />
@@ -85,9 +89,6 @@
                     <td> {{ item.Freq }}</td>
                     <td> {{ item.diaDeReparto }}</td>
                     <td> {{ item.Observacion }}</td>
-                    <!-- 
-                    <td> {{ item.preferencia }}</td>
-                    -->
                     <td>
                         <!-- Crear Pedido -->
                         <CrearPedido :id="item.ID + 'pdd'" :cliente="item.ID" />
@@ -133,6 +134,7 @@ import EliminarCliente from "../components/EliminarCliente.vue";
 import EditarCliente from "../components/EditarCliente.vue";
 import CrearPedido from "../components/CrearPedido.vue";
 import CrearPedidoAuto from "../components/CrearPedidoAuto.vue";
+import Excel from "../components/Excel.vue";
 
 export default {
     //Nombre del componente
@@ -203,6 +205,6 @@ export default {
         axios.get(url).then((response) => (this.items = response.data));
     },
 
-    components: { CrearCliente, EliminarCliente, EditarCliente, CrearPedido, CrearPedidoAuto },
+    components: { CrearCliente, EliminarCliente, EditarCliente, CrearPedido, CrearPedidoAuto, Excel },
 }
 </script>

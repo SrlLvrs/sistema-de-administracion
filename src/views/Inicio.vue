@@ -9,7 +9,10 @@
     <div class="flex h-screen prose max-w-none">
         <div class="flex-1 px-4">
             <h1 class="text-center p-8">Pedidos pendientes para hoy</h1>
-            <table class="table">
+            <div v-if="pendientes.length == 0" class="flex justify-center items-center">
+                <p class="text-center">No se encontraron pedidos</p>
+            </div>
+            <table v-else class="table">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -24,7 +27,7 @@
                         <td>{{ pedido.Nombre }}</td>
                         <td>{{ pedido.Direccion }}, {{ pedido.NombreSector }}, {{ pedido.Comuna }}</td>
                         <td class="not-prose">
-                            <DetallesPedido :id="pedido.ID" :label="pedido.ID + 'label'"/>
+                            <DetallesPedido :id="pedido.ID" :label="pedido.ID + 'label'" />
                         </td>
                     </tr>
                 </tbody>
@@ -63,12 +66,20 @@ export default {
             const promises = urls.map(url => axios.get(url));
 
             try {
-                const resultados = await Promise.all(promises);
-                // resultados es un arreglo con las respuestas de cada endpoint
-                console.log(resultados);
-                this.items = resultados[0].data;
-                this.pendientes = resultados[1].data;
-
+                const resultados = await Promise.allSettled(promises);
+                resultados.forEach((resultado, indice) => {
+                    if (resultado.status === 'fulfilled') {
+                        // Si la promesa se resolvió correctamente
+                        if (indice === 0) {
+                            this.items = resultado.value.data;
+                        } else {
+                            this.pendientes = resultado.value.data;
+                        }
+                    } else {
+                        // Si la promesa fue rechazada
+                        console.error(`Error en el endpoint ${urls[indice]}`, resultado.reason);
+                    }
+                });
             } catch (error) {
                 console.error(error);
             }

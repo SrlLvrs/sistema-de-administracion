@@ -6,7 +6,7 @@
             <h1 class="text-center p-4 m-0">Clientes Deudores</h1>
             <div class="flex justify-center">
                 <!-- INPUT FILTRAR -->
-                <label class="input input-bordered flex items-center gap-2">
+                <label class="input input-bordered flex items-center gap-2 mx-2">
                     <input v-model="filterText" type="text" class="grow" placeholder="Nombre o dirección..." />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                         class="h-4 w-4 opacity-70">
@@ -15,6 +15,8 @@
                             clip-rule="evenodd" />
                     </svg>
                 </label>
+                <!-- BOTON Exportar a Excel -->
+                <Excel :items="filteredItems" />
             </div>
         </div>
     </div>
@@ -65,7 +67,7 @@
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
 import DetalleCliente from "../components/DetalleClienteDeudor.vue"
-
+import Excel from "../components/Excel.vue"
 
 export default {
     //Nombre del componente
@@ -113,6 +115,6 @@ export default {
         axios.get(url).then((response) => (this.items = response.data));
     },
 
-    components: { DetalleCliente },
+    components: { DetalleCliente, Excel },
 }
 </script>
