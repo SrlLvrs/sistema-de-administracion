@@ -1,8 +1,5 @@
 <template>
-    <div class="prose max-w-none text-center p-4">
-        <h1>Crea un nuevo usuario</h1>
-    </div>
-    <form @submit.prevent="createUser_old()" class="space-y-6 w-full max-w-sm mx-auto">
+    <form @submit.prevent="logIn()" class="space-y-6 w-full max-w-sm mx-auto">
         <div class="form-control">
             <label class="label">
                 <span class="label-text font-bold">Correo electrónico</span>
@@ -15,14 +12,13 @@
             </label>
             <input type="password" v-model="password" placeholder="Contraseña" class="input input-bordered w-full" />
         </div>
-        <button type="submit" class="btn btn-outline btn-success w-full">Crear cuenta</button>
+        <button type="submit" class="btn btn-outline btn-success w-full">Iniciar sesión</button>
     </form>
     <button @click="currentUser()" class="btn btn-outline btn-success">Current User</button>
-    <button @click="signOut()" class="btn btn-outline btn-error">Sign Out</button>
 </template>
 
 <script>
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 export default {
     //Nombre del componente
@@ -33,28 +29,15 @@ export default {
             email: '',
             password: '',
             uid: '',
-            email_admin: 'iolivares0505@gmail.com',
-            password_admin: 'asdjkl1289',
         };
     },
 
     methods: {
-        createUser_old() {
-            createUserWithEmailAndPassword(getAuth(), this.email, this.password)
+        logIn() {
+            signInWithEmailAndPassword(getAuth(), this.email, this.password)
                 .then((userCredential) => {
                     console.log("userCredential", userCredential);
                     this.uid = userCredential.user.uid;
-                    return signOut(getAuth());
-                })
-                .then(() => {
-                    console.log('Usuario creado, pero la sesión se cerró');
-                })
-                .then(() => {
-                    signInWithEmailAndPassword(getAuth(), this.email_admin, this.password_admin)
-                        .then((userCredential) => {
-                            console.log("userCredential", userCredential);
-                            console.log('Sesión de admin iniciada');
-                        })  
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -71,15 +54,6 @@ export default {
                 console.log("No hay usuario actual");
             }
         },
-        signOut() {
-            signOut(getAuth())
-                .then(() => {
-                    console.log('Sesion cerrada');
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
     }
 }
 </script>
