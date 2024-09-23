@@ -2,7 +2,7 @@
     <div class="prose max-w-none text-center p-4">
         <h1>Iniciar sesión</h1>
     </div>
-    <form @submit.prevent="createUser_old()" class="space-y-6 w-full max-w-sm mx-auto">
+    <form @submit.prevent="iniciar_sesion()" class="space-y-6 w-full max-w-sm mx-auto">
         <div class="form-control">
             <label class="label">
                 <span class="label-text font-bold">Correo electrónico</span>
@@ -15,7 +15,7 @@
             </label>
             <input type="password" v-model="password" placeholder="Contraseña" class="input input-bordered w-full" />
         </div>
-        <button type="submit" class="btn btn-outline btn-success w-full">Crear cuenta</button>
+        <button type="submit" class="btn btn-outline btn-success w-full">Iniciar sesión</button>
     </form>
 </template>
 
@@ -29,54 +29,28 @@ export default {
 
     data() {
         return {
-            nombre: '',
             email: '',
             password: '',
-            rol: '',
-            uid: '',
-            ea: 'iolivares0505@gmail.com',
-            pa: 'asdjkl1289',
         };
     },
 
     methods: {
-        user_to_db() {
-            let n = this.nombre;
-            let r = this.rol;
-            let u = this.uid;
-            let url = `https://nuestrocampo.cl/api/users/create.php?name=${n}&rol=${r}&uid=${u}`;
-
-            axios.post(url).then(function (response) {
-                console.log(response.data);
-            })
-        },
-        createUser_old() {
-            createUserWithEmailAndPassword(getAuth(), this.email, this.password)
+        iniciar_sesion(){
+            console.log('iniciando sesion')
+            signInWithEmailAndPassword(getAuth(), this.email, this.password)
                 .then((userCredential) => {
                     console.log("userCredential", userCredential);
-                    this.uid = userCredential.user.uid;
-                    console.log('Usuario creado. UID:', this.uid);
-                    return signOut(getAuth());
+                    console.log('Sesión de admin iniciada');
                 })
                 .then(() => {
-                    this.user_to_db()
-                })
-                .then(() => {
-                    console.log('Usuario creado, pero la sesión se cerró');
-                })
-                .then(() => {
-                    signInWithEmailAndPassword(getAuth(), this.ea, this.pa)
-                        .then((userCredential) => {
-                            console.log("userCredential", userCredential);
-                            console.log('Sesión de admin iniciada');
-                        })  
+                    this.$router.push({ name: 'Inicio' });
                 })
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
                     console.log(errorCode, errorMessage);
                 });
-        },
+        }
     }
 }
 </script>

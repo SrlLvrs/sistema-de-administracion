@@ -67,11 +67,14 @@ export default {
                 .then(() => {
                     console.log('Sesion cerrada');
                 })
+                .then(() => {
+                    this.$router.push({ name: 'LogIn' });
+                })
                 .catch((error) => {
                     console.log(error);
                 });
         },
-    }
+    },
 }
 
 </script>
