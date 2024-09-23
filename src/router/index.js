@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 const router = createRouter({
     history: createWebHistory(),
     routes: [
-        { path: "/", component: () => import("../views/Inicio.vue")},
+        { path: "/", component: () => import("../views/Inicio.vue"), meta: { requiresAuth: true }},
         { path: "/clientes", component: () => import("../views/Clientes.vue")},
         { path: "/clientes/deudores", component: () => import("../views/Clientes-Deudores.vue")},
         { path: "/productos", component: () => import("../views/Productos.vue")},
@@ -15,6 +15,14 @@ const router = createRouter({
         { path: "/sectores", component: () => import("../views/Sectores.vue")},
         { path: "/login", component: () => import("../views/LogIn.vue")},
     ],
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        next('/login');
+    } else {
+        next();
+    }
 });
 
 export default router;

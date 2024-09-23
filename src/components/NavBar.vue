@@ -33,17 +33,44 @@
                 <li><router-link to='/pedidos'>Pedidos</router-link></li>
                 <li><router-link to='/produccion'>Producción</router-link></li>
                 <li><router-link to='/admin'>Administrar usuarios</router-link></li>
+                <li>
+                    <button @click="currentUser()" class="btn btn-outline btn-success">Current User</button>
+                </li>
+                <li>
+                    <button @click="signOut()" class="btn btn-outline btn-error">Sign Out</button>
+                </li>
             </ul>
         </div>
     </div>
 </template>
 
 <script>
+import { getAuth, signOut } from 'firebase/auth';
+
 export default {
     methods: {
         close() {
             document.activeElement.blur();
-        }
+        },
+        currentUser() {
+            const user = getAuth().currentUser;
+            if (user) {
+                console.log('Información del usuario actual:');
+                console.log("UID:", user.uid);
+                console.log("Correo electrónico:", user.email);
+            } else {
+                console.log("No hay usuario actual");
+            }
+        },
+        signOut() {
+            signOut(getAuth())
+                .then(() => {
+                    console.log('Sesion cerrada');
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
     }
 }
 

@@ -1,5 +1,8 @@
 <template>
-    <form @submit.prevent="logIn()" class="space-y-6 w-full max-w-sm mx-auto">
+    <div class="prose max-w-none text-center p-4">
+        <h1>Iniciar sesión</h1>
+    </div>
+    <form @submit.prevent="createUser_old()" class="space-y-6 w-full max-w-sm mx-auto">
         <div class="form-control">
             <label class="label">
                 <span class="label-text font-bold">Correo electrónico</span>
@@ -12,13 +15,13 @@
             </label>
             <input type="password" v-model="password" placeholder="Contraseña" class="input input-bordered w-full" />
         </div>
-        <button type="submit" class="btn btn-outline btn-success w-full">Iniciar sesión</button>
+        <button type="submit" class="btn btn-outline btn-success w-full">Crear cuenta</button>
     </form>
-    <button @click="currentUser()" class="btn btn-outline btn-success">Current User</button>
 </template>
 
 <script>
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import axios from 'axios';
 
 export default {
     //Nombre del componente
@@ -26,33 +29,53 @@ export default {
 
     data() {
         return {
+            nombre: '',
             email: '',
             password: '',
+            rol: '',
             uid: '',
+            ea: 'iolivares0505@gmail.com',
+            pa: 'asdjkl1289',
         };
     },
 
     methods: {
-        logIn() {
-            signInWithEmailAndPassword(getAuth(), this.email, this.password)
+        user_to_db() {
+            let n = this.nombre;
+            let r = this.rol;
+            let u = this.uid;
+            let url = `https://nuestrocampo.cl/api/users/create.php?name=${n}&rol=${r}&uid=${u}`;
+
+            axios.post(url).then(function (response) {
+                console.log(response.data);
+            })
+        },
+        createUser_old() {
+            createUserWithEmailAndPassword(getAuth(), this.email, this.password)
                 .then((userCredential) => {
                     console.log("userCredential", userCredential);
                     this.uid = userCredential.user.uid;
+                    console.log('Usuario creado. UID:', this.uid);
+                    return signOut(getAuth());
+                })
+                .then(() => {
+                    this.user_to_db()
+                })
+                .then(() => {
+                    console.log('Usuario creado, pero la sesión se cerró');
+                })
+                .then(() => {
+                    signInWithEmailAndPassword(getAuth(), this.ea, this.pa)
+                        .then((userCredential) => {
+                            console.log("userCredential", userCredential);
+                            console.log('Sesión de admin iniciada');
+                        })  
                 })
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
                     console.log(errorCode, errorMessage);
                 });
-        },
-        currentUser() {
-            const user = getAuth().currentUser;
-            if (user) {
-                console.log("UID:", user.uid);
-                console.log("Correo electrónico:", user.email);
-            } else {
-                console.log("No hay usuario actual");
-            }
         },
     }
 }

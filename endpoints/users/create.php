@@ -12,31 +12,28 @@ $db = $database->getConnection();
 
 // Obtener parámetros de la URL
 $name = isset($_GET['name']) ? $_GET['name'] : '';
-//$email = isset($_GET['email']) ? $_GET['email'] : '';
+$rol = isset($_GET['rol']) ? $_GET['rol'] : '';
+$uid = isset($_GET['uid']) ? $_GET['uid'] : '';
 
-/*
-Hay que crear todas las variables, una por cada columna de la base de datos
-Hay que ponerlas todas en el if, para que analice si están o no vacias
-Hay que bindearlas usando BINDPARAM
-*/
-
-if (!empty($name) /*&& !empty($email)*/) {
-    $query = "INSERT INTO usuario SET Nombre=:name";
+if (!empty($name)) {
+    $query = "  INSERT INTO usuarios
+                SET Nombre = :name, Rol = :rol, UID = :uid";
 
     $stmt = $db->prepare($query);
 
     $stmt->bindParam(":name", $name);
-    //$stmt->bindParam(":email", $email);
+    $stmt->bindParam(":rol", $rol);
+    $stmt->bindParam(":uid", $uid);
 
     if ($stmt->execute()) {
         http_response_code(201);
-        echo json_encode(array("message" => "User was created."));
+        echo json_encode(array("message" => "El usuario ha sido creado."));
     } else {
         http_response_code(503);
-        echo json_encode(array("message" => "Unable to create user."));
+        echo json_encode(array("message" => "No se ha podido crear el usuario."));
     }
 } else {
     http_response_code(400);
-    echo json_encode(array("message" => "Incomplete data."));
+    echo json_encode(array("message" => "Faltan datos para crear el usuario."));
 }
 ?>
