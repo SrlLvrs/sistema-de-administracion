@@ -57,6 +57,10 @@ export default {
     },
 
     methods: {
+        checkUserSession() {
+            const sessionData = JSON.parse(localStorage.getItem('authUser'));
+            return sessionData ? sessionData : null;
+        },
         async llamadasConcurrentes() {
             const urls = [
                 'https://nuestrocampo.cl/api/inicio/read.php',
@@ -90,9 +94,24 @@ export default {
         //Nada por acá...
     },
 
-    //Método para llamar a la API cuando se cree la instancia
     mounted() {
-        this.llamadasConcurrentes();
+        const sessionData = this.checkUserSession();
+        if (sessionData) {
+            console.log('Sesión iniciada');
+            this.id_user = sessionData.id;
+            if (sessionData.rol === 'Repartidor') {
+                alert('No tienes permiso para ver esta información');
+                this.$router.push({ name: 'Repartidor' });
+            } else {
+                console.log('El usuario no es repartidor');
+                this.llamadasConcurrentes();
+            }
+        } else {
+            console.log('No hay sesión iniciada');
+            this.$router.push({ name: 'LogIn' });
+        }
+
+
     },
 
     components: { DetallesPedido }

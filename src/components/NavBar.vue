@@ -1,5 +1,5 @@
 <template>
-    <div class="navbar bg-base-100">
+    <div v-if="sessionData" class="navbar bg-base-100">
         <div class="navbar-start">
             <div class="dropdown">
                 <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -26,13 +26,13 @@
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
                 <!-- Este es el menú de pantallas grandes -->
-                <li><router-link to='/'>Inicio</router-link></li>
+                <li v-if="rol != 'Repartidor'"><router-link to='/'>Inicio</router-link></li>
                 <li><router-link to='/clientes'>Clientes</router-link></li>
                 <li><router-link to='/productos'>Productos</router-link></li>
                 <li><router-link to='/sectores'>Sectores de Reparto</router-link></li>
                 <li><router-link to='/pedidos'>Pedidos</router-link></li>
-                <li><router-link to='/produccion'>Producción</router-link></li>
-                <li><router-link to='/admin'>Administrar usuarios</router-link></li>
+                <li v-if="rol != 'Repartidor'"><router-link to='/produccion'>Producción</router-link></li>
+                <li v-if="rol != 'Repartidor'"><router-link to='/admin'>Administrar usuarios</router-link></li>
                 <li>
                     <button @click="checkUserSession()" class="btn btn-outline btn-success">Current User</button>
                 </li>
@@ -47,25 +47,48 @@
 <script>
 
 export default {
+    data() {
+        return {
+            sessionData: null,
+        };
+    },
+
+    computed: {
+        rol() {
+            return this.sessionData && this.sessionData.rol;
+        },
+    },
+
     methods: {
         close() {
             document.activeElement.blur();
         },
         checkUserSession() {
-            // Verificar si hay una sesión guardada en localStorage al cargar el componente
             const sessionData = JSON.parse(localStorage.getItem('authUser'));
-            if (sessionData) {
-                console.log('Usuario autenticado:', sessionData);
-                console.log(sessionData.rol);
-            } else {
-                console.log('No hay usuario autenticado');
-            }
+            console.log(sessionData);
+            return sessionData ? sessionData : null;
         },
         logout() {
             // Eliminar la información de sesión de localStorage
             localStorage.removeItem('authUser');
             console.log('Sesión cerrada');
             this.$router.push({ name: 'LogIn' });
+        },
+    },
+
+    created() {
+        this.sessionData = this.checkUserSession();
+
+        if (this.sessionData) {
+            console.log('Sesión iniciada');
+        } else {
+            console.log('No hay sesión iniciada');
+        }
+    },
+
+    watch: {
+        $route(to, from) {
+            this.sessionData = this.checkUserSession();
         },
     },
 }
