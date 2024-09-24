@@ -11,17 +11,17 @@ $database = new Database();
 $db = $database->getConnection();
 
 // Obtener parámetros de la URL
-$name = isset($_GET['name']) ? $_GET['name'] : '';
+$username = isset($_GET['username']) ? $_GET['username'] : '';
 $rol = isset($_GET['rol']) ? $_GET['rol'] : '';
 $pass = isset($_GET['pass']) ? $_GET['pass'] : '';
 
-if (!empty($name)) {
+if (!empty($username)) {
     $query = "  INSERT INTO usuarios
-                SET Nombre = :name, Rol = :rol, Pass = :pass";
+                SET Username = :username, Rol = :rol, Pass = :pass";
 
     $stmt = $db->prepare($query);
 
-    $stmt->bindParam(":name", $name);
+    $stmt->bindParam(":username", $username);
     $stmt->bindParam(":rol", $rol);
     $stmt->bindParam(":pass", $pass);
 

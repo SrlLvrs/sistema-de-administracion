@@ -48,34 +48,17 @@ export default {
     },
 
     methods: {
-        crearUsuarioXXXX() {
-            let n = this.nombre;
-            let r = this.rol;
-            let u = this.uid;
-            let url = `https://nuestrocampo.cl/api/users/create.php?name=${n}&rol=${r}&uid=${u}`;
-
-            axios.post(url).then(function (response) {
-                console.log(response.data);
-            })
-        },
         async crearUsuario() {
             const saltRounds = 10;
             // Encriptar la contraseña
             const hashedPassword = await bcrypt.hash(this.password, saltRounds);
 
-            // Aquí enviarías el username y hashedPassword a tu backend (API)
-            const userData = {
-                username: this.username,
-                password: hashedPassword
-            };
-
-            // Simulación de envío de datos
-            console.log('Datos a enviar:', userData);
+            // Enviar datos al backend (API)
 
             let u = this.username;
             let p = hashedPassword;
             let r = this.rol;
-            let url = `https://nuestrocampo.cl/api/users/create.php?name=${u}&pass=${p}&rol=${r}`;
+            let url = `https://nuestrocampo.cl/api/users/create.php?username=${u}&pass=${p}&rol=${r}`;
 
             axios.post(url).then(function (response) {
                 console.log(response.data);

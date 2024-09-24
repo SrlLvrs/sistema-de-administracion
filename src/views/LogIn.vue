@@ -3,12 +3,15 @@
         <h1>Iniciar sesión</h1>
     </div>
     <form @submit.prevent="iniciar_sesion()" class="space-y-6 w-full max-w-sm mx-auto">
+        <!-- Nombre de usuario -->
         <div class="form-control">
             <label class="label">
-                <span class="label-text font-bold">Correo electrónico</span>
+                <span class="label-text font-bold">Nombre de usuario</span>
             </label>
-            <input type="email" v-model="email" placeholder="Correo electrónico" class="input input-bordered w-full" />
+            <input type="email" v-model="username" placeholder="Nombre de usuario"
+                class="input input-bordered w-full" />
         </div>
+        <!-- Contraseña -->
         <div class="form-control">
             <label class="label">
                 <span class="label-text font-bold">Contraseña</span>
@@ -29,27 +32,28 @@ export default {
 
     data() {
         return {
-            email: '',
+            username: '',
             password: '',
         };
     },
 
     methods: {
-        iniciar_sesion(){
+        iniciar_sesion() {
             console.log('iniciando sesion')
-            signInWithEmailAndPassword(getAuth(), this.email, this.password)
-                .then((userCredential) => {
-                    console.log("userCredential", userCredential);
-                    console.log('Sesión de admin iniciada');
-                })
-                .then(() => {
-                    this.$router.push({ name: 'Inicio' });
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(errorCode, errorMessage);
+            //GET users WHERE username = this.username
+
+            //this.storedHash = result.data
+
+            /**
+             * bcrypt.compare(inputPassword, storedHash, function(err, result) {
+                    if (result) {
+                        // La contraseña es correcta
+                    } else {
+                        // La contraseña es incorrecta
+                    }
                 });
+
+             */
         }
     }
 }
