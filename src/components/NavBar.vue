@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import { getAuth, signOut } from 'firebase/auth';
 
 export default {
     methods: {
@@ -57,6 +56,7 @@ export default {
             const sessionData = JSON.parse(localStorage.getItem('authUser'));
             if (sessionData) {
                 console.log('Usuario autenticado:', sessionData);
+                console.log(sessionData.rol);
             } else {
                 console.log('No hay usuario autenticado');
             }

@@ -16,7 +16,7 @@ $username = isset($_GET['username']) ? $_GET['username'] : '';
 // Verifica si el username no está vacío
 if (!empty($username)) {
     // Consulta para obtener el hash.
-    $query = "  SELECT pass, rol
+    $query = "  SELECT *
                 FROM usuarios
                 WHERE username = :username";
     $stmt = $db->prepare($query);

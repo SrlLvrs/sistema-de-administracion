@@ -35,6 +35,7 @@ export default {
             password: '',
             storedHash: '',
             rol: '',
+            id: '',
         };
     },
 
@@ -45,29 +46,32 @@ export default {
             let url = `https://nuestrocampo.cl/api/users/read-hash.php?username=${u}`
 
             await axios.get(url).then((response) => {
-                console.log(response.data)
-                this.storedHash = response.data[0].pass;
-                this.rol = response.data[0].rol // Ahora this se refiere al contexto correcto
-                console.log(this.storedHash)
-                console.log(this.rol)
+                this.storedHash = response.data[0].Pass;
+                this.rol = response.data[0].Rol;
+                this.id = response.data[0].ID;
             })
 
             bcrypt.compare(this.password, this.storedHash, function (err, result) {
                 if (result) {
-                    console.log('La contraseña es correcta')
                     // Almacenar la información de inicio de sesión en localStorage
                     const sessionData = {
+                        id: self.id,
                         username: u,
                         rol: self.rol,
                         loginTime: new Date().toISOString()
                     };
 
-                    // Guardar en localStorage como lo hace Firebase Auth
                     localStorage.setItem('authUser', JSON.stringify(sessionData));
 
                     console.log('Inicio de sesión exitoso, datos guardados:', sessionData);
 
-                    self.$router.push({ name: 'Inicio' });
+                    if (sessionData.rol === 'Colaborador' || sessionData.rol === 'Admin') {
+                        //Redirecionar a la página de inicio
+                        self.$router.push({ name: 'Inicio' });
+                    } else if (sessionData.rol === 'Repartidor') {
+                        //Redirecionar a la página de repartidor
+                        self.$router.push({ name: 'Repartidor' });
+                    }
                 } else {
                     alert('La contraseña es incorrecta')
                     self.password = ''
