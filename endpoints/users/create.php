@@ -13,17 +13,17 @@ $db = $database->getConnection();
 // Obtener parámetros de la URL
 $name = isset($_GET['name']) ? $_GET['name'] : '';
 $rol = isset($_GET['rol']) ? $_GET['rol'] : '';
-$uid = isset($_GET['uid']) ? $_GET['uid'] : '';
+$pass = isset($_GET['pass']) ? $_GET['pass'] : '';
 
 if (!empty($name)) {
     $query = "  INSERT INTO usuarios
-                SET Nombre = :name, Rol = :rol, UID = :uid";
+                SET Nombre = :name, Rol = :rol, Pass = :pass";
 
     $stmt = $db->prepare($query);
 
     $stmt->bindParam(":name", $name);
     $stmt->bindParam(":rol", $rol);
-    $stmt->bindParam(":uid", $uid);
+    $stmt->bindParam(":pass", $pass);
 
     if ($stmt->execute()) {
         http_response_code(201);

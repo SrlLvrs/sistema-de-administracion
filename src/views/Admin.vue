@@ -2,25 +2,22 @@
     <div class="prose max-w-none text-center p-4">
         <h1>Crea un nuevo usuario</h1>
     </div>
-    <form @submit.prevent="createUser_old()" class="space-y-6 w-full max-w-sm mx-auto">
+    <form @submit.prevent="crearUsuario()" class="space-y-6 w-full max-w-sm mx-auto">
+        <!-- Nombre -->
         <div class="form-control">
             <label class="label">
-                <span class="label-text font-bold">Nombre</span>
+                <span class="label-text font-bold">Nombre de usuario</span>
             </label>
-            <input type="text" v-model="nombre" placeholder="Nombre" class="input input-bordered w-full" />
+            <input type="text" v-model="username" placeholder="Nombre" class="input input-bordered w-full" />
         </div>
-        <div class="form-control">
-            <label class="label">
-                <span class="label-text font-bold">Correo electrónico</span>
-            </label>
-            <input type="email" v-model="email" placeholder="Correo electrónico" class="input input-bordered w-full" />
-        </div>
+        <!-- Contraseña -->
         <div class="form-control">
             <label class="label">
                 <span class="label-text font-bold">Contraseña</span>
             </label>
             <input type="password" v-model="password" placeholder="Contraseña" class="input input-bordered w-full" />
         </div>
+        <!-- Rol -->
         <div class="form-control">
             <label class="label">
                 <span class="label-text font-bold">Rol</span>
@@ -32,13 +29,11 @@
         </div>
         <button type="submit" class="btn btn-outline btn-success w-full">Crear cuenta</button>
     </form>
-    <button @click="currentUser()" class="btn btn-outline btn-success">Current User</button>
-    <button @click="signOut()" class="btn btn-outline btn-error">Sign Out</button>
 </template>
 
 <script>
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import axios from 'axios';
+import bcrypt from 'bcryptjs';
 
 export default {
     //Nombre del componente
@@ -46,18 +41,14 @@ export default {
 
     data() {
         return {
-            nombre: '',
-            email: '',
+            username: '',
             password: '',
             rol: '',
-            uid: '',
-            ea: 'iolivares0505@gmail.com',
-            pa: 'asdjkl1289',
         };
     },
 
     methods: {
-        user_to_db() {
+        crearUsuarioXXXX() {
             let n = this.nombre;
             let r = this.rol;
             let u = this.uid;
@@ -67,33 +58,29 @@ export default {
                 console.log(response.data);
             })
         },
-        createUser_old() {
-            createUserWithEmailAndPassword(getAuth(), this.email, this.password)
-                .then((userCredential) => {
-                    console.log("userCredential", userCredential);
-                    this.uid = userCredential.user.uid;
-                    console.log('Usuario creado. UID:', this.uid);
-                    return signOut(getAuth());
-                })
-                .then(() => {
-                    this.user_to_db()
-                })
-                .then(() => {
-                    console.log('Usuario creado, pero la sesión se cerró');
-                })
-                .then(() => {
-                    signInWithEmailAndPassword(getAuth(), this.ea, this.pa)
-                        .then((userCredential) => {
-                            console.log("userCredential", userCredential);
-                            console.log('Sesión de admin iniciada');
-                        })  
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(errorCode, errorMessage);
-                });
-        },
+        async crearUsuario() {
+            const saltRounds = 10;
+            // Encriptar la contraseña
+            const hashedPassword = await bcrypt.hash(this.password, saltRounds);
+
+            // Aquí enviarías el username y hashedPassword a tu backend (API)
+            const userData = {
+                username: this.username,
+                password: hashedPassword
+            };
+
+            // Simulación de envío de datos
+            console.log('Datos a enviar:', userData);
+
+            let u = this.username;
+            let p = hashedPassword;
+            let r = this.rol;
+            let url = `https://nuestrocampo.cl/api/users/create.php?name=${u}&pass=${p}&rol=${r}`;
+
+            axios.post(url).then(function (response) {
+                console.log(response.data);
+            })
+        }
     }
 }
 </script>
