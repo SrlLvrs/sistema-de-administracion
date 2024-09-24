@@ -34,10 +34,10 @@
                 <li><router-link to='/produccion'>Producción</router-link></li>
                 <li><router-link to='/admin'>Administrar usuarios</router-link></li>
                 <li>
-                    <button @click="currentUser()" class="btn btn-outline btn-success">Current User</button>
+                    <button @click="checkUserSession()" class="btn btn-outline btn-success">Current User</button>
                 </li>
                 <li>
-                    <button @click="signOut()" class="btn btn-outline btn-error">Sign Out</button>
+                    <button @click="logout()" class="btn btn-outline btn-error">Sign Out</button>
                 </li>
             </ul>
         </div>
@@ -52,27 +52,20 @@ export default {
         close() {
             document.activeElement.blur();
         },
-        currentUser() {
-            const user = getAuth().currentUser;
-            if (user) {
-                console.log('Información del usuario actual:');
-                console.log("UID:", user.uid);
-                console.log("Correo electrónico:", user.email);
+        checkUserSession() {
+            // Verificar si hay una sesión guardada en localStorage al cargar el componente
+            const sessionData = JSON.parse(localStorage.getItem('authUser'));
+            if (sessionData) {
+                console.log('Usuario autenticado:', sessionData);
             } else {
-                console.log("No hay usuario actual");
+                console.log('No hay usuario autenticado');
             }
         },
-        signOut() {
-            signOut(getAuth())
-                .then(() => {
-                    console.log('Sesion cerrada');
-                })
-                .then(() => {
-                    this.$router.push({ name: 'LogIn' });
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+        logout() {
+            // Eliminar la información de sesión de localStorage
+            localStorage.removeItem('authUser');
+            console.log('Sesión cerrada');
+            this.$router.push({ name: 'LogIn' });
         },
     },
 }

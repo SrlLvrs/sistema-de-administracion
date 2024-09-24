@@ -8,8 +8,7 @@
             <label class="label">
                 <span class="label-text font-bold">Nombre de usuario</span>
             </label>
-            <input type="email" v-model="username" placeholder="Nombre de usuario"
-                class="input input-bordered w-full" />
+            <input type="text" v-model="username" placeholder="Nombre de usuario" class="input input-bordered w-full" />
         </div>
         <!-- Contraseña -->
         <div class="form-control">
@@ -23,8 +22,8 @@
 </template>
 
 <script>
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import axios from 'axios';
+import bcrypt from 'bcryptjs';
 
 export default {
     //Nombre del componente
@@ -34,26 +33,46 @@ export default {
         return {
             username: '',
             password: '',
+            storedHash: '',
+            rol: '',
         };
     },
 
     methods: {
-        iniciar_sesion() {
-            console.log('iniciando sesion')
-            //GET users WHERE username = this.username
+        async iniciar_sesion() {
+            let self = this;
+            let u = this.username
+            let url = `https://nuestrocampo.cl/api/users/read-hash.php?username=${u}`
 
-            //this.storedHash = result.data
+            await axios.get(url).then((response) => {
+                console.log(response.data)
+                this.storedHash = response.data[0].pass;
+                this.rol = response.data[0].rol // Ahora this se refiere al contexto correcto
+                console.log(this.storedHash)
+                console.log(this.rol)
+            })
 
-            /**
-             * bcrypt.compare(inputPassword, storedHash, function(err, result) {
-                    if (result) {
-                        // La contraseña es correcta
-                    } else {
-                        // La contraseña es incorrecta
-                    }
-                });
+            bcrypt.compare(this.password, this.storedHash, function (err, result) {
+                if (result) {
+                    console.log('La contraseña es correcta')
+                    // Almacenar la información de inicio de sesión en localStorage
+                    const sessionData = {
+                        username: u,
+                        rol: self.rol,
+                        loginTime: new Date().toISOString()
+                    };
 
-             */
+                    // Guardar en localStorage como lo hace Firebase Auth
+                    localStorage.setItem('authUser', JSON.stringify(sessionData));
+
+                    console.log('Inicio de sesión exitoso, datos guardados:', sessionData);
+
+                    self.$router.push({ name: 'Inicio' });
+                } else {
+                    alert('La contraseña es incorrecta')
+                    self.password = ''
+                }
+            });
         }
     }
 }
