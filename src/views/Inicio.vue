@@ -98,16 +98,16 @@ export default {
         const sessionData = this.checkUserSession();
         if (sessionData) {
             console.log('Sesión iniciada');
-            this.id_user = sessionData.id;
+            //this.id_user = sessionData.id;
             if (sessionData.rol === 'Repartidor') {
-                alert('No tienes permiso para ver esta información');
+                alert('No tienes permiso para ver esta información.');
                 this.$router.push({ name: 'Repartidor' });
             } else {
-                console.log('El usuario no es repartidor');
+                console.log('El usuario es Administrador o Colaborador');
                 this.llamadasConcurrentes();
             }
         } else {
-            console.log('No hay sesión iniciada');
+            console.log('No hay sesión iniciada. Redireccionado a login');
             this.$router.push({ name: 'LogIn' });
         }
 

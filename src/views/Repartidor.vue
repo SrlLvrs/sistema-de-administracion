@@ -3,7 +3,7 @@
     <!-- ENCABEZADO -->
     <div class="prose max-w-none">
         <div class="grid grid-cols-1">
-            <h1 class="text-center p-4 m-0">Todos los pedidos de hoy asignados a ti</h1>
+            <h1 class="text-center p-4 m-0">Todos los pedidos pendientes de hoy</h1>
             <div class="flex justify-center mb-4">
                 <!-- INPUT FILTRAR -->
                 <label class="input input-bordered flex items-center gap-2 mx-2">
@@ -34,8 +34,6 @@
                     <th>Pagado</th>
                     <th>Medio de Pago</th>
                     <th>Fecha de Entrega</th>
-                    <th>Hora de Creación</th>
-                    <th>Hora de Cierre</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -60,17 +58,10 @@
                     <td> {{ item.Pagado }}</td>
                     <td> {{ item.MedioPago }}</td>
                     <td> {{ item.FechaEntrega }}</td>
-                    <td> {{ item.HoraCreacion }}</td>
-                    <td> {{ item.HoraCierre }}</td>
                     <td>
                         <!-- Detalle Pedido -->
+                        <EntregarPedido :label="item.ID + 'deliver'" :id="item.ID" />
                         <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
-
-                        <!-- Editar Pedido -->
-                        <EditarPedido :label="item.ID + 'edit'" :id="item.ID" />
-
-                        <!-- Eliminar Pedido -->
-                        <EliminarPedido :id="item.ID" />
                     </td>
                 </tr>
             </tbody>
@@ -85,6 +76,7 @@ import EliminarPedido from "../components/EliminarPedido.vue";
 import DetallePedido from "../components/DetallesPedido.vue";
 import EditarPedido from "../components/EditarPedido.vue";
 import Excel from "../components/Excel.vue";
+import EntregarPedido from "../components/EntregarPedido.vue";
 
 export default {
     //Nombre del componente
@@ -143,6 +135,6 @@ export default {
         }
     },
 
-    components: { EliminarPedido, DetallePedido, EditarPedido, Excel },
+    components: { EliminarPedido, DetallePedido, EditarPedido, Excel, EntregarPedido },
 }
 </script>

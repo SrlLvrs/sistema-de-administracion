@@ -26,18 +26,27 @@ $query = "  SELECT
                 p.IDPA,
                 p.IDCliente,
                 c.Nombre,
+                c.Direccion,
+                s.NombreSector,
+                s.Comuna,
                 p.IDRepartidor,
                 p.Estado,
                 p.Pagado,
                 p.MedioPago,
                 DATE_FORMAT(p.FechaEntrega, '%d/%m/%Y') AS FechaEntrega,
-                DATE_FORMAT(p.HoraCreacion, '%d/%m/%Y %H:%i') AS HoraCreacion,
+                DATE_FORMAT(
+                    p.HoraCreacion, '%d/%m/%Y %H:%i'
+                ) AS HoraCreacion,
                 DATE_FORMAT(p.HoraCierre, '%d/%m/%Y %H:%i') AS HoraCierre
             FROM
                 pedidos p
                 JOIN clientes c ON p.IDCliente = c.ID
+                JOIN sector s ON c.IDSector = s.ID
             WHERE
-                p.Visible = 1 AND DATE(p.FechaEntrega) = CURDATE() AND p.IDRepartidor = :id
+                p.Visible = 1
+                AND DATE(p.FechaEntrega) = CURDATE()
+                AND p.IDRepartidor = :id
+                AND p.Estado = 'Agendado'
             ORDER BY
                 p.FechaEntrega DESC";
 
