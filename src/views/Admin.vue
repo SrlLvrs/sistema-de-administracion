@@ -1,39 +1,41 @@
 <template>
-    <div class="prose max-w-none text-center p-4">
-        <h1>Crea un nuevo usuario</h1>
+    <div class="prose max-w-none">
+        <h1 class="text-center p-4 m-0">Todos los usuarios</h1>
+        <div class="flex justify-center">
+            <!-- Botón CREAR NUEVO USUARIO -->
+            <CrearUsuario />
+        </div>
     </div>
-    <form @submit.prevent="crearUsuario()" class="space-y-6 w-full max-w-sm mx-auto">
-        <!-- Nombre -->
-        <div class="form-control">
-            <label class="label">
-                <span class="label-text font-bold">Nombre de usuario</span>
-            </label>
-            <input type="text" v-model="username" placeholder="Nombre" class="input input-bordered w-full" />
-        </div>
-        <!-- Contraseña -->
-        <div class="form-control">
-            <label class="label">
-                <span class="label-text font-bold">Contraseña</span>
-            </label>
-            <input type="password" v-model="password" placeholder="Contraseña" class="input input-bordered w-full" />
-        </div>
-        <!-- Rol -->
-        <div class="form-control">
-            <label class="label">
-                <span class="label-text font-bold">Rol</span>
-            </label>
-            <select v-model="rol" class="select select-bordered w-full">
-                <option value="Repartidor">Repartidor</option>
-                <option value="Colaborador">Colaborador</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-outline btn-success w-full">Crear cuenta</button>
-    </form>
+    <!-- TABLA DE USUARIOS -->
+    <div class="overflow-x-auto">
+        <table class="table w-full">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in usuarios" :key="item.ID">
+                    <th>{{ item.ID }}</th>
+                    <td>{{ item.Username }}</td>
+                    <td>{{ item.Rol }}</td>
+                    <td>
+                        Cambiar contraseña
+                        Cambiar rol
+                        Eliminar usuario
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <script>
 import axios from 'axios';
-import bcrypt from 'bcryptjs';
+import CrearUsuario from '../components/CrearUsuario.vue'
 
 export default {
     //Nombre del componente
@@ -41,29 +43,15 @@ export default {
 
     data() {
         return {
-            username: '',
-            password: '',
-            rol: '',
+            usuarios: []
         };
     },
 
-    methods: {
-        async crearUsuario() {
-            const saltRounds = 10;
-            // Encriptar la contraseña
-            const hashedPassword = await bcrypt.hash(this.password, saltRounds);
+    mounted() {
+        let url = `https://nuestrocampo.cl/api/users/read.php`;
+        axios.get(url).then((response) => (this.usuarios = response.data));
+    },
 
-            // Enviar datos al backend (API)
-
-            let u = this.username;
-            let p = hashedPassword;
-            let r = this.rol;
-            let url = `https://nuestrocampo.cl/api/users/create.php?username=${u}&pass=${p}&rol=${r}`;
-
-            axios.post(url).then(function (response) {
-                console.log(response.data);
-            })
-        }
-    }
+    components: { CrearUsuario }
 }
 </script>
