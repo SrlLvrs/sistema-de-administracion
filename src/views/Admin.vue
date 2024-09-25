@@ -25,7 +25,7 @@
                     <td>
                         <EditarPass :id=item.ID :label="item.ID + 'pass'" />
                         <EditarRol :id=item.ID :label="item.ID + 'rol'" />
-                        Eliminar usuario
+                        <EliminarUsuario :id=item.ID :label="item.ID + 'eliminar'" />
                     </td>
                 </tr>
             </tbody>
@@ -38,6 +38,7 @@ import axios from 'axios';
 import CrearUsuario from '../components/CrearUsuario.vue'
 import EditarPass from '../components/EditarPass.vue'
 import EditarRol from '../components/EditarRol.vue'
+import EliminarUsuario from '../components/EliminarUsuario.vue'
 
 export default {
     //Nombre del componente
@@ -54,6 +55,6 @@ export default {
         axios.get(url).then((response) => (this.usuarios = response.data));
     },
 
-    components: { CrearUsuario, EditarPass, EditarRol }
+    components: { CrearUsuario, EditarPass, EditarRol, EliminarUsuario }
 }
 </script>

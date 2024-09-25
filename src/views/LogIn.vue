@@ -65,7 +65,7 @@ export default {
 
                     console.log('Inicio de sesión exitoso, datos guardados:', sessionData);
 
-                    if (sessionData.rol === 'Colaborador' || sessionData.rol === 'Admin') {
+                    if (sessionData.rol === 'Colaborador' || sessionData.rol === 'Administrador') {
                         //Redirecionar a la página de inicio
                         self.$router.push({ name: 'Inicio' });
                     } else if (sessionData.rol === 'Repartidor') {

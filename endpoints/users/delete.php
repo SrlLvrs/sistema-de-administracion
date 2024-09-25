@@ -1,9 +1,9 @@
 <?php
 // Estos encabezados permiten el acceso a la API desde cualquier origen y especifican que el contenido de la respuesta será JSON.
-// También permiten el uso del método DELETE y gestionan los encabezados para las solicitudes.
+// También permiten el uso del método PUT y gestionan los encabezados para las solicitudes.
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: DELETE");
+header("Access-Control-Allow-Methods: PUT");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
@@ -14,36 +14,40 @@ include_once '../config/db.php';
 $database = new Database();
 $db = $database->getConnection();
 
-// Obtener el parámetro 'id' de la URL.
+// Obtener parámetros de la URL.
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 
-// Verifica que el 'id' no esté vacío.
+// Verifica que el campo 'id' no esté vacío
 if (!empty($id)) {
-    // Se prepara la consulta SQL para eliminar el usuario.
-    $query = "DELETE FROM usuario WHERE Rut = :id";
+    // Se prepara la consulta SQL para actualizar el usuario.
+    $query = "  UPDATE usuarios
+                SET Pass = NULL
+                WHERE id = :id";
 
     // Se prepara la consulta para su ejecución.
     $stmt = $db->prepare($query);
 
-    // Se vincula el parámetro 'id' con el valor recibido.
-    $stmt->bindParam(":id", $id);
+    // Se vinculan los parámetros de la consulta con los valores recibidos.
+    if (!empty($id)) {
+        $stmt->bindParam(":id", $id);
+    }
 
     // Se ejecuta la consulta.
     if ($stmt->execute()) {
         // Si la ejecución es exitosa, se establece el código de respuesta a 200 OK.
         http_response_code(200);
         // Se envía una respuesta JSON indicando que el usuario fue eliminado.
-        echo json_encode(array("message" => "User " . $id . " was deleted."));
+        echo json_encode(array("message" => "El usuario fue eliminado."));
     } else {
         // Si la ejecución falla, se establece el código de respuesta a 503 Service Unavailable.
         http_response_code(503);
         // Se envía una respuesta JSON indicando que no se pudo eliminar el usuario.
-        echo json_encode(array("message" => "Unable to delete user."));
+        echo json_encode(array("message" => "No se pudo eliminar el usuario."));
     }
 } else {
-    // Si el 'id' está vacío, se establece el código de respuesta a 400 Bad Request.
+    // Si los datos están incompletos, se establece el código de respuesta a 400 Bad Request.
     http_response_code(400);
-    // Se envía una respuesta JSON indicando que el 'id' está incompleto.
-    echo json_encode(array("message" => "Incomplete data."));
+    // Se envía una respuesta JSON indicando que los datos están incompletos.
+    echo json_encode(array("message" => "Los datos son incompletos."));
 }
 ?>

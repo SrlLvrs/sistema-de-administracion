@@ -12,7 +12,8 @@ $db = $database->getConnection();
 
     // Consulta para obtener el hash.
     $query = "  SELECT *
-                FROM usuarios";
+                FROM usuarios
+                WHERE pass IS NOT NULL";
     $stmt = $db->prepare($query);
 
     $stmt->execute();

@@ -70,7 +70,7 @@ export default {
 
             // Enviar datos al backend (API)
             let url = `https://nuestrocampo.cl/api/users/update-role.php?id=${id}&rol=${r}`;
-            axios.put(url).then(function (response) {
+            await axios.put(url).then(function (response) {
                 console.log(response.data);
             });
 
