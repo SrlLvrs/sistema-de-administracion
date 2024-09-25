@@ -19,12 +19,13 @@ Obtener los parámetros por url
 //PEDIDOS: ID, IDCliente, IDRepartidor, Estado, Pagado, MedioPago, FechaEntrega, HoraCreacion, HoraCierra, Visible
 */
 $id = isset($_GET['id']) ? $_GET['id'] : ''; //NOT NULL
+$estado = isset($_GET['estado']) ? $_GET['estado'] : '';
 
 // Verifica que los campos no estén vacíos
 if (!empty($id)) {
     // Se prepara la consulta SQL para actualizar el cliente.
     $query = "  UPDATE pedidos 
-                SET Estado = 'Entregado', HoraCierre = NOW()
+                SET Estado = :estado, HoraCierre = NOW()
                 WHERE ID = :id";
 
     // Se prepara la consulta para su ejecución.
@@ -32,6 +33,7 @@ if (!empty($id)) {
 
     //Bindear las variables usando bindParam
     $stmt->bindParam(":id", $id);
+    $stmt->bindParam(":estado", $estado);
 
     // Se ejecuta la consulta.
     if ($stmt->execute()) {

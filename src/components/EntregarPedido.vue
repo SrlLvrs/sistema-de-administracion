@@ -35,8 +35,9 @@
                     </svg>
                     Entregado, pagado con Transferencia</label>
             </div>
+            <!-- Entregado, sin pagar -->
             <div>
-                <label class="btn btn-outline btn-warning m-2" @click="entregado(id)">
+                <label class="btn btn-outline btn-warning m-2" @click="entregado(id, 'Entregado')">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -44,17 +45,14 @@
                     </svg>
                     Entregado, sin pagar</label>
             </div>
-            <div>
-                <label class="btn btn-outline btn-error m-2" @click="pagarPedido()">Rechazado, el cliente explicitamente
-                    rechaza el pedido</label>
+
+            <!-- Pedidos rechazados -->
+            <div v-for="item in items">
+                <label class="btn btn-outline btn-error m-2" @click="entregado(id, item.motivo)">
+                    <span v-html="item.icono"></span> {{ item.motivo }}
+                </label>
             </div>
-            <div>
-                <label class="btn btn-outline btn-error m-2" @click="pagarPedido()">Rechazado, el cliente no se
-                    encuentra</label>
-            </div>
-            <div>
-                <label class="btn btn-outline btn-error m-2" @click="pagarPedido()">Rechazado, otro motivo</label>
-            </div>
+
             <!-- Acciones -->
             <div class="modal-action ">
                 <label :for="label" class="btn">Salir</label>
@@ -69,7 +67,7 @@ import axios from "axios";
 
 export default {
     //Nombre del componente
-    name: "PagarPedidoEfectivo",
+    name: "EntregarEfectivo",
 
     props: {
         id: Number,
@@ -78,7 +76,25 @@ export default {
 
     data() {
         return {
-            items: [],
+            items: [
+                {
+                    'motivo': 'Rechazado, el cliente explicitamente rechaza el pedido',
+                    'icono': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 16.318A4.486 4.486 0 0 0 12.016 15a4.486 4.486 0 0 0-3.198 1.318M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
+                    </svg>`
+                },
+                {
+                    'motivo': 'Rechazado, el cliente no se encuentra en el domicilio',
+                    'icono': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                    </svg>`
+                },
+                {
+                    'motivo': 'Rechazado, otro motivo',
+                    'icono': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                    </svg>`
+                }]
         };
     },
 
@@ -86,9 +102,9 @@ export default {
         pagarPedido() {
             //Nada
         },
-        async entregado(idp) {
+        async entregado(idp, estado) {
             //Marcar como Entregado
-            let url = `https://nuestrocampo.cl/api/pedidos/update-deliver.php?id=${idp}`
+            let url = `https://nuestrocampo.cl/api/pedidos/update-deliver.php?id=${idp}&estado=${estado}`
             await axios.put(url).then(function (response) {
                 console.log(response.data)
             })
@@ -102,7 +118,7 @@ export default {
                 console.log(response.data)
             })
 
-            await this.entregado(idp)
+            await this.entregado(idp, 'Entregado')
         },
         async transferencia() {
             //pagado transferencia
@@ -112,7 +128,7 @@ export default {
                 console.log(response.data)
             })
 
-            await this.entregado(idp)
+            await this.entregado(idp, 'Entregado')
         }
     },
 };
