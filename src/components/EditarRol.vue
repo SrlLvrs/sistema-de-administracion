@@ -1,10 +1,10 @@
 <template>
     <!-- Botón para abrir el modal -->
-    <label :for="label" class="btn btn-outline btn-warning mr-2">
+    <label :for="label" class="btn btn-outline btn-info mr-2">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round"
-                d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+                d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
         </svg>
     </label>
 
@@ -13,27 +13,30 @@
     <div class="modal" role="dialog">
         <div class="modal-box modal-pedido">
             <h3 class="text-lg font-bold mb-2 text-center">
-                Editar contraseña
+                Editar rol
             </h3>
 
             <div>
-                <!-- Contraseña -->
+                <!-- Rol -->
                 <label class="label">
-                    <span class="label-text font-bold">Nueva Contraseña</span>
+                    <span class="label-text font-bold">Nuevo Rol</span>
                 </label>
-                <input type="password" v-model="password" placeholder="Contraseña"
-                    class="input input-bordered w-full max-w-xs mb-2" />
+                <select v-model="rol" class="select select-bordered w-full max-w-xs">
+                    <option value="Administrador">Administrador</option>
+                    <option value="Colaborador">Colaborador</option>
+                    <option value="Repartidor">Repartidor</option>
+                </select>
 
                 <!-- Botones del modal -->
                 <div class="modal-action">
                     <label :for="label" class="btn">Salir</label>
-                    <button class="btn btn-outline btn-warning" @click="editPass()">
+                    <button class="btn btn-outline btn-info" @click="editRol()">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+                                d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
                         </svg>
-                        Editar contraseña
+                        Editar rol
                     </button>
                 </div>
             </div>
@@ -47,7 +50,7 @@ import axios from "axios";
 import bcrypt from "bcryptjs";
 
 export default {
-    name: "EditarPass",
+    name: "EditarRol",
 
     props: {
         id: Number,
@@ -56,21 +59,17 @@ export default {
 
     data() {
         return {
-            password: '',
+            rol: '',
         };
     },
 
     methods: {
-        async editPass() {
-            const saltRounds = 10;
-            // Encriptar la contraseña
-            const hashedPassword = await bcrypt.hash(this.password, saltRounds);
-            console.log(hashedPassword)
+        async editRol() {
+            let r = this.rol
+            let id = this.id
 
             // Enviar datos al backend (API)
-            let id = this.id;
-            let p = hashedPassword;
-            let url = `https://nuestrocampo.cl/api/users/update.php?id=${id}&pass=${p}`;
+            let url = `https://nuestrocampo.cl/api/users/update-role.php?id=${id}&rol=${r}`;
             axios.put(url).then(function (response) {
                 console.log(response.data);
             });
