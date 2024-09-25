@@ -23,7 +23,7 @@
                     <td>{{ item.Username }}</td>
                     <td>{{ item.Rol }}</td>
                     <td>
-                        Cambiar contraseña
+                        <EditarPass :id=item.ID :label="item.ID + 'label'" />
                         Cambiar rol
                         Eliminar usuario
                     </td>
@@ -36,6 +36,7 @@
 <script>
 import axios from 'axios';
 import CrearUsuario from '../components/CrearUsuario.vue'
+import EditarPass from '../components/EditarPass.vue'
 
 export default {
     //Nombre del componente
@@ -52,6 +53,6 @@ export default {
         axios.get(url).then((response) => (this.usuarios = response.data));
     },
 
-    components: { CrearUsuario }
+    components: { CrearUsuario, EditarPass }
 }
 </script>
