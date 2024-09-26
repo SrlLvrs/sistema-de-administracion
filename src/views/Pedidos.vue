@@ -67,11 +67,11 @@
                         <!-- Detalle Pedido -->
                         <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
 
-                        <!-- Editar Pedido -->
-                        <EditarPedido :label="item.ID + 'edit'" :id="item.ID" />
+                        <!-- Editar Pedido (No se muestra si el rol es repartidor) -->
+                        <EditarPedido v-if="this.rol != 'Repartidor'" :label="item.ID + 'edit'" :id="item.ID" />
 
-                        <!-- Eliminar Pedido -->
-                        <EliminarPedido :id="item.ID" />
+                        <!-- Eliminar Pedido (No se muestra si el rol es repartidor) -->
+                        <EliminarPedido v-if="this.rol != 'Repartidor'" :id="item.ID" />
                     </td>
                 </tr>
             </tbody>
@@ -96,6 +96,7 @@ export default {
             //Array para guardar datos de la API
             items: [],
             filterText: '',
+            rol: '',
         };
     },
 
@@ -135,6 +136,7 @@ export default {
         const sessionData = this.checkUserSession();
         if (sessionData) {
             console.log('Sesión iniciada. Montando...');
+            this.rol = sessionData.rol;
             this.getPedidos()
         } else {
             console.log('No hay sesión iniciada. Redireccionando a login');

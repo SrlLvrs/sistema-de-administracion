@@ -108,14 +108,14 @@
                         </button>
 
                         <!-- Editar Cliente -->
-                        <EditarCliente :id="item.ID" :nombre="item.Nombre" :comuna="item.Comuna"
+                        <EditarCliente v-if="this.rol != 'Repartidor'" :id="item.ID" :nombre="item.Nombre" :comuna="item.Comuna"
                             :sector="item.NombreSector" :id_sector="item.IDSector" :dia="item.diaDeReparto"
                             :direccion="item.Direccion" :telefono="item.Telefono" :telefono2="item.Telefono2"
                             :linkmaps="item.LinkMaps" :frecuencia="item.freq" :observaciones="item.Observacion"
                             producto_preferido="no" id_producto_preferido="noid" />
 
                         <!-- Eliminar Cliente -->
-                        <EliminarCliente :id="item.ID + 'eliminar'" />
+                        <EliminarCliente v-if="this.rol != 'Repartidor'" :id="item.ID + 'eliminar'" />
                     </td>
                 </tr>
             </tbody>
@@ -149,6 +149,7 @@ export default {
             filterText: '',
             selectedDay: '',
             selectedSus: '',
+            rol: '',
         };
     },
 
@@ -209,6 +210,7 @@ export default {
         const sessionData = this.checkUserSession();
         if (sessionData) {
             console.log('Sesión iniciada. Montando...');
+            this.rol = sessionData.rol
             this.getClientes()
         } else {
             console.log('No hay sesión iniciada. Redireccionando a login');

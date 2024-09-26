@@ -31,7 +31,7 @@
                     <th>Comuna</th>
                     <th>Día de reparto</th>
                     <th>Orden de Reparto</th>
-                    <th>Acciones</th>
+                    <th v-if="this.rol != 'Repartidor'">Acciones</th>
                 </tr>
             </thead>
             <!-- Body -->
@@ -48,13 +48,16 @@
                     <td>
                         <!-- Botón EDITAR SECTOR -->
                         <editarSectorModal 
+                            v-if="this.rol != 'Repartidor'"
                             :id="item.id" 
                             :nombreSector="item.nombreSector" 
                             :comuna="item.comuna" 
                             :diareparto="item.diaReparto" 
                             :orden="item.orden" />
                         <!-- Botón BORRAR SECTOR -->
-                        <eliminarSectorModal :id="item.id" />
+                        <eliminarSectorModal 
+                            v-if="this.rol != 'Repartidor'" 
+                            :id="item.id" />
                     </td>
                 </tr>
             </tbody>
@@ -78,6 +81,7 @@ export default {
             //Array para guardar datos de la API
             items: [],
             filterText: '',
+            rol: '',
         };
     },
 
@@ -111,6 +115,7 @@ export default {
         const sessionData = this.checkUserSession();
         if (sessionData) {
             console.log('Sesión iniciada. Montando...');
+            this.rol = sessionData.rol
             this.getSectores()
         } else {
             console.log('No hay sesión iniciada. Redireccionando a login');

@@ -69,9 +69,6 @@
             </tbody>
         </table>
     </div>
-    <div v-if="filteredItems.length == 0" class="flex justify-center items-center h-screen">
-        <p class="text-center">No hay pedidos que coincidan con el filtro actual</p>
-    </div>
     <div v-else class="flex justify-center items-center h-screen">
         <p class="text-center">No hay pedidos asignados a ti, o no eres repartidor. Si crees que es un error, comunícate con el administrador.</p>
     </div>
