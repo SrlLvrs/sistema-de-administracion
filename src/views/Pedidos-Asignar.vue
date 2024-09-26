@@ -41,15 +41,8 @@
                     <td> {{ item.Comuna }}</td>
                     <td> {{ item.Repartidor }}</td>
                     <td>
-                        <!-- Botón EDITAR SECTOR -->
-                        <editarSectorModal 
-                            :id="item.id" 
-                            :nombreSector="item.nombreSector" 
-                            :comuna="item.comuna" 
-                            :diareparto="item.diaReparto" 
-                            :orden="item.orden" />
-                        <!-- Botón BORRAR SECTOR -->
-                        <eliminarSectorModal :id="item.id" />
+                        <!-- Botón ASIGNAR REPARTIDOR -->
+                        <AsignarRepartidor :id="item.IDSector" :label="item.IDSector + 'label'" />                        
                     </td>
                 </tr>
             </tbody>
@@ -60,17 +53,14 @@
 <script>
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
-import eliminarSectorModal from "../components/EliminarSector.vue";
-import crearSectorModal from "../components/CrearSector.vue";
-import editarSectorModal from "../components/EditarSector.vue";
+import AsignarRepartidor from '../components/AsignarRepartidor.vue'
+
 
 export default {
-    //Nombre del componente
     name: "Sectores",
 
     data() {
         return {
-            //Array para guardar datos de la API
             items: [],
             filterText: '',
         };
@@ -88,19 +78,29 @@ export default {
     },
 
     computed: {
-        //Esta función filtra el array en base a el NOMBRE o la DIRECCION del cliente
         filteredItems() {
-            return this.items.filter(item => {
-                return item.NombreSector.toLowerCase().includes(this.filterText.toLowerCase()) || //esta linea filtra texto
-                    item.Comuna.toLowerCase().includes(this.filterText.toLowerCase());
-                //item.edad.toString().includes(this.filterText); //esta linea filtra INTs
-                //hay que añadir una de estas 2 tipos de lineas, para cada una de las columnas a filtrar
+            // Normaliza el texto de búsqueda y los campos de los clientes
+            const normalizeText = (text) => {
+                return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            };
 
+            // Obtiene el texto de búsqueda normalizado
+            const filterTextNormalized = normalizeText(this.filterText);
+
+            // Filtra los elementos de la lista de sectores según los criterios de filtrado
+            return this.items.filter((item) => {
+                const matchesText =
+                    !filterTextNormalized ||
+                    normalizeText(item.NombreSector).includes(filterTextNormalized) ||
+                    normalizeText(item.Comuna).includes(filterTextNormalized);
+
+                // Devuelve los elementos que cumplen con todos los criterios de filtrado
+                return matchesText;
             });
-        }
+        },
     },
 
-    components: { eliminarSectorModal, crearSectorModal, editarSectorModal },
+    components: { AsignarRepartidor },
 
     mounted() {
         const sessionData = this.checkUserSession();

@@ -104,7 +104,7 @@ export default {
         },
         async entregado(idp, estado) {
             //Marcar como Entregado
-            let url = `https://nuestrocampo.cl/api/pedidos/update-deliver.php?id=${idp}&estado=${estado}`
+            let url = `https://nuestrocampo.cl/api/pedidos/update-state.php?id=${idp}&estado=${estado}`
             await axios.put(url).then(function (response) {
                 console.log(response.data)
             })
