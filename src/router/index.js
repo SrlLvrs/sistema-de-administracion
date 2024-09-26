@@ -14,6 +14,11 @@ const router = createRouter({
         { path: "/pedidos", component: () => import("../views/Pedidos.vue") },
         { path: "/pedidos/automaticos", component: () => import("../views/Pedidos-auto.vue") },
         { path: "/pedidos/hoy", component: () => import("../views/Pedidos-hoy.vue") },
+        { 
+            path: "/pedidos/asignar", 
+            name: "PedidosAsignar",
+            component: () => import("../views/Pedidos-Asignar.vue") 
+        },
         { path: "/produccion", component: () => import("../views/Produccion.vue") },
         { path: "/admin", component: () => import("../views/Admin.vue") },
         { path: "/sectores", component: () => import("../views/Sectores.vue") },
