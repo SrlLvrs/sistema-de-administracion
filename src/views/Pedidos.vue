@@ -100,7 +100,14 @@ export default {
     },
 
     methods: {
-        //Nada por aquí...
+        checkUserSession() {
+            const sessionData = JSON.parse(localStorage.getItem('authUser'));
+            return sessionData ? sessionData : null;
+        },
+        async getPedidos() {
+            let url = "https://nuestrocampo.cl/api/pedidos/read.php";
+            await axios.get(url).then((response) => (this.items = response.data));
+        }
     },
 
     computed: {
@@ -124,12 +131,15 @@ export default {
         },
     },
 
-    //Método para llamar a la API cuando se cree la instancia
-    created() {
-        //Variable con endpoint
-        let url = "https://nuestrocampo.cl/api/pedidos/read.php";
-
-        axios.get(url).then((response) => (this.items = response.data));
+    mounted() {
+        const sessionData = this.checkUserSession();
+        if (sessionData) {
+            console.log('Sesión iniciada. Montando...');
+            this.getPedidos()
+        } else {
+            console.log('No hay sesión iniciada. Redireccionando a login');
+            this.$router.push({ name: 'LogIn' });
+        }
     },
 
     components: { EliminarPedido, DetallePedido, EditarPedido, Excel },

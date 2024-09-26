@@ -153,6 +153,14 @@ export default {
     },
 
     methods: {
+        checkUserSession() {
+            const sessionData = JSON.parse(localStorage.getItem('authUser'));
+            return sessionData ? sessionData : null;
+        },
+        async getClientes() {
+            let url = "https://nuestrocampo.cl/api/clientes/read.php";
+            await axios.get(url).then((response) => (this.items = response.data));
+        },
         borrarFiltros() {
             this.filterText = '';
             this.selectedDay = '';
@@ -197,12 +205,15 @@ export default {
         },
     },
 
-    //Método para llamar a la API cuando se cree la instancia
-    created() {
-        //Variable con endpoint
-        let url = "https://nuestrocampo.cl/api/clientes/read.php";
-
-        axios.get(url).then((response) => (this.items = response.data));
+    mounted() {
+        const sessionData = this.checkUserSession();
+        if (sessionData) {
+            console.log('Sesión iniciada. Montando...');
+            this.getClientes()
+        } else {
+            console.log('No hay sesión iniciada. Redireccionando a login');
+            this.$router.push({ name: 'LogIn' });
+        }
     },
 
     components: { CrearCliente, EliminarCliente, EditarCliente, CrearPedido, CrearPedidoAuto, Excel },

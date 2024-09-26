@@ -80,12 +80,13 @@ export default {
 
     created() {
         this.sessionData = this.checkUserSession();
-
+        /*
         if (this.sessionData) {
             console.log('Sesión iniciada');
         } else {
             console.log('No hay sesión iniciada');
         }
+        */
     },
 
     watch: {

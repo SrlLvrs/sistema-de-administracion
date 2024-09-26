@@ -110,8 +110,6 @@ export default {
             console.log('No hay sesión iniciada. Redireccionado a login');
             this.$router.push({ name: 'LogIn' });
         }
-
-
     },
 
     components: { DetallesPedido }

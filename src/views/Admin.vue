@@ -50,9 +50,32 @@ export default {
         };
     },
 
+    methods: {
+        checkUserSession() {
+            const sessionData = JSON.parse(localStorage.getItem('authUser'));
+            return sessionData ? sessionData : null;
+        },
+        async getUsers() {
+            let url = `https://nuestrocampo.cl/api/users/read.php`;
+            await axios.get(url).then((response) => (this.usuarios = response.data));
+        }
+    },
+
     mounted() {
-        let url = `https://nuestrocampo.cl/api/users/read.php`;
-        axios.get(url).then((response) => (this.usuarios = response.data));
+        const sessionData = this.checkUserSession();
+        if (sessionData) {
+            console.log('Sesión iniciada');
+            if (sessionData.rol === 'Administrador') {
+                console.log('Sesión administrador. Montando...')
+                this.getUsers();
+            } else {
+                alert('No tienes permiso para ver esta información.');
+                this.$router.push({ name: 'Inicio' });
+            }
+        } else {
+            console.log('No hay sesión iniciada. Redireccionado a login');
+            this.$router.push({ name: 'LogIn' });
+        }
     },
 
     components: { CrearUsuario, EditarPass, EditarRol, EliminarUsuario }

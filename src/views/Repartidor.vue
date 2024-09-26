@@ -6,8 +6,8 @@
             <h1 class="text-center p-4 m-0">Todos los pedidos pendientes de hoy</h1>
             <div class="flex justify-center mb-4">
                 <!-- INPUT FILTRAR -->
-                <label class="input input-bordered flex items-center gap-2 mx-2">
-                    <input v-model="filterText" type="text" class="grow" placeholder="Cliente o ID de pedido" />
+                <label class="input input-bordered flex items-center gap-2 mx-2 w-full max-w-xs">
+                    <input v-model="filterText" type="text" class="grow" placeholder="Cliente, dirección o ID de pedido" />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                         class="h-4 w-4 opacity-70">
                         <path fill-rule="evenodd"
@@ -22,7 +22,7 @@
         </div>
     </div>
     <!-- RESULTADOS -->
-    <div class="overflow-x-auto">
+    <div v-if="items.length > 0" class="overflow-x-auto">
         <table class="table">
             <!-- Encabezado -->
             <thead>
@@ -30,6 +30,7 @@
                     <th></th>
                     <th>Número de pedido</th>
                     <th>Cliente</th>
+                    <th>Dirección</th>
                     <th>Estado</th>
                     <th>Pagado</th>
                     <th>Medio de Pago</th>
@@ -54,6 +55,7 @@
                     </th>
                     <th> {{ item.ID }}</th>
                     <th> {{ item.Nombre }}</th>
+                    <td> {{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</td>
                     <td> {{ item.Estado }}</td>
                     <td> {{ item.Pagado }}</td>
                     <td> {{ item.MedioPago }}</td>
@@ -66,6 +68,12 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+    <div v-if="filteredItems.length == 0" class="flex justify-center items-center h-screen">
+        <p class="text-center">No hay pedidos que coincidan con el filtro actual</p>
+    </div>
+    <div v-else class="flex justify-center items-center h-screen">
+        <p class="text-center">No hay pedidos asignados a ti, o no eres repartidor. Si crees que es un error, comunícate con el administrador.</p>
     </div>
 </template>
 
@@ -110,7 +118,10 @@ export default {
                 const matchesText =
                     !filterTextNormalized ||
                     normalizeText(item.ID).includes(filterTextNormalized) ||
-                    normalizeText(item.Nombre).includes(filterTextNormalized);
+                    normalizeText(item.Nombre).includes(filterTextNormalized) ||
+                    normalizeText(item.Direccion).includes(filterTextNormalized) ||
+                    normalizeText(item.NombreSector).includes(filterTextNormalized) ||
+                    normalizeText(item.Comuna).includes(filterTextNormalized);
 
                 // Devuelve los elementos que coincidan con todos los filtros activos
                 return matchesText;

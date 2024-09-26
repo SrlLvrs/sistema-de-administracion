@@ -81,6 +81,17 @@ export default {
         };
     },
 
+    methods: {
+        checkUserSession() {
+            const sessionData = JSON.parse(localStorage.getItem('authUser'));
+            return sessionData ? sessionData : null;
+        },
+        async getSectores() {
+            let url = "https://nuestrocampo.cl/api/sectores/read.php";
+            await axios.get(url).then((response) => (this.items = response.data));
+        }
+    },
+
     computed: {
         //Esta función filtra el array en base a el NOMBRE o la DIRECCION del cliente
         filteredItems() {
@@ -96,12 +107,15 @@ export default {
 
     components: { eliminarSectorModal, crearSectorModal, editarSectorModal },
 
-    //Método para llamar a la API cuando se cree la instancia
-    created() {
-        //Variable con endpoint
-        let url = "https://nuestrocampo.cl/api/sectores/read.php";
-
-        axios.get(url).then((response) => (this.items = response.data));
+    mounted() {
+        const sessionData = this.checkUserSession();
+        if (sessionData) {
+            console.log('Sesión iniciada. Montando...');
+            this.getSectores()
+        } else {
+            console.log('No hay sesión iniciada. Redireccionando a login');
+            this.$router.push({ name: 'LogIn' });
+        }
     },
 };
 </script>

@@ -82,27 +82,34 @@ export default {
     },
 
     methods: {
+        checkUserSession() {
+            const sessionData = JSON.parse(localStorage.getItem('authUser'));
+            return sessionData ? sessionData : null;
+        },
+        async getProductos() {
+            let url = "https://nuestrocampo.cl/api/productos/read.php";
+            await axios.get(url).then((response) => (this.items = response.data));
+        }
     },
 
     computed: {
-        //Esta función filtra el array en base a el NOMBRE o la DIRECCION del cliente
+        //Esta función filtra el array en base a el NOMBRE del producto
         filteredItems() {
             return this.items.filter(item => {
-                return item.descripcion.toLowerCase().includes(this.filterText.toLowerCase()); //esta linea filtra texto
-                    //item.direccion.toLowerCase().includes(this.filterText.toLowerCase());
-                //item.edad.toString().includes(this.filterText); //esta linea filtra INTs
-                //hay que añadir una de estas 2 tipos de lineas, para cada una de las columnas a filtrar
-
+                return item.descripcion.toLowerCase().includes(this.filterText.toLowerCase());
             });
         }
     },
 
-    //Método para llamar a la API cuando se cree la instancia
-    created() {
-        //Variable con endpoint
-        let url = "https://nuestrocampo.cl/api/productos/read.php";
-
-        axios.get(url).then((response) => (this.items = response.data));
+    mounted() {
+        const sessionData = this.checkUserSession();
+        if (sessionData) {
+            console.log('Sesión iniciada. Montando...');
+            this.getProductos()
+        } else {
+            console.log('No hay sesión iniciada. Redireccionando a login');
+            this.$router.push({ name: 'LogIn' });
+        }
     },
 
     components: { CrearProducto, EliminarProducto, EditarProducto }
