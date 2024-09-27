@@ -96,20 +96,15 @@ export default {
     methods: {
         //Obtiene el detalle del pedido desde la Base de Datos
         leerDetallePedido() {
-            let idp = this.id;
-            let url = `https://nuestrocampo.cl/api/pedidos/read-detail.php?id=${idp}`
-
-            axios.get(url).then((response) => (this.items = response.data));
-
-            //Sumar el total
-            setTimeout(() => {
-                let adicion = this.items.reduce((total, pedido) => {
-                    return total + parseInt(pedido.Total, 10);
-                }, 0);
-                this.suma = adicion
-                console.log(this.suma)
-            }, 1000);
-
+            const idp = this.id;
+            const url = `https://nuestrocampo.cl/api/pedidos/read-detail.php?id=${idp}`;
+        
+            axios.get(url)
+                .then(response => {
+                    this.items = response.data;
+                    this.suma = this.items.reduce((total, pedido) => total + parseInt(pedido.Total, 10), 0);
+                })
+                .catch(error => console.error(error));
         },
     },
 };

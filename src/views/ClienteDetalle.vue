@@ -44,42 +44,112 @@
     </div>
 
     <!-- Pedidos pendientes de pago -->
-    <div v-if="pendientes" class="prose max-w-none mt-8">
-        <h1 class="text-center p-4 m-0">Pedidos pendientes de pago</h1>
-    </div>
-    <div class="overflow-x-auto">
-        <table class="table">
-            <!-- Head -->
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Estado</th>
-                    <th>Pagado</th>
-                    <th>Medio de Pago</th>
-                    <th>Hora y Fecha de Entrega</th>
-                    <th>Detalle</th>
-                </tr>
-            </thead>
-            <!-- Body -->
-            <tbody>
-                <tr v-for="item in pendientes" :key="item.ID">
-                    <th> {{ item.ID }}</th>
-                    <td> {{ item.Estado }}</td>
-                    <td> {{ item.Pagado }}</td>
-                    <td> {{ item.MedioPago }}</td>
-                    <td> {{ item.FechaEntrega }}</td>
-                    <td>
-                        <!-- Detalle Pedido -->
-                        <DetallePedidoMinimal :label="item.ID + 'detail'" :id="item.ID" />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div v-if="pendientes">
+        <div class="prose max-w-none mt-8">
+            <h1 class="text-center p-4 m-0">Pedidos pendientes de pago</h1>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="table">
+                <!-- Head -->
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Estado</th>
+                        <th>Pagado</th>
+                        <th>Medio de Pago</th>
+                        <th>Hora y Fecha de Entrega</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <!-- Body -->
+                <tbody>
+                    <tr v-for="item in pendientes" :key="item.ID">
+                        <th> {{ item.ID }}</th>
+                        <td> {{ item.Estado }}</td>
+                        <td> {{ item.Pagado }}</td>
+                        <td> {{ item.MedioPago }}</td>
+                        <td> {{ item.FechaEntrega }}</td>
+                        <td>
+                            <!-- Detalle Pedido -->
+                            <DetallePedidoMinimal :label="item.ID + 'detail'" :id="item.ID" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Próximos pedidos -->
+    <div v-if="futuros">
+        <div class="prose max-w-none mt-8">
+            <h1 class="text-center p-4 m-0">Próximos pedidos</h1>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="table">
+                <!-- Head -->
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Estado</th>
+                        <th>Pagado</th>
+                        <th>Medio de Pago</th>
+                        <th>Fecha de Entrega</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <!-- Body -->
+                <tbody>
+                    <tr v-for="item in futuros" :key="item.ID">
+                        <th> {{ item.ID }}</th>
+                        <td> {{ item.Estado }}</td>
+                        <td> {{ item.Pagado }}</td>
+                        <td> {{ item.MedioPago }}</td>
+                        <td> {{ item.FechaEntrega }}</td>
+                        <td>
+                            <!-- Detalle Pedido -->
+                            <DetallePedidoMinimal :label="item.ID + 'next'" :id="item.ID" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <!-- Pedidos anteriores -->
+    <div v-if="pasados" >
+        <div class="prose max-w-none mt-8">
+            <h1 class="text-center p-4 m-0">Pedidos pasados</h1>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="table">
+                <!-- Head -->
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Estado</th>
+                        <th>Pagado</th>
+                        <th>Medio de Pago</th>
+                        <th>Fecha de Entrega</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <!-- Body -->
+                <tbody>
+                    <tr v-for="item in pasados" :key="item.ID">
+                        <th> {{ item.ID }}</th>
+                        <td> {{ item.Estado }}</td>
+                        <td> {{ item.Pagado }}</td>
+                        <td> {{ item.MedioPago }}</td>
+                        <td> {{ item.FechaEntrega }}</td>
+                        <td>
+                            <!-- Detalle Pedido -->
+                            <DetallePedidoMinimal :label="item.ID + 'past'" :id="item.ID" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </template>
 
@@ -101,6 +171,8 @@ export default {
             //Array para guardar datos de la API
             items: [],
             pendientes: [],
+            futuros: [],
+            pasados: [],
         };
     },
 
@@ -109,7 +181,8 @@ export default {
             const urls = [
                 `https://nuestrocampo.cl/api/clientes/read-detail.php?id=${this.id}`,
                 `https://nuestrocampo.cl/api/pedidos/read-debt.php?id=${this.id}`,
-                'https://nuestrocampo.cl/api/inicio/read-log.php'
+                `https://nuestrocampo.cl/api/pedidos/read-next.php?id=${this.id}`,
+                `https://nuestrocampo.cl/api/pedidos/read-past.php?id=${this.id}`,
             ];
 
             const promises = urls.map(url => axios.get(url));
@@ -124,7 +197,9 @@ export default {
                         } else if (indice === 1) {
                             this.pendientes = resultado.value.data;
                         } else if (indice === 2) {
-                            this.logs = resultado.value.data;
+                            this.futuros = resultado.value.data;
+                        } else if (indice === 3) {
+                            this.pasados = resultado.value.data;
                         }
                     } else {
                         // Si la promesa fue rechazada
