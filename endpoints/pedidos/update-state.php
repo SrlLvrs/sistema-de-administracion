@@ -9,6 +9,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 // Se incluye el archivo que contiene la clase para la conexión a la base de datos.
 include_once '../config/db.php';
+include_once '../inicio/log_functions.php';
 
 // Se instancia la base de datos y se obtiene la conexión.
 $database = new Database();
@@ -20,6 +21,7 @@ Obtener los parámetros por url
 */
 $id = isset($_GET['id']) ? $_GET['id'] : ''; //NOT NULL
 $estado = isset($_GET['estado']) ? $_GET['estado'] : '';
+$user = isset($_GET['user']) ? $_GET['user'] : '';
 
 // Verifica que los campos no estén vacíos
 if (!empty($id)) {
@@ -41,6 +43,7 @@ if (!empty($id)) {
         http_response_code(200);
         // Se envía una respuesta JSON indicando que el pedido fue actualizado.
         echo json_encode(array("message" => "El pedido fue actualizado"));
+        logChange("$user marcó el pedido $id como $estado");
     } else {
         // Si la ejecución falla, se establece el código de respuesta a 503 Service Unavailable.
         http_response_code(503);

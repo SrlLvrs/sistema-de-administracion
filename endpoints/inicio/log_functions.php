@@ -3,19 +3,14 @@
 
 require_once '../config/db.php';
 
-function logChange($action, $table, $recordId, $changes) {
-    // Conectar a la base de datos
-    include_once '../config/db.php';
+function logChange($changes) {
     $database = new Database();
     $conn = $database->getConnection();
 
     // Preparar el log
-    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, record_id, changes) VALUES (:action, :table, :recordId, :changes)");
+    $stmt = $conn->prepare("INSERT INTO logs (changes) VALUES (:changes)");
 
     // Vincular parámetros a la consulta
-    $stmt->bindParam(':action', $action);
-    $stmt->bindParam(':table', $table);
-    $stmt->bindParam(':recordId', $recordId);
     $stmt->bindParam(':changes', $changes);
 
     // Ejecutar el query

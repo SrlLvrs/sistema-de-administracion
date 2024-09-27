@@ -11,34 +11,9 @@ $database = new Database();
 $db = $database->getConnection();
 
 // Se prepara la consulta SQL para seleccionar toda la información de pedidos.
-$query = "  SELECT
-                p.ID,
-                p.IDPA,
-                p.IDCliente,
-                c.Nombre,
-                c.Direccion,
-                s.NombreSector,
-                s.Comuna,
-                c.LinkMaps,
-                p.IDRepartidor,
-                u.Username AS NombreRepartidor,
-                p.Estado,
-                p.Pagado,
-                p.MedioPago,
-                DATE_FORMAT(p.FechaEntrega, '%d/%m/%Y') AS FechaEntrega,
-                DATE_FORMAT(
-                    p.HoraCreacion, '%d/%m/%Y %H:%i'
-                ) AS HoraCreacion,
-                DATE_FORMAT(p.HoraCierre, '%d/%m/%Y %H:%i') AS HoraCierre
-            FROM
-                pedidos p
-                JOIN clientes c ON p.IDCliente = c.ID
-                JOIN sector s ON c.IDSector = s.ID
-                JOIN usuarios u ON p.IDRepartidor = u.ID
-            WHERE
-                p.Visible = 1
-            ORDER BY
-                p.FechaEntrega DESC";
+$query = "  SELECT id, changes, DATE_FORMAT(log_time, '%H:%i - %d/%m/%Y') AS log_time
+            FROM logs
+            ORDER BY log_time DESC";
 
 $stmt = $db->prepare($query);
 

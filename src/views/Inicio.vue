@@ -35,7 +35,21 @@
         </div>
         <div class="flex-1 px-4">
             <h1 class="text-center p-8">Ultimas modificaciones</h1>
-            <p>Columna 2</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Hora</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="log in logs" :key="log.ID">
+                        <td>{{ log.log_time }}</td>
+                        <td>{{ log.changes }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
         </div>
     </div>
 </template>
@@ -53,6 +67,7 @@ export default {
         return {
             items: [],
             pendientes: [],
+            logs: [],
         };
     },
 
@@ -65,6 +80,7 @@ export default {
             const urls = [
                 'https://nuestrocampo.cl/api/inicio/read.php',
                 'https://nuestrocampo.cl/api/inicio/read-pendientes.php',
+                'https://nuestrocampo.cl/api/inicio/read-log.php'
             ];
 
             const promises = urls.map(url => axios.get(url));
@@ -76,8 +92,10 @@ export default {
                         // Si la promesa se resolvió correctamente
                         if (indice === 0) {
                             this.items = resultado.value.data;
-                        } else {
+                        } else if (indice === 1) {
                             this.pendientes = resultado.value.data;
+                        } else if (indice === 2) {
+                            this.logs = resultado.value.data;
                         }
                     } else {
                         // Si la promesa fue rechazada

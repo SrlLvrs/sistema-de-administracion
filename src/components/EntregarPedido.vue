@@ -94,42 +94,56 @@ export default {
                     'icono': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
                     </svg>`
-                }]
+                }],
+            user: '',
+            entregadoTimeout: null,
         };
     },
 
     methods: {
-        pagarPedido() {
-            //Nada
+        checkUserSession() {
+            const sessionData = JSON.parse(localStorage.getItem('authUser'));
+            return sessionData ? sessionData : null;
+        },
+        async getUser() {
+            const sessionData = this.checkUserSession();
+            this.user = sessionData.username
         },
         async entregado(idp, estado) {
-            //Marcar como Entregado
-            let url = `https://nuestrocampo.cl/api/pedidos/update-state.php?id=${idp}&estado=${estado}`
+            //Marcar como ${estado}
+            let url = `https://nuestrocampo.cl/api/pedidos/update-state.php?id=${idp}&estado=${estado}&user=${this.user}`
             await axios.put(url).then(function (response) {
                 console.log(response.data)
+            }).then(() => {
+                location.reload()
             })
-            location.reload()
         },
         async efectivo() {
-            //Pagado efectivo
+            //Pagar con efectivo
             let idp = this.id
-            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-cash.php?id=${idp}`
+            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-cash.php?id=${idp}&user=${this.user}`
             await axios.put(url).then(function (response) {
                 console.log(response.data)
             })
-
+            
+            //Entregar
             await this.entregado(idp, 'Entregado')
         },
         async transferencia() {
-            //pagado transferencia
+            //Pagar con transferencia
             let idp = this.id
-            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-wire.php?id=${idp}`
+            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-wire.php?id=${idp}&user=${this.user}`
             await axios.put(url).then(function (response) {
                 console.log(response.data)
             })
-
+            
+            //Entregar
             await this.entregado(idp, 'Entregado')
         }
     },
+
+    mounted() {
+        this.getUser()
+    }
 };
 </script>

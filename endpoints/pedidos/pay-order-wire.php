@@ -9,6 +9,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 // Se incluye el archivo que contiene la clase para la conexión a la base de datos.
 include_once '../config/db.php';
+include_once '../inicio/log_functions.php';
 
 // Se instancia la base de datos y se obtiene la conexión.
 $database = new Database();
@@ -18,6 +19,7 @@ $db = $database->getConnection();
 Obtiene la id del pedido por URL y lo marca como PAGADO
 */
 $id = isset($_GET['id']) ? $_GET['id'] : ''; //NOT NULL
+$user = isset($_GET['user']) ? $_GET['user'] : '';
 
 // Verifica que los campos no estén vacíos
 if (!empty($id)) {
@@ -37,6 +39,7 @@ if (!empty($id)) {
         http_response_code(200);
         // Se envía una respuesta JSON indicando que el pedido fue actualizado.
         echo json_encode(array("message" => "El pedido fue marcado como pagado"));
+        logChange("$user marcó el pedido $id como Pagado con Transferencia");
     } else {
         // Si la ejecución falla, se establece el código de respuesta a 503 Service Unavailable.
         http_response_code(503);

@@ -6,8 +6,8 @@
             <h1 class="text-center p-4 m-0">Todos los pedidos</h1>
             <div class="flex justify-center mb-4">
                 <!-- INPUT FILTRAR -->
-                <label class="input input-bordered flex items-center gap-2 mx-2">
-                    <input v-model="filterText" type="text" class="grow" placeholder="Cliente o ID de pedido" />
+                <label class="input input-bordered flex items-center gap-2 mx-2 w-full max-w-xs">
+                    <input v-model="filterText" type="text" class="grow" placeholder="Cliente, dirección o ID de pedido" />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                         class="h-4 w-4 opacity-70">
                         <path fill-rule="evenodd"
@@ -23,14 +23,16 @@
     </div>
     <!-- RESULTADOS -->
     <div class="overflow-x-auto">
-        <table class="table">
+        <table class="table table-zebra">
             <!-- Encabezado -->
             <thead>
                 <tr>
                     <th></th>
                     <th>Número de pedido</th>
                     <th>Cliente</th>
+                    <th>Direccion</th>
                     <th>Estado</th>
+                    <th>Repartidor</th>
                     <th>Pagado</th>
                     <th>Medio de Pago</th>
                     <th>Fecha de Entrega</th>
@@ -57,7 +59,9 @@
                     </th>
                     <th> {{ item.ID }}</th>
                     <th> {{ item.Nombre }}</th>
+                    <th> {{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</th>
                     <td> {{ item.Estado }}</td>
+                    <td> {{ item.NombreRepartidor }}</td>
                     <td> {{ item.Pagado }}</td>
                     <td> {{ item.MedioPago }}</td>
                     <td> {{ item.FechaEntrega }}</td>
@@ -124,7 +128,10 @@ export default {
                 const matchesText =
                     !filterTextNormalized ||
                     normalizeText(item.ID).includes(filterTextNormalized) ||
-                    normalizeText(item.Nombre).includes(filterTextNormalized);
+                    normalizeText(item.Nombre).includes(filterTextNormalized) ||
+                    normalizeText(item.Direccion).includes(filterTextNormalized) ||
+                    normalizeText(item.NombreSector).includes(filterTextNormalized) ||
+                    normalizeText(item.Comuna).includes(filterTextNormalized);
 
                 // Devuelve los elementos que coincidan con todos los filtros activos
                 return matchesText;
