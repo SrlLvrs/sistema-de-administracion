@@ -29,7 +29,17 @@ if (!empty($id)) {
                     COALESCE(
                         c.DiaRepartoExcepcional, s.DiaReparto
                     ) AS Dia_de_Reparto,
-                    c.Observacion
+                    c.Observacion,
+                    CASE WHEN EXISTS (
+                        SELECT
+                            1
+                        FROM
+                            pedidos
+                        WHERE
+                            IDCliente = c.ID
+                            AND Pagado = 'No'
+                            AND Estado = 'Entregado'
+                        ) THEN 'Tiene deuda' ELSE NULL END AS Deuda
                 FROM
                     clientes c
                     JOIN sector s ON c.IDSector = s.ID

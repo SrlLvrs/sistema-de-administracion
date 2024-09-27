@@ -1,13 +1,9 @@
 <template>
     <!-- Usar la clase prose para estilos, y max-w-none para usar el ancho completo -->
-    <!-- ENCABEZADO -->
+
+    <!-- Detalle Cliente -->
     <div class="prose max-w-none">
-        <div class="grid grid-cols-1">
-            <h1 class="text-center p-4 m-0">Detalle Clientes {{ id }}</h1>
-        </div>
-    </div>
-    <div>
-        {{ items }}
+        <h1 class="text-center p-4 m-0">Información del cliente</h1>
     </div>
     <div class="overflow-x-auto">
         <table class="table">
@@ -25,9 +21,6 @@
             </thead>
             <!-- Body -->
             <tbody>
-                <!-- GET -->
-                <!-- el nombre del array es ITEMS, que debe ser el mismo que se define en DATA() RETURN -->
-                <!-- Los resultados deben recorrerse dentro del TR -->
                 <tr v-for="item in items" :key="item.IDCliente">
                     <th>
                         <div v-if="item.Deuda" class="text-red-500 tooltip tooltip-right"
@@ -49,12 +42,51 @@
             </tbody>
         </table>
     </div>
-    
+
+    <!-- Pedidos pendientes de pago -->
+    <div v-if="pendientes" class="prose max-w-none mt-8">
+        <h1 class="text-center p-4 m-0">Pedidos pendientes de pago</h1>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="table">
+            <!-- Head -->
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Estado</th>
+                    <th>Pagado</th>
+                    <th>Medio de Pago</th>
+                    <th>Hora y Fecha de Entrega</th>
+                    <th>Detalle</th>
+                </tr>
+            </thead>
+            <!-- Body -->
+            <tbody>
+                <tr v-for="item in pendientes" :key="item.ID">
+                    <th> {{ item.ID }}</th>
+                    <td> {{ item.Estado }}</td>
+                    <td> {{ item.Pagado }}</td>
+                    <td> {{ item.MedioPago }}</td>
+                    <td> {{ item.FechaEntrega }}</td>
+                    <td>
+                        <!-- Detalle Pedido -->
+                        <DetallePedidoMinimal :label="item.ID + 'detail'" :id="item.ID" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Próximos pedidos -->
+
+    <!-- Pedidos anteriores -->
+
 </template>
 
 <script>
 //Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
+import DetallePedidoMinimal from "../components/DetallesPedidoMinimal.vue";
 
 export default {
     //Nombre del componente
@@ -68,19 +100,48 @@ export default {
         return {
             //Array para guardar datos de la API
             items: [],
+            pendientes: [],
         };
     },
 
     methods: {
         async getInfoCliente() {
-            let url = `https://nuestrocampo.cl/api/clientes/read-detail.php?id=${this.id}`;
-            await axios.get(url).then((response) => (this.items = response.data));
+            const urls = [
+                `https://nuestrocampo.cl/api/clientes/read-detail.php?id=${this.id}`,
+                `https://nuestrocampo.cl/api/pedidos/read-debt.php?id=${this.id}`,
+                'https://nuestrocampo.cl/api/inicio/read-log.php'
+            ];
+
+            const promises = urls.map(url => axios.get(url));
+
+            try {
+                const resultados = await Promise.allSettled(promises);
+                resultados.forEach((resultado, indice) => {
+                    if (resultado.status === 'fulfilled') {
+                        // Si la promesa se resolvió correctamente
+                        if (indice === 0) {
+                            this.items = resultado.value.data;
+                        } else if (indice === 1) {
+                            this.pendientes = resultado.value.data;
+                        } else if (indice === 2) {
+                            this.logs = resultado.value.data;
+                        }
+                    } else {
+                        // Si la promesa fue rechazada
+                        console.error(`Error en el endpoint ${urls[indice]}`, resultado.reason);
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+            }
         },
     },
 
     computed: {
         //Nada por aqui
     },
+
+    components: { DetallePedidoMinimal },
 
     mounted() {
         this.getInfoCliente()
