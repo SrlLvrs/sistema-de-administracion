@@ -23,7 +23,7 @@
     </div>
     <!-- RESULTADOS -->
     <div class="overflow-x-auto">
-        <table class="table table-zebra">
+        <table v-if="filteredItems.length > 0" class="table table-zebra">
             <!-- Encabezado -->
             <thead>
                 <tr>
@@ -80,6 +80,9 @@
                 </tr>
             </tbody>
         </table>
+        <div v-else class="flex justify-center items-center h-screen">
+            <p class="text-center">No se encontraron pedidos con el filtro de búsqueda actual</p>
+        </div>
     </div>
 </template>
 

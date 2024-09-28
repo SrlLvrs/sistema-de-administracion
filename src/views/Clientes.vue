@@ -121,7 +121,7 @@
             </tbody>
         </table>
         <div v-else class="flex justify-center items-center h-screen">
-            <p class="text-center">No se encontraron clientes con el filtro de búsqueda</p>
+            <p class="text-center">No se encontraron clientes con el filtro de búsqueda actual</p>
         </div>
     </div>
 </template>
