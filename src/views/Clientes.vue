@@ -32,7 +32,10 @@
                 <!-- SELECT Filtro de Suscripción -->
                 <select id="sus" v-model="selectedSus" class="select select-bordered max-w-xs ml-2">
                     <option value="">Filtrar por suscripción</option>
-                    <option v-for="suscripcion in suscripciones"> {{ suscripcion }} </option>
+                    <option value="todas">Todas las suscripciones</option>
+                    <option v-for="suscripcion in suscripciones" :key="suscripcion" :value="suscripcion">
+                        {{ suscripcion }}
+                    </option>
                 </select>
 
                 <!-- BOTÓN PARA DESACTIVAR EL FILTRO -->
@@ -108,11 +111,11 @@
                         </button>
 
                         <!-- Editar Cliente -->
-                        <EditarCliente v-if="this.rol != 'Repartidor'" :id="item.ID" :nombre="item.Nombre" :comuna="item.Comuna"
-                            :sector="item.NombreSector" :id_sector="item.IDSector" :dia="item.diaDeReparto"
-                            :direccion="item.Direccion" :telefono="item.Telefono" :telefono2="item.Telefono2"
-                            :linkmaps="item.LinkMaps" :frecuencia="item.freq" :observaciones="item.Observacion"
-                            producto_preferido="no" id_producto_preferido="noid" />
+                        <EditarCliente v-if="this.rol != 'Repartidor'" :id="item.ID" :nombre="item.Nombre"
+                            :comuna="item.Comuna" :sector="item.NombreSector" :id_sector="item.IDSector"
+                            :dia="item.diaDeReparto" :direccion="item.Direccion" :telefono="item.Telefono"
+                            :telefono2="item.Telefono2" :linkmaps="item.LinkMaps" :frecuencia="item.freq"
+                            :observaciones="item.Observacion" producto_preferido="no" id_producto_preferido="noid" />
 
                         <!-- Eliminar Cliente -->
                         <EliminarCliente v-if="this.rol != 'Repartidor'" :id="item.ID + 'eliminar'" />
@@ -198,7 +201,9 @@ export default {
 
                 const matchesSus =
                     !selectedSusNormalized ||
+                    (selectedSusNormalized === 'todas' && ['Cada 1 semana', 'Cada 2 semanas', 'Cada 3 semanas', 'Cada 4 semanas'].includes(item.Freq)) ||
                     normalizeText(item.Freq) === selectedSusNormalized;
+
 
                 // Devuelve los elementos que cumplen con todos los criterios de filtrado
                 return matchesText && matchesDay && matchesSus;

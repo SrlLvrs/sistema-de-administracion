@@ -28,7 +28,7 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th>Número de pedido</th>
+                    <th>ID de pedido</th>
                     <th>Cliente</th>
                     <th>Direccion</th>
                     <th>Estado</th>
@@ -43,9 +43,6 @@
             </thead>
             <!-- Body -->
             <tbody>
-                <!-- GET -->
-                <!-- el nombre del array es FILTEREDITEMS, que es una función que toma el JSON y lo convierte en array, para poder filtrarlo -->
-                <!-- Los resultados deben recorrerse dentro del TR -->
                 <tr v-for="item in filteredItems" :key="item.ID">
                     <th>
                         <div v-if="item.IDPA" class="tooltip tooltip-right"
