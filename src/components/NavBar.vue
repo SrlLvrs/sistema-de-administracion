@@ -35,11 +35,13 @@
                 <li><router-link to='/pedidos'>Pedidos</router-link></li>
                 <li v-if="rol != 'Repartidor'"><router-link to='/produccion'>Producción</router-link></li>
                 <li v-if="rol != 'Repartidor'"><router-link to='/admin'>Administrar usuarios</router-link></li>
-                <li>
-                    <button @click="checkUserSession()" class="btn btn-outline btn-success">Current User</button>
+                <!--
+                -->
+                <li @click="logout()" class="text-red-500">
+                    <router-link to='/login'>Cerrar sesión</router-link>
                 </li>
                 <li>
-                    <button @click="logout()" class="btn btn-outline btn-error">Sign Out</button>
+                    <button @click="checkUserSession()" class="btn btn-outline btn-success">Current User</button>
                 </li>
             </ul>
         </div>
