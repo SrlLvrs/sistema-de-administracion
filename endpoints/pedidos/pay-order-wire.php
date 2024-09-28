@@ -20,6 +20,7 @@ Obtiene la id del pedido por URL y lo marca como PAGADO
 */
 $id = isset($_GET['id']) ? $_GET['id'] : ''; //NOT NULL
 $user = isset($_GET['user']) ? $_GET['user'] : '';
+$msg = isset($_GET['msg']) ? $_GET['msg'] : '';
 
 // Verifica que los campos no estén vacíos
 if (!empty($id)) {
@@ -39,7 +40,7 @@ if (!empty($id)) {
         http_response_code(200);
         // Se envía una respuesta JSON indicando que el pedido fue actualizado.
         echo json_encode(array("message" => "El pedido fue marcado como pagado"));
-        logChange("$user marcó el pedido $id como Pagado con Transferencia");
+        logChange($id, "$user marcó el pedido $id de $msg como Pagado con Transferencia");
     } else {
         // Si la ejecución falla, se establece el código de respuesta a 503 Service Unavailable.
         http_response_code(503);

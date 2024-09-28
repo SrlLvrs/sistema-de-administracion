@@ -10,7 +10,10 @@ include_once '../config/db.php';
 $database = new Database();
 $db = $database->getConnection();
 
-// GET todos los pedidos.
+//Parámetros por URL: id de pedido
+$id = isset($_GET['id']) ? $_GET['id'] : ''; // NOT NULL
+
+// GET un pedido específico en base a su ID.
 $query = "  SELECT
                 p.ID,
                 p.IDPA,
@@ -37,10 +40,10 @@ $query = "  SELECT
                 JOIN usuarios u ON p.IDRepartidor = u.ID
             WHERE
                 p.Visible = 1
-            ORDER BY
-                p.FechaEntrega DESC";
+                AND p.ID = :id";
 
 $stmt = $db->prepare($query);
+$stmt->bindParam(':id', $id);
 
 // Se ejecuta la consulta.
 $stmt->execute();

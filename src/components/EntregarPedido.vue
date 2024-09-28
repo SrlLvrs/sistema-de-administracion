@@ -96,7 +96,7 @@ export default {
                     </svg>`
                 }],
             user: '',
-            entregadoTimeout: null,
+            pedido: [],
         };
     },
 
@@ -105,13 +105,22 @@ export default {
             const sessionData = JSON.parse(localStorage.getItem('authUser'));
             return sessionData ? sessionData : null;
         },
+        //Obtiene el usuario para el log
         async getUser() {
             const sessionData = this.checkUserSession();
             this.user = sessionData.username
         },
+        //Obtiene el pedido para el log
+        async getPedido() {
+            let url = `https://nuestrocampo.cl/api/pedidos/read-by-id.php?id=${this.id}`
+            await axios.get(url).then((response) => {
+                this.pedido = response.data
+            })
+        },
         async entregado(idp, estado) {
             //Marcar como ${estado}
-            let url = `https://nuestrocampo.cl/api/pedidos/update-state.php?id=${idp}&estado=${estado}&user=${this.user}`
+            let msg = this.pedido[0].Nombre + ', ' + this.pedido[0].Direccion + ', ' + this.pedido[0].NombreSector + ', ' + this.pedido[0].Comuna
+            let url = `https://nuestrocampo.cl/api/pedidos/update-state.php?id=${idp}&estado=${estado}&user=${this.user}&msg=${msg}`
             await axios.put(url).then(function (response) {
                 console.log(response.data)
             }).then(() => {
@@ -121,7 +130,8 @@ export default {
         async efectivo() {
             //Pagar con efectivo
             let idp = this.id
-            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-cash.php?id=${idp}&user=${this.user}`
+            let msg = this.pedido[0].Nombre + ', ' + this.pedido[0].Direccion + ', ' + this.pedido[0].NombreSector + ', ' + this.pedido[0].Comuna
+            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-cash.php?id=${idp}&user=${this.user}&msg=${msg}`
             await axios.put(url).then(function (response) {
                 console.log(response.data)
             })
@@ -132,7 +142,8 @@ export default {
         async transferencia() {
             //Pagar con transferencia
             let idp = this.id
-            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-wire.php?id=${idp}&user=${this.user}`
+            let msg = this.pedido[0].Nombre + ', ' + this.pedido[0].Direccion + ', ' + this.pedido[0].NombreSector + ', ' + this.pedido[0].Comuna
+            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-wire.php?id=${idp}&user=${this.user}&msg=${msg}`
             await axios.put(url).then(function (response) {
                 console.log(response.data)
             })
@@ -144,6 +155,7 @@ export default {
 
     mounted() {
         this.getUser()
+        this.getPedido()
     }
 };
 </script>
