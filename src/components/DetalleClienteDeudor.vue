@@ -1,10 +1,10 @@
 <template>
     <!-- Botón para abrir el modal -->
-    <label :for="label" class="btn btn-outline btn-info mr-2" @click="leerDetalleCliente()">
+    <label :for="label" class="btn btn-outline btn-error mr-2" @click="leerDetalleCliente()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round"
-                d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
         </svg>
     </label>
 
@@ -108,7 +108,8 @@
                                         -->
                                     <td>{{ pedido.Total_Pedido }}</td>
                                     <td>
-                                        <DetallePedidoMinimal :id="pedido.IDPedido" :label="pedido.IDPedido + 'detail'" />
+                                        <DetallePedidoMinimal :id="pedido.IDPedido"
+                                            :label="pedido.IDPedido + 'detail'" />
                                         <PagarPedidoEfectivo :id="pedido.IDPedido" :label="pedido.IDPedido + 'cash'" />
                                         <PagarPedidoTransferencia :id="pedido.IDPedido"
                                             :label="pedido.IDPedido + 'wire'" />
