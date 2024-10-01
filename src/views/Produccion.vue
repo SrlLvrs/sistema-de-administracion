@@ -11,6 +11,7 @@
             <thead>
                 <tr>
                     <th>Productos</th>
+                    <th>Stock semana anterior</th>
                     <th v-for="(day, index) in daysOfWeek" :key="index">{{ day }}</th>
                     <th>Total</th>
                 </tr>
@@ -18,12 +19,13 @@
             <tbody>
                 <tr v-for="(producto, rowIndex) in productos" :key="rowIndex">
                     <td>{{ producto.descripcion }}</td>
+                    <td>{{ producto.stock_semana_anterior }}</td>
                     <td v-for="(day, dayIndex) in daysOfWeek" :key="dayIndex">
                         <input v-model.number="producto.stock[dayIndex]" @input="updateStock(rowIndex, dayIndex)"
                             type="number" placeholder="Ingresa el Stock"
                             class="input input-bordered w-full max-w-xs mb-2" />
                     </td>
-                    <td>{{ calculateTotal(producto.stock) }}</td>
+                    <td>{{ calculateTotal(producto.stock, producto.stock_semana_anterior) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -31,11 +33,11 @@
         <div class="flex justify-end p-6">
             <button class="btn btn-outline btn-success" @click="putStock">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25" />
-            </svg>
-            Actualizar stock</button>
+                    stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25" />
+                </svg>
+                Actualizar stock</button>
         </div>
     </div>
 </template>
@@ -49,7 +51,8 @@ export default {
             daysOfWeek: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
             weeklyStock: [], // Almacena el stock de la semana actual
             productos: [],
-            stockData: [] // Aquí guardamos los datos de la API
+            stockData: [], // Aquí guardamos los datos de la API
+            lastWeek: [],
         };
     },
     async mounted() {
@@ -63,8 +66,10 @@ export default {
                 this.productos[rowIndex].stock[i] = currentStock;
             }
         },
-        calculateTotal(stockArray) {
-            return stockArray.reduce((total, num) => total + num, 0); // Suma el stock de cada día
+        calculateTotal(stock, stock_semana_anterior) {
+            // Aquí puedes realizar los cálculos que necesites con ambos valores
+            // Por ejemplo:
+            return stock.reduce((total, num) => total + num, 0) + parseInt(stock_semana_anterior);
         },
         //PUT todo el stock
         async putStock() {
@@ -120,7 +125,6 @@ export default {
                             stock: stockData ? JSON.parse(stockData.stock) : [0, 0, 0, 0, 0]
                         };
                     });
-                    console.log('productos obtenidos')
                 })
                 .catch(error => {
                     console.error('Error al obtener los productos: ', error);
@@ -132,8 +136,9 @@ export default {
                 // Llamar a la API para obtener el stock de la semana actual
                 const response = await axios.get('https://nuestrocampo.cl/api/stock/read.php');
                 this.stockData = response.data; // Asignar el stock a stockData
-                console.log('Stock de la semana actual:', this.stockData);
+
                 await this.getProductos()
+                await this.getLastWeek()
             } catch (error) {
                 this.postStock()
                 console.error('Error al obtener el stock de la semana actual:', error);
@@ -180,6 +185,24 @@ export default {
                 console.log(this.productos[i].stock);
             }
         },
+        //GET stock de la semana anterior
+        async getLastWeek() {
+            let url = `https://nuestrocampo.cl/api/stock/read-last-week.php`
+            await axios.get(url).then(response => {
+                this.lastWeek = response.data
+
+                // Fusionar la información de la semana anterior con la información actual de stock
+                this.productos.forEach((item, index) => {
+                    const lastWeekItem = this.lastWeek.find((lastWeekItem) => lastWeekItem.idproducto === item.id)
+                    if (lastWeekItem) {
+                        item.stock_semana_anterior = lastWeekItem.stock_semana_anterior
+                    } else {
+                        item.stock_semana_anterior = 0 // o algún otro valor por defecto
+                    }
+                })
+            })
+            console.log(this.productos)
+        }
     }
 }
 </script>

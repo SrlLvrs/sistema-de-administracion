@@ -69,13 +69,11 @@ export default {
         },
         checkUserSession() {
             const sessionData = JSON.parse(localStorage.getItem('authUser'));
-            console.log(sessionData);
             return sessionData ? sessionData : null;
         },
         logout() {
             // Eliminar la información de sesión de localStorage
             localStorage.removeItem('authUser');
-            console.log('Sesión cerrada');
             this.$router.push({ name: 'LogIn' });
         },
     },
