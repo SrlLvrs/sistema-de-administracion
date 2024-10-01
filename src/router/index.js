@@ -16,6 +16,11 @@ const router = createRouter({
             props: true
         },
         { path: "/clientes/deudores", component: () => import("../views/Clientes-Deudores.vue") },
+        {
+            path: "/resumen",
+            name: "Resumen",
+            component: () => import("../views/Resumen.vue"),
+        },
         { path: "/productos", component: () => import("../views/Productos.vue") },
         { path: "/pedidos", component: () => import("../views/Pedidos.vue") },
         { path: "/pedidos/automaticos", component: () => import("../views/Pedidos-auto.vue") },

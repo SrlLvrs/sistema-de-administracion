@@ -74,6 +74,15 @@ export default {
         async getSectores() {
             let url = "https://nuestrocampo.cl/api/pedidos/read-asign.php";
             await axios.get(url).then((response) => (this.items = response.data));
+        },
+        async getSectores() {
+            try {
+                let url = "https://nuestrocampo.cl/api/pedidos/read-asign.php";
+                const response = await axios.get(url);
+                this.items = response.data;
+            } catch (error) {
+                console.error("Error al obtener sectores:", error);
+            }
         }
     },
 
