@@ -89,11 +89,7 @@
                     <div class="label">
                         <span class="label-text font-bold">Total: {{ total }}</span>
                     </div>
-                    {{ productos_elegidos }}
                 </div>
-
-
-
 
                 <!-- Botones del modal -->
                 <div class="modal-action">
@@ -151,6 +147,8 @@ export default {
                     console.log(response.data)
                 })
             }
+
+            location.reload()
         },
         /** Elimina los productos de la tabla de productos seleccionados */
         borrarProducto(i) {
@@ -198,17 +196,6 @@ export default {
             let url = `https://nuestrocampo.cl/api/productos/read.php`
             await axios.get(url).then((response) => (this.productos = response.data));
         },
-        async updateRepartidor() {
-            let idr = this.repartidor;
-            let ids = this.id;
-
-            let url = `https://nuestrocampo.cl/api/pedidos/update-delivery.php?idsector=${ids}&idrepartidor=${idr}`
-            await axios.put(url).then(function (response) {
-                console.log(response.data);
-            })
-
-            location.reload()
-        }
     },
 
     mounted() {
