@@ -2,25 +2,46 @@
     <div v-if="sessionData" class="navbar bg-base-100">
         <div class="navbar-start">
             <div class="dropdown">
-                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden" @click="toggleDropdown">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 12h8m-8 6h16" />
                     </svg>
                 </div>
-                <ul tabindex="0"
+                <ul v-show="isDropdownOpen" tabindex="0"
                     class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                     <!-- Este es el menú de pantallas pequeñas -->
-                    <li><router-link to='/' @click.native="close">Inicio</router-link></li>
-                    <li v-if="rol == 'Repartidor'"><router-link to='/repartidor' @click.native="close">Repartos de
-                            hoy</router-link></li>
-                    <li><router-link to='/clientes' @click.native="close">Clientes</router-link></li>
-                    <li><router-link to='/productos' @click.native="close">Productos</router-link></li>
-                    <li><router-link to='/sectores' @click.native="close">Sectores de Reparto</router-link></li>
-                    <li><router-link to='/pedidos' @click.native="close">Pedidos</router-link></li>
-                    <li><router-link to='/produccion' @click.native="close">Producción</router-link></li>
-                    <li><router-link to='/admin' @click.native="close">Administrar usuarios</router-link></li>
+                    <li v-if="rol != 'Repartidor'" @click="closeDropdown"><router-link to='/'>Inicio</router-link></li>
+                    <li v-if="rol == 'Repartidor'" @click="closeDropdown"><router-link to='/repartidor'>Repartos de hoy</router-link></li>
+                    <li @click="closeDropdown"><router-link to='/resumen'>Resumen diario</router-link></li>
+                    <li>
+                        <details>
+                            <summary>Clientes</summary>
+                            <ul class="bg-base-100 rounded-t-none p-2">
+                                <li @click="closeDropdown"><router-link to="/clientes">Todos los Clientes</router-link></li>
+                                <li @click="closeDropdown"><router-link to="/clientes/deudores">Clientes deudores</router-link></li>
+                            </ul>
+                        </details>
+                    </li>
+                    <li @click="closeDropdown"><router-link to='/productos'>Productos</router-link></li>
+                    <li @click="closeDropdown"><router-link to='/sectores'>Sectores de Reparto</router-link></li>
+                    <li>
+                        <details>
+                            <summary>Pedidos</summary>
+                            <ul class="bg-base-100 rounded-t-none p-2">
+                                <li @click="closeDropdown"><router-link to="/pedidos">Todos los pedidos</router-link></li>
+                                <li @click="closeDropdown"><router-link to="/pedidos/hoy">Pedidos de hoy</router-link></li>
+                                <li @click="closeDropdown"><router-link to="/pedidos/automaticos">Pedidos automáticos</router-link></li>
+                                <li @click="closeDropdown"><router-link to="/pedidos/asignar">Asignar Pedidos</router-link></li>
+                            </ul>
+                        </details>
+                    </li>
+                    <li v-if="rol != 'Repartidor'" @click="closeDropdown"><router-link to='/produccion'>Producción</router-link></li>
+                    <li v-if="rol != 'Repartidor'" @click="closeDropdown"><router-link to='/admin'>Administrar usuarios</router-link></li>
+                    <li @click="logout()" class="text-red-500">
+                        <router-link to='/login' @click="closeDropdown">Cerrar sesión</router-link>
+                    </li>
                 </ul>
             </div>
             <a class="btn btn-ghost text-xl"><router-link to='/'>Nuestro Campo</router-link></a>
@@ -29,8 +50,7 @@
             <ul class="menu menu-horizontal px-1">
                 <!-- Este es el menú de pantallas grandes -->
                 <li v-if="rol != 'Repartidor'"><router-link to='/'>Inicio</router-link></li>
-                <li v-if="rol == 'Repartidor'"><router-link to='/repartidor' @click.native="close">Repartos de
-                        hoy</router-link></li>
+                <li v-if="rol == 'Repartidor'"><router-link to='/repartidor'>Repartos de hoy</router-link></li>
                 <li><router-link to='/resumen'>Resumen diario</router-link></li>
                 <li>
                     <details ref="dropdown">
@@ -43,14 +63,14 @@
                 </li>
                 <li><router-link to='/productos'>Productos</router-link></li>
                 <li><router-link to='/sectores'>Sectores de Reparto</router-link></li>
-                <li><router-link to='/pedidos'>Pedidos</router-link></li>
                 <li>
                     <details ref="dropdown">
-                        <summary>Pedidos drop</summary>
+                        <summary>Pedidos</summary>
                         <ul class="bg-base-100 rounded-t-none p-2">
                             <li><router-link to="/pedidos">Todos los pedidos</router-link></li>
                             <li><router-link to="/pedidos/hoy">Pedidos de hoy</router-link></li>
-                            <li><router-link to="/pedidos/automaticos">Pedidos automaticos</router-link></li>
+                            <li><router-link to="/pedidos/automaticos">Pedidos automáticos</router-link></li>
+                            <li><router-link to="/pedidos/asignar">Asignar Pedidos</router-link></li>
                         </ul>
                     </details>
                 </li>
@@ -64,13 +84,20 @@
     </div>
 </template>
 
-<script>
 
+<style scoped>
+ul {
+  position: relative; /* Para controlar el stacking context */
+  z-index: 10; /* Para asegurarte de que el dropdown esté encima */
+}
+</style>
+
+<script>
 export default {
     data() {
         return {
             sessionData: null,
-            dropdown: null,
+            isDropdownOpen: false,
         };
     },
 
@@ -81,12 +108,15 @@ export default {
     },
 
     methods: {
-        close() {
-            document.activeElement.blur();
-        },
         checkUserSession() {
             const sessionData = JSON.parse(localStorage.getItem('authUser'));
             return sessionData ? sessionData : null;
+        },
+        toggleDropdown() {
+            this.isDropdownOpen = !this.isDropdownOpen;
+        },
+        closeDropdown() {
+            this.isDropdownOpen = false;
         },
         logout() {
             // Eliminar la información de sesión de localStorage
@@ -97,30 +127,13 @@ export default {
 
     created() {
         this.sessionData = this.checkUserSession();
-        /*
-        if (this.sessionData) {
-            console.log('Sesión iniciada');
-        } else {
-            console.log('No hay sesión iniciada');
-        }
-        */
-    },
-
-    mounted() {
-        this.dropdown = this.$refs.dropdown;
-        this.$router.beforeEach((to, from, next) => {
-            if (this.dropdown) {
-                this.dropdown.open = false; // Cierra el dropdown
-            }
-            next(); // Permite la navegación
-        });
     },
 
     watch: {
         $route(to, from) {
             this.sessionData = this.checkUserSession();
+            this.closeDropdown(); // Cierra el menú al cambiar de ruta
         },
     },
 }
-
 </script>
