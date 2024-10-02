@@ -8,7 +8,6 @@
             <DespacharRepartidor id="1" label="despachar" />
         </div>
         <div v-else>
-            {{ repartidores }}
             <div v-for="(repartidor, index) in repartidores" :key="index">
                 <h2>Repartidor {{ repartidor.Username }}</h2>
                 <table class="table table-zebra">
@@ -16,44 +15,54 @@
                         <tr>
                             <th>Fecha</th>
                             <th>Descripcion</th>
-                            <th>Cantidad</th>
+                            <th>Cantidad Despachada</th>
+                            <th>Cantidad Restante</th>
                             <th>Precio</th>
                             <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in items.filter(i => i.IDRepartidor === repartidor.IDRepartidor)" :key="item.ID">
+                        <tr v-for="item in items.filter(i => i.IDRepartidor === repartidor.IDRepartidor)"
+                            :key="item.ID">
                             <td>{{ item.Fecha }}</td>
                             <td>{{ item.Descripcion }}</td>
-                            <td>{{ item.Cantidad }}</td>
+                            <td>{{ item.cantidadDespachada }}</td>
+                            <td>{{ item.ProductosSobrantes }}</td>
                             <td>{{ item.Precio }}</td>
-                            <td>{{ item.TOTAL }}</td>
+                            <td>{{ item.Total }}</td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="label">
-                    <span class="label-text font-bold">Total Repartidor: {{ totalRepartidor(repartidor.IDRepartidor).toLocaleString('es-CL') }}</span>
+                    <span class="label-text font-bold">Total esperado del Repartidor: {{
+                        totalRepartidor(repartidor.IDRepartidor).toLocaleString('es-CL') }}</span>
+                </div>
+
+                <div v-if="repartidorDetails[repartidor.IDRepartidor]"
+                    v-for="(item, idx) in repartidorDetails[repartidor.IDRepartidor]" :key="idx" class="label">
+                    <span class="label-text font-bold">
+                        {{ item.Nombre }}: {{ item.Valor }}
+                    </span>
                 </div>
             </div>
             <div class="label">
-                <span class="label-text font-bold">Total General: {{ total.toLocaleString('es-CL') }}</span>
+                <span class="label-text font-bold">Total esperado General: {{ total.toLocaleString('es-CL') }}</span>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-//Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
 import DespacharRepartidor from "../components/DespacharRepartidor.vue";
 
 export default {
-    //Nombre del componente
     name: "Resumen",
 
     data() {
         return {
             items: [],
+            repartidorDetails: {}, // Almacenará los detalles de cada repartidor
         };
     },
 
@@ -63,21 +72,35 @@ export default {
             return sessionData ? sessionData : null;
         },
         getResumen() {
+            console.log('Obteniendo resumen...')
             let url = `https://nuestrocampo.cl/api/resumen/read.php`;
             axios.get(url).then((response) => {
+                console.log(response.data)
                 this.items = response.data;
-            })
+            });
         },
         totalRepartidor(idRepartidor) {
-            return this.items
+            const total = this.items
                 .filter(item => item.IDRepartidor === idRepartidor)
-                .reduce((acc, item) => acc + parseInt(item.TOTAL), 0);
-        }
+                .reduce((acc, item) => acc + parseInt(item.Total), 0);
+
+            return total;
+        },
+        getDetail(idRepartidor) {
+            // Verifica si los detalles ya están almacenados
+            if (!this.repartidorDetails[idRepartidor]) {
+                let url = `https://nuestrocampo.cl/api/resumen/read-detail.php?idr=${idRepartidor}`;
+                axios.get(url).then((response) => {
+                    // Almacena los detalles para el repartidor directamente
+                    this.repartidorDetails[idRepartidor] = response.data;
+                });
+            }
+        },
     },
 
     computed: {
         total() {
-            return this.items.reduce((acc, item) => acc + parseInt(item.TOTAL), 0);
+            return this.items.reduce((acc, item) => acc + parseInt(item.Total), 0);
         },
         repartidores() {
             return this.items.reduce((acc, item) => {
@@ -98,6 +121,15 @@ export default {
         } else {
             console.log('No hay sesión iniciada. Redireccionando a login');
             this.$router.push({ name: 'LogIn' });
+        }
+    },
+
+    watch: {
+        // Observa cambios en 'repartidores' y ejecuta 'getDetail' para cada repartidor
+        repartidores(newRepartidores) {
+            newRepartidores.forEach(repartidor => {
+                this.getDetail(repartidor.IDRepartidor);
+            });
         }
     },
 
