@@ -187,21 +187,29 @@ export default {
         },
         //GET stock de la semana anterior
         async getLastWeek() {
-            let url = `https://nuestrocampo.cl/api/stock/read-last-week.php`
-            await axios.get(url).then(response => {
-                this.lastWeek = response.data
+            try {
+                let url = `https://nuestrocampo.cl/api/stock/read-last-week.php`;
+                const response = await axios.get(url);
+                this.lastWeek = response.data;
 
                 // Fusionar la información de la semana anterior con la información actual de stock
                 this.productos.forEach((item, index) => {
-                    const lastWeekItem = this.lastWeek.find((lastWeekItem) => lastWeekItem.idproducto === item.id)
-                    if (lastWeekItem) {
-                        item.stock_semana_anterior = lastWeekItem.stock_semana_anterior
-                    } else {
-                        item.stock_semana_anterior = 0 // o algún otro valor por defecto
-                    }
-                })
-            })
-            console.log(this.productos)
+                    const lastWeekItem = this.lastWeek.find((lastWeekItem) => lastWeekItem.idproducto === item.id);
+                    item.stock_semana_anterior = lastWeekItem ? lastWeekItem.stock_semana_anterior : 0; // Valor por defecto
+                });
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    console.log("Stock de la semana anterior no encontrado (404), omitiendo...");
+
+                    // Si ocurre un error 404, rellenar stock_semana_anterior con 0
+                    this.productos.forEach(item => {
+                        item.stock_semana_anterior = 0; // Valor predeterminado 0 si hay un error
+                    });
+                } else {
+                    // Maneja otros errores aquí si es necesario
+                    console.error('Error al obtener el stock de la semana anterior:', error);
+                }
+            }
         }
     }
 }
