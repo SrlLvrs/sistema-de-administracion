@@ -8,23 +8,47 @@ const router = createRouter({
             name: "Inicio",
             component: () => import("../views/Inicio.vue"),
         },
-        { path: "/clientes", component: () => import("../views/Clientes.vue") },
+        { 
+            path: "/clientes",
+            name: "Clientes", 
+            component: () => import("../views/Clientes.vue")
+        },
         { 
             path: "/clientes/detalle/:id", 
             name: "ClienteDetalle",
             component: () => import("../views/ClienteDetalle.vue"),
             props: true
         },
-        { path: "/clientes/deudores", component: () => import("../views/Clientes-Deudores.vue") },
+        { 
+            path: "/clientes/deudores", 
+            name: "ClientesDeudores",
+            component: () => import("../views/Clientes-Deudores.vue") 
+        },
         {
             path: "/resumen",
             name: "Resumen",
             component: () => import("../views/Resumen.vue"),
         },
-        { path: "/productos", component: () => import("../views/Productos.vue") },
-        { path: "/pedidos", component: () => import("../views/Pedidos.vue") },
-        { path: "/pedidos/automaticos", component: () => import("../views/Pedidos-auto.vue") },
-        { path: "/pedidos/hoy", component: () => import("../views/Pedidos-hoy.vue") },
+        { 
+            path: "/productos", 
+            name: "Productos",
+            component: () => import("../views/Productos.vue") 
+        },
+        { 
+            path: "/pedidos",
+            name: "Pedidos", 
+            component: () => import("../views/Pedidos.vue") 
+        },
+        { 
+            path: "/pedidos/automaticos",
+            name: "PedidosAutomáticos", 
+            component: () => import("../views/Pedidos-auto.vue") 
+        },
+        { 
+            path: "/pedidos/hoy", 
+            name: "PedidosHoy",
+            component: () => import("../views/Pedidos-hoy.vue") 
+        },
         { 
             path: "/pedidos/asignar", 
             name: "PedidosAsignar",

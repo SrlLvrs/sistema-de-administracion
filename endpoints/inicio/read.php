@@ -1,4 +1,5 @@
 <?php
+//VISTA: Inicio.vue
 // Estos encabezados permiten el acceso a la API desde cualquier origen y especifican que el contenido de la respuesta será JSON.
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -80,7 +81,7 @@ try {
     /************************************************************* */
 
     // 4. Obtiene clientes libres
-    $query4 = " SELECT 'Clientes No Suscripcion' AS Nombre, COUNT(DISTINCT c.ID) AS Clientes_No_Suscripcion
+    $query4 = " SELECT 'Clientes sin Suscripcion' AS Nombre, COUNT(DISTINCT c.ID) AS Clientes_No_Suscripcion
                 FROM clientes c
                 WHERE c.ID NOT IN ( SELECT pa.IDCliente 
                                     FROM pedidos_automaticos pa 
@@ -102,7 +103,7 @@ try {
     /************************************************************* */
 
     // 5. Obtiene cantidad de pedidos para hoy
-    $query5 = " SELECT 'Pedidos agendados para hoy' AS Nombre, COUNT(*) AS Pedidos_agendados_hoy
+    $query5 = " SELECT 'Pedidos para hoy' AS Nombre, COUNT(*) AS Pedidos_agendados_hoy
                 FROM pedidos p
                 WHERE DATE(p.FechaEntrega) = CURDATE()";
     $stmt5 = $db->prepare($query5);

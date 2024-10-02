@@ -13,7 +13,8 @@
                     class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                     <!-- Este es el menú de pantallas pequeñas -->
                     <li><router-link to='/' @click.native="close">Inicio</router-link></li>
-                    <li v-if="rol == 'Repartidor'"><router-link to='/repartidor' @click.native="close">Repartos de hoy</router-link></li>
+                    <li v-if="rol == 'Repartidor'"><router-link to='/repartidor' @click.native="close">Repartos de
+                            hoy</router-link></li>
                     <li><router-link to='/clientes' @click.native="close">Clientes</router-link></li>
                     <li><router-link to='/productos' @click.native="close">Productos</router-link></li>
                     <li><router-link to='/sectores' @click.native="close">Sectores de Reparto</router-link></li>
@@ -28,20 +29,35 @@
             <ul class="menu menu-horizontal px-1">
                 <!-- Este es el menú de pantallas grandes -->
                 <li v-if="rol != 'Repartidor'"><router-link to='/'>Inicio</router-link></li>
-                <li v-if="rol == 'Repartidor'"><router-link to='/repartidor' @click.native="close">Repartos de hoy</router-link></li>
-                <li><router-link to='/clientes'>Clientes</router-link></li>
+                <li v-if="rol == 'Repartidor'"><router-link to='/repartidor' @click.native="close">Repartos de
+                        hoy</router-link></li>
+                <li><router-link to='/resumen'>Resumen diario</router-link></li>
+                <li>
+                    <details ref="dropdown">
+                        <summary>Clientes</summary>
+                        <ul class="bg-base-100 rounded-t-none p-2">
+                            <li><router-link to="/clientes">Todos los Clientes</router-link></li>
+                            <li><router-link to="/clientes/deudores">Clientes deudores</router-link></li>
+                        </ul>
+                    </details>
+                </li>
                 <li><router-link to='/productos'>Productos</router-link></li>
                 <li><router-link to='/sectores'>Sectores de Reparto</router-link></li>
                 <li><router-link to='/pedidos'>Pedidos</router-link></li>
+                <li>
+                    <details ref="dropdown">
+                        <summary>Pedidos drop</summary>
+                        <ul class="bg-base-100 rounded-t-none p-2">
+                            <li><router-link to="/pedidos">Todos los pedidos</router-link></li>
+                            <li><router-link to="/pedidos/hoy">Pedidos de hoy</router-link></li>
+                            <li><router-link to="/pedidos/automaticos">Pedidos automaticos</router-link></li>
+                        </ul>
+                    </details>
+                </li>
                 <li v-if="rol != 'Repartidor'"><router-link to='/produccion'>Producción</router-link></li>
                 <li v-if="rol != 'Repartidor'"><router-link to='/admin'>Administrar usuarios</router-link></li>
-                <!--
-                -->
                 <li @click="logout()" class="text-red-500">
                     <router-link to='/login'>Cerrar sesión</router-link>
-                </li>
-                <li>
-                    <button @click="checkUserSession()" class="btn btn-outline btn-success">Current User</button>
                 </li>
             </ul>
         </div>
@@ -54,6 +70,7 @@ export default {
     data() {
         return {
             sessionData: null,
+            dropdown: null,
         };
     },
 
@@ -87,6 +104,16 @@ export default {
             console.log('No hay sesión iniciada');
         }
         */
+    },
+
+    mounted() {
+        this.dropdown = this.$refs.dropdown;
+        this.$router.beforeEach((to, from, next) => {
+            if (this.dropdown) {
+                this.dropdown.open = false; // Cierra el dropdown
+            }
+            next(); // Permite la navegación
+        });
     },
 
     watch: {
