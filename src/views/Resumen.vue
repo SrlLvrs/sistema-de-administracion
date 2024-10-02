@@ -3,19 +3,19 @@
         <h1>Resumen diario</h1>
         <div id="items" v-if="items.length === 0">
             <p>
-                No hay información para hoy. Necesita despachar al menos un repartidor.
+                No hay información para hoy. Necesitas crear al menos 1 pedido.
             </p>
-            <DespacharRepartidor id="1" label="despachar" />
         </div>
         <div v-else>
             <div v-for="(repartidor, index) in repartidores" :key="index">
-                <h2>Repartidor {{ repartidor.Username }}</h2>
+                <h2>{{ repartidor.Username }}</h2>
                 <table class="table table-zebra">
                     <thead>
                         <tr>
                             <th>Fecha</th>
-                            <th>Descripcion</th>
-                            <th>Cantidad Despachada</th>
+                            <th>Producto</th>
+                            <th>Cantidad Necesaria</th>
+                            <th>Cantidad Entregada</th>
                             <th>Cantidad Restante</th>
                             <th>Precio</th>
                             <th>Total</th>
@@ -24,10 +24,11 @@
                     <tbody>
                         <tr v-for="item in items.filter(i => i.IDRepartidor === repartidor.IDRepartidor)"
                             :key="item.ID">
-                            <td>{{ item.Fecha }}</td>
-                            <td>{{ item.Descripcion }}</td>
-                            <td>{{ item.cantidadDespachada }}</td>
-                            <td>{{ item.ProductosSobrantes }}</td>
+                            <td>{{ item.FechaPedido }}</td>
+                            <td>{{ item.Producto }}</td>
+                            <td>{{ item.TotalCantidad }}</td>
+                            <td>{{ item.CantidadEntregada }}</td>
+                            <td>{{ item.TotalRestante }}</td>
                             <td>{{ item.Precio }}</td>
                             <td>{{ item.Total }}</td>
                         </tr>
@@ -54,7 +55,6 @@
 
 <script>
 import axios from "axios";
-import DespacharRepartidor from "../components/DespacharRepartidor.vue";
 
 export default {
     name: "Resumen",
@@ -106,7 +106,7 @@ export default {
             return this.items.reduce((acc, item) => {
                 const existingRepartidor = acc.find(r => r.IDRepartidor === item.IDRepartidor);
                 if (!existingRepartidor) {
-                    acc.push({ IDRepartidor: item.IDRepartidor, Username: item.Username });
+                    acc.push({ IDRepartidor: item.IDRepartidor, Username: item.Repartidor });
                 }
                 return acc;
             }, []);
@@ -132,7 +132,5 @@ export default {
             });
         }
     },
-
-    components: { DespacharRepartidor }
 };
 </script>

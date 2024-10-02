@@ -13,39 +13,29 @@ $db = $database->getConnection();
 
 // GET stock de la semana
 $query = "  SELECT 
-                r.Fecha, 
-                r.IDRepartidor, 
-                u.Username, 
-                r.IDProducto, 
-                p.Descripcion, 
-                r.Cantidad AS cantidadDespachada, 
-                (
-                    r.Cantidad - COALESCE(SUM(pp.Cantidad), 0)
-                ) AS ProductosSobrantes, 
-                p.Precio, 
-                (r.Cantidad * p.Precio) AS Total
+                u.Username AS Repartidor,                   -- Nombre del repartidor
+                p.IDRepartidor,                             -- ID del repartidor
+                DATE_FORMAT(p.FechaEntrega, '%Y-%m-%d') AS FechaPedido,  -- Fecha formateada sin hora
+                prod.Descripcion AS Producto,               -- Descripción del producto
+                prod.Precio AS Precio,                      -- Precio del producto
+                SUM(pp.Cantidad) AS TotalCantidad,          -- Cantidad total de productos
+                SUM(CASE WHEN p.Estado = 'Entregado' THEN pp.Cantidad ELSE 0 END) AS CantidadEntregada,  -- Cantidad de productos entregados
+                (SUM(pp.Cantidad) - SUM(CASE WHEN p.Estado = 'Entregado' THEN pp.Cantidad ELSE 0 END)) AS TotalRestante,  -- Total restante por entregar
+                (SUM(pp.Cantidad) * prod.Precio) AS Total   -- Total (Cantidad * Precio)
             FROM 
-                resumen r
+                pedidos p
             JOIN 
-                productos p ON r.IDProducto = p.ID
+                usuarios u ON p.IDRepartidor = u.ID         -- Unir con la tabla usuarios para obtener el nombre del repartidor
             JOIN 
-                usuarios u ON r.IDRepartidor = u.ID
-            LEFT JOIN 
-                pedidos_productos pp ON r.IDProducto = pp.IDProducto
-            LEFT JOIN 
-                pedidos ped ON pp.IDPedido = ped.ID
+                pedidos_productos pp ON p.ID = pp.IDPedido  -- Unir con pedidos_productos
+            JOIN 
+                productos prod ON pp.IDProducto = prod.ID   -- Unir con productos para obtener el precio
             WHERE 
-                r.Fecha = CURDATE()
-                AND ped.Estado = 'Entregado'
-                AND DATE(ped.FechaEntrega) = CURDATE()
+                DATE(p.FechaEntrega) = CURDATE()            -- Filtrar solo los pedidos de hoy
             GROUP BY 
-                r.Fecha, 
-                r.IDRepartidor, 
-                u.Username, 
-                r.IDProducto, 
-                p.Descripcion, 
-                r.Cantidad, 
-                p.Precio";
+                u.Username, p.IDRepartidor, p.FechaEntrega, prod.Descripcion, prod.Precio
+            ORDER BY 
+                p.FechaEntrega DESC";
 
 $stmt = $db->prepare($query);
 
