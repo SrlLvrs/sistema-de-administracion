@@ -1,4 +1,5 @@
 <?php
+//Componente: CrearPedidoAuto.vue
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
@@ -16,11 +17,12 @@ Obtiene por url el ID de cliente y la fecha de creación, lo demás se rellena p
 $id_cliente = isset($_GET['id_cliente']) ? $_GET['id_cliente'] : '';
 $ultimo_pedido = isset($_GET['ultimo_pedido']) ? $_GET['ultimo_pedido'] : '';
 $frecuencia = isset($_GET['frecuencia']) ? $_GET['frecuencia'] : '';
+$observacion = isset($_GET['observacion']) ? $_GET['observacion'] : '';
 
 //Comprueba que las variables NO estén vacías
 if (!empty($id_cliente)) {
     $query = "  INSERT INTO pedidos_automaticos 
-                SET IDCliente = :idc, UltimoPedido = :up, Frecuencia = :f";
+                SET IDCliente = :idc, UltimoPedido = :up, Frecuencia = :f, Observacion = :o";
 
     $stmt = $db->prepare($query);
 
@@ -28,6 +30,7 @@ if (!empty($id_cliente)) {
     $stmt->bindParam(":idc", $id_cliente);
     $stmt->bindParam(":up", $ultimo_pedido);
     $stmt->bindParam(":f", $frecuencia);
+    $stmt->bindParam(":o", $observacion);
     
     if ($stmt->execute()) {
         //Obtener ultimo id

@@ -33,6 +33,7 @@
                     <th>Cliente</th>
                     <th>Direccion</th>
                     <th>Frecuencia</th>
+                    <th>Observaciones</th>
                     <th>Último Pedido Agendado</th>
                     <th>Acciones</th>
                 </tr>
@@ -47,6 +48,7 @@
                     <th> {{ item.Nombre }}</th>
                     <td> {{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</td>
                     <td> {{ item.Frecuencia }}</td>
+                    <td> {{ item.Observacion }}</td>
                     <td> {{ item.UltimoPedido }}</td>
                     <td>
                         <!-- Detalle Pedido -->

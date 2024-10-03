@@ -11,8 +11,7 @@ $database = new Database();
 $db = $database->getConnection();
 
 // GET todos los pedidos.
-$query = "  SELECT
-                p.ID,
+$query = "  SELECT p.ID,
                 p.IDPA,
                 p.IDCliente,
                 c.Nombre,
@@ -25,20 +24,17 @@ $query = "  SELECT
                 p.Estado,
                 p.Pagado,
                 p.MedioPago,
+                COALESCE(pa.Observacion, c.Observacion) AS Observacion,
                 DATE_FORMAT(p.FechaEntrega, '%d/%m/%Y') AS FechaEntrega,
-                DATE_FORMAT(
-                    p.HoraCreacion, '%d/%m/%Y %H:%i'
-                ) AS HoraCreacion,
+                DATE_FORMAT(p.HoraCreacion, '%d/%m/%Y %H:%i') AS HoraCreacion,
                 DATE_FORMAT(p.HoraCierre, '%d/%m/%Y %H:%i') AS HoraCierre
-            FROM
-                pedidos p
-                JOIN clientes c ON p.IDCliente = c.ID
-                JOIN sector s ON c.IDSector = s.ID
-                JOIN usuarios u ON p.IDRepartidor = u.ID
-            WHERE
-                p.Visible = 1
-            ORDER BY
-                p.FechaEntrega DESC";
+            FROM pedidos p
+            JOIN clientes c ON p.IDCliente = c.ID
+            JOIN sector s ON c.IDSector = s.ID
+            JOIN usuarios u ON p.IDRepartidor = u.ID
+            LEFT JOIN pedidos_automaticos pa ON p.IDPA = pa.ID
+            WHERE p.Visible = 1
+            ORDER BY p.FechaEntrega DESC";
 
 $stmt = $db->prepare($query);
 

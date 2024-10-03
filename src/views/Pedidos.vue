@@ -35,6 +35,7 @@
                     <th>Repartidor</th>
                     <th>Pagado</th>
                     <th>Medio de Pago</th>
+                    <th>Observacion</th>
                     <th>Fecha de Entrega</th>
                     <th>Hora de Creación</th>
                     <th>Hora de Cierre</th>
@@ -61,6 +62,7 @@
                     <td> {{ item.NombreRepartidor }}</td>
                     <td> {{ item.Pagado }}</td>
                     <td> {{ item.MedioPago }}</td>
+                    <td> {{ item.Observacion }}</td>
                     <td> {{ item.FechaEntrega }}</td>
                     <td> {{ item.HoraCreacion }}</td>
                     <td> {{ item.HoraCierre }}</td>

@@ -19,7 +19,7 @@
             <div v-if="items.length === 0">
                 <span class="loading loading-spinner loading-md"></span>
             </div>
-            
+
             <!-- Contenido del modal -->
             <div v-else>
                 <div v-for="item in items">
@@ -61,6 +61,16 @@
                             ésta.</p>
                         <VCalendar v-model="fecha_reparto_local"></VCalendar>
                     </div>
+
+                    <!-- Observacion -->
+                    <div>
+                        <div class="label">
+                            <span class="label-text font-bold">Observaciones</span>
+                        </div>
+                        <input v-model="observaciones" type="text" placeholder="3er lunes de cada mes."
+                        class="input input-bordered w-full max-w-xs mb-2">
+                    </div>
+
                 </div>
 
                 <!-- Todos los productos -->
@@ -182,6 +192,7 @@ export default {
             ultimo_pedido: [],
             last_idpa: '',
             cantidad_pedidos: 0,
+            observaciones: '',
         };
     },
 
@@ -285,14 +296,15 @@ export default {
         /** 1. Crea los pedidos automáticos */
         async crearPedido_Auto() {
             //POST pedidos_automáticos
-            //1. guardar idcliente, ultimopedido y frecuencia
+            //1. guardar idcliente, ultimopedido, frecuencia y observacion
             let idc = this.cliente
             let up = this.formatToMySQLDateTime(this.fecha_reparto_local)
             let f = this.frecuencia_seleccionada
+            let o = this.observaciones
 
             let idpa = ''
 
-            let url = `https://nuestrocampo.cl/api/pedidos/create-auto.php?id_cliente=${idc}&ultimo_pedido=${up}&frecuencia=${f}`
+            let url = `https://nuestrocampo.cl/api/pedidos/create-auto.php?id_cliente=${idc}&ultimo_pedido=${up}&frecuencia=${f}&observacion=${o}`
             await axios.post(url).then(function (response) {
                 console.log(response.data);
                 idpa = response.data.id
