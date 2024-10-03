@@ -70,7 +70,7 @@ export default {
                         self.$router.push({ name: 'Inicio' });
                     } else if (sessionData.rol === 'Repartidor') {
                         //Redirecionar a la página de repartidor
-                        self.$router.push({ name: 'Repartidor' });
+                        self.$router.push({ name: 'PedidosOrdenar' });
                     }
                 } else {
                     alert('La contraseña es incorrecta')

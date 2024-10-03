@@ -13,7 +13,7 @@
     <div class="modal" role="dialog">
         <div class="modal-box modal-pedido">
             <h3 class="text-lg font-bold mb-2 text-center">
-                Editar rol
+                Asignar repartidor a este sector
             </h3>
 
             <div>
@@ -58,6 +58,7 @@ export default {
         return {
             items: [],
             repartidor: '',
+            orden: 1,
         };
     },
 
@@ -70,17 +71,53 @@ export default {
             let idr = this.repartidor;
             let ids = this.id;
 
-            let url = `https://nuestrocampo.cl/api/pedidos/update-delivery.php?idsector=${ids}&idrepartidor=${idr}`
+            let url = `https://nuestrocampo.cl/api/pedidos/update-delivery.php?idsector=${ids}&idrepartidor=${idr}&orden=${this.orden}`
             await axios.put(url).then(function (response) {
                 console.log(response.data);
             })
 
+            let nuevo = this.orden + 1
+
+            await this.updateOrden(nuevo)
+
             location.reload()
-        }
+        },
+        // Método para actualizar el valor de 'orden' y guardarlo en localStorage
+        updateOrden(newOrden) {
+            this.orden = newOrden;
+
+            // Recuperar sessionData de localStorage nuevamente
+            let sessionData = localStorage.getItem('authUser');
+
+            if (sessionData) {
+                sessionData = JSON.parse(sessionData);
+
+                // Actualizar el campo 'orden'
+                sessionData.orden = this.orden;
+
+                // Guardar los cambios en localStorage
+                localStorage.setItem('authUser', JSON.stringify(sessionData));
+            }
+        },
+
     },
 
     mounted() {
         this.getRepartidores()
-    }
-};
+
+        // Recuperar la información de localStorage
+        let sessionData = localStorage.getItem('authUser');
+
+        // Verificar si la información existe
+        if (sessionData) {
+            // Convertir la cadena JSON a un objeto
+            sessionData = JSON.parse(sessionData);
+
+            // Si existe la propiedad 'orden', asignarla a this.orden
+            if (sessionData.orden !== undefined) {
+                this.orden = sessionData.orden;
+            }
+        }
+    },
+}
 </script>

@@ -1,4 +1,5 @@
 <?php
+//VISTA: OrdenarPedidos.vue
 // Estos encabezados permiten el acceso a la API desde cualquier origen y especifican que el contenido de la respuesta será JSON.
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -48,7 +49,7 @@ $query = "  SELECT
                 AND p.IDRepartidor = :id
                 AND p.Estado = 'Agendado'
             ORDER BY
-                p.FechaEntrega DESC";
+                p.OrdenEntrega ASC";
 
 $stmt = $db->prepare($query);
 

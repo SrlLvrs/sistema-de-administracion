@@ -13,14 +13,19 @@
                     class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                     <!-- Este es el menú de pantallas pequeñas -->
                     <li v-if="rol != 'Repartidor'" @click="closeDropdown"><router-link to='/'>Inicio</router-link></li>
-                    <li v-if="rol == 'Repartidor'" @click="closeDropdown"><router-link to='/repartidor'>Repartos de hoy</router-link></li>
+                    <li v-if="rol == 'Repartidor'" @click="closeDropdown"><router-link to='/pedidos/ordenar'>Ordenar
+                            Pedidos</router-link></li>
+                    <li v-if="rol == 'Repartidor'" @click="closeDropdown"><router-link to='/repartidor'>Repartos de
+                            hoy</router-link></li>
                     <li @click="closeDropdown"><router-link to='/resumen'>Resumen diario</router-link></li>
                     <li>
                         <details>
                             <summary>Clientes</summary>
                             <ul class="bg-base-100 rounded-t-none p-2">
-                                <li @click="closeDropdown"><router-link to="/clientes">Todos los Clientes</router-link></li>
-                                <li @click="closeDropdown"><router-link to="/clientes/deudores">Clientes deudores</router-link></li>
+                                <li @click="closeDropdown"><router-link to="/clientes">Todos los Clientes</router-link>
+                                </li>
+                                <li @click="closeDropdown"><router-link to="/clientes/deudores">Clientes
+                                        deudores</router-link></li>
                             </ul>
                         </details>
                     </li>
@@ -30,15 +35,21 @@
                         <details>
                             <summary>Pedidos</summary>
                             <ul class="bg-base-100 rounded-t-none p-2">
-                                <li @click="closeDropdown"><router-link to="/pedidos">Todos los pedidos</router-link></li>
-                                <li @click="closeDropdown"><router-link to="/pedidos/hoy">Pedidos de hoy</router-link></li>
-                                <li @click="closeDropdown"><router-link to="/pedidos/automaticos">Pedidos automáticos</router-link></li>
-                                <li @click="closeDropdown"><router-link to="/pedidos/asignar">Asignar Pedidos</router-link></li>
+                                <li @click="closeDropdown"><router-link to="/pedidos">Todos los pedidos</router-link>
+                                </li>
+                                <li @click="closeDropdown"><router-link to="/pedidos/hoy">Pedidos de hoy</router-link>
+                                </li>
+                                <li @click="closeDropdown"><router-link to="/pedidos/automaticos">Pedidos
+                                        automáticos</router-link></li>
+                                <li @click="closeDropdown"><router-link to="/pedidos/asignar">Asignar
+                                        Pedidos</router-link></li>
                             </ul>
                         </details>
                     </li>
-                    <li v-if="rol != 'Repartidor'" @click="closeDropdown"><router-link to='/produccion'>Producción</router-link></li>
-                    <li v-if="rol != 'Repartidor'" @click="closeDropdown"><router-link to='/admin'>Administrar usuarios</router-link></li>
+                    <li v-if="rol != 'Repartidor'" @click="closeDropdown"><router-link
+                            to='/produccion'>Producción</router-link></li>
+                    <li v-if="rol != 'Repartidor'" @click="closeDropdown"><router-link to='/admin'>Administrar
+                            usuarios</router-link></li>
                     <li @click="logout()" class="text-red-500">
                         <router-link to='/login' @click="closeDropdown">Cerrar sesión</router-link>
                     </li>
@@ -50,10 +61,11 @@
             <ul class="menu menu-horizontal px-1">
                 <!-- Este es el menú de pantallas grandes -->
                 <li v-if="rol != 'Repartidor'"><router-link to='/'>Inicio</router-link></li>
+                <li v-if="rol == 'Repartidor'"><router-link to='/pedidos/ordenar'>Ordenar pedidos</router-link></li>
                 <li v-if="rol == 'Repartidor'"><router-link to='/repartidor'>Repartos de hoy</router-link></li>
                 <li><router-link to='/resumen'>Resumen diario</router-link></li>
                 <li>
-                    <details ref="dropdown">
+                    <details ref="dropdown1">
                         <summary>Clientes</summary>
                         <ul class="bg-base-100 rounded-t-none p-2">
                             <li><router-link to="/clientes">Todos los Clientes</router-link></li>
@@ -64,7 +76,7 @@
                 <li><router-link to='/productos'>Productos</router-link></li>
                 <li><router-link to='/sectores'>Sectores de Reparto</router-link></li>
                 <li>
-                    <details ref="dropdown">
+                    <details ref="dropdown2">
                         <summary>Pedidos</summary>
                         <ul class="bg-base-100 rounded-t-none p-2">
                             <li><router-link to="/pedidos">Todos los pedidos</router-link></li>
@@ -83,14 +95,6 @@
         </div>
     </div>
 </template>
-
-
-<style scoped>
-ul {
-  position: relative; /* Para controlar el stacking context */
-  z-index: 10; /* Para asegurarte de que el dropdown esté encima */
-}
-</style>
 
 <script>
 export default {
@@ -118,9 +122,21 @@ export default {
         closeDropdown() {
             this.isDropdownOpen = false;
         },
+        closeLargeMenuDropdowns() {
+            // Verifica si las referencias existen antes de intentar cerrarlas
+            if (this.$refs.dropdown1) {
+                this.$refs.dropdown1.open = false;
+            }
+            if (this.$refs.dropdown2) {
+                this.$refs.dropdown2.open = false;
+            }
+        },
         logout() {
             // Eliminar la información de sesión de localStorage
             localStorage.removeItem('authUser');
+            // Actualiza el estado de la sesión
+            this.sessionData = null;
+            // Redirige a la página de inicio de sesión
             this.$router.push({ name: 'LogIn' });
         },
     },
@@ -130,10 +146,20 @@ export default {
     },
 
     watch: {
-        $route(to, from) {
+        $route() {
             this.sessionData = this.checkUserSession();
-            this.closeDropdown(); // Cierra el menú al cambiar de ruta
+            this.closeDropdown(); // Cierra el menú para pantallas pequeñas
+            this.closeLargeMenuDropdowns(); // Cierra los dropdowns de pantallas grandes
         },
     },
 }
 </script>
+
+<style scoped>
+ul {
+    position: relative;
+    /* Para controlar el stacking context */
+    z-index: 10;
+    /* Para asegurarte de que el dropdown esté encima */
+}
+</style>

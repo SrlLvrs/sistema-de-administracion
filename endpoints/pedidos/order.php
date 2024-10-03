@@ -1,5 +1,5 @@
 <?php
-//  COMPONENTE: AsignarRepartidor.vue
+//VISTA: OrdenarPedidos.vue
 // Estos encabezados permiten el acceso a la API desde cualquier origen y especifican que el contenido de la respuesta será JSON.
 // También permiten el uso del método PUT y gestionan los encabezados para las solicitudes.
 header("Access-Control-Allow-Origin: *");
@@ -16,27 +16,23 @@ $database = new Database();
 $db = $database->getConnection();
 
 /*
-Obtener los parámetros por url
+Parámetros por url: idpedido, index (orden)
 */
-$idsector = isset($_GET['idsector']) ? $_GET['idsector'] : ''; //NOT NULL
-$idrepartidor = isset($_GET['idrepartidor']) ? $_GET['idrepartidor'] : '';
+$idp = isset($_GET['idp']) ? $_GET['idp'] : ''; //NOT NULL
 $orden = isset($_GET['orden']) ? $_GET['orden'] : '';
 
 // Verifica que los campos no estén vacíos
-if (!empty($idsector)) {
+if (!empty($idp)) {
     // Se prepara la consulta SQL para actualizar el cliente.
-    $query = "  UPDATE pedidos p
-                JOIN clientes c ON p.IDCliente = c.ID
-                JOIN sector s ON c.IDSector = s.ID
-                SET p.IDRepartidor = :idrepartidor, p.OrdenEntrega = :orden
-                WHERE s.ID = :idsector";
+    $query = "  UPDATE pedidos 
+                SET OrdenEntrega=:orden
+                WHERE ID = :idp";
 
     // Se prepara la consulta para su ejecución.
     $stmt = $db->prepare($query);
 
     //Bindear las variables usando bindParam
-    $stmt->bindParam(":idsector", $idsector);
-    $stmt->bindParam(":idrepartidor", $idrepartidor);
+    $stmt->bindParam(":idp", $idp);
     $stmt->bindParam(":orden", $orden);
 
     // Se ejecuta la consulta.

@@ -54,6 +54,11 @@ const router = createRouter({
             name: "PedidosAsignar",
             component: () => import("../views/Pedidos-Asignar.vue") 
         },
+        {
+            path: "/pedidos/ordenar",
+            name: "PedidosOrdenar",
+            component: () => import("../views/OrdenarPedidos.vue"),
+        },
         { 
             path: "/produccion", 
             name: "Produccion",
