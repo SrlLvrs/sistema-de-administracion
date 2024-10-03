@@ -14,8 +14,8 @@ $db = $database->getConnection();
 // Se prepara la consulta SQL para seleccionar toda la información de pedidos.
 $query = "  SELECT id, changes, DATE_FORMAT(log_time, '%H:%i - %d/%m/%Y') AS log_time
             FROM logs
-            WHERE changes IS NOT null
-            ORDER BY log_time ASC";
+            WHERE changes IS NOT NULL
+            ORDER BY id DESC";
 
 $stmt = $db->prepare($query);
 

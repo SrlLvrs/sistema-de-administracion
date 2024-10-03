@@ -17,11 +17,10 @@ hay que crear una variable por cada columna
 $nombresector = isset($_GET['nombresector']) ? $_GET['nombresector'] : '';
 $comuna = isset($_GET['comuna']) ? $_GET['comuna'] : '';
 $diareparto = isset($_GET['diareparto']) ? $_GET['diareparto'] : '';
-$orden = isset($_GET['orden']) ? $_GET['orden'] : ''; // ESTA VARIABLE ES UN INT
 
 //Comprueba que las variables NO estén vacías
-if (!empty($nombresector) && !empty($comuna) && !empty($diareparto) && !empty($orden)) {
-    $query = "INSERT INTO sector SET NombreSector=:nombresector, Comuna=:comuna, DiaReparto=:diareparto, Orden=:orden";
+if (!empty($nombresector) && !empty($comuna) && !empty($diareparto)) {
+    $query = "INSERT INTO sector SET NombreSector=:nombresector, Comuna=:comuna, DiaReparto=:diareparto";
 
     $stmt = $db->prepare($query);
 
@@ -29,7 +28,6 @@ if (!empty($nombresector) && !empty($comuna) && !empty($diareparto) && !empty($o
     $stmt->bindParam(":nombresector", $nombresector);
     $stmt->bindParam(":comuna", $comuna);
     $stmt->bindParam(":diareparto", $diareparto);
-    $stmt->bindParam(":orden", $orden);
 
     if ($stmt->execute()) {
         http_response_code(201);

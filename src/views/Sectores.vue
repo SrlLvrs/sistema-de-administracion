@@ -30,7 +30,6 @@
                     <th>Nombre del Sector</th>
                     <th>Comuna</th>
                     <th>Día de reparto</th>
-                    <th>Orden de Reparto</th>
                     <th v-if="this.rol != 'Repartidor'">Acciones</th>
                 </tr>
             </thead>
@@ -44,7 +43,6 @@
                     <td> {{ item.nombreSector }}</td>
                     <td> {{ item.comuna }}</td>
                     <td> {{ item.diaReparto }}</td>
-                    <td> {{ item.orden }}</td>
                     <td>
                         <!-- Botón EDITAR SECTOR -->
                         <editarSectorModal 
@@ -52,8 +50,7 @@
                             :id="item.id" 
                             :nombreSector="item.nombreSector" 
                             :comuna="item.comuna" 
-                            :diareparto="item.diaReparto" 
-                            :orden="item.orden" />
+                            :diareparto="item.diaReparto" />
                         <!-- Botón BORRAR SECTOR -->
                         <eliminarSectorModal 
                             v-if="this.rol != 'Repartidor'" 

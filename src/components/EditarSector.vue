@@ -35,11 +35,6 @@
             <!-- 
                 <p>El nuevo día de reparto es: {{ localDiaReparto }}</p>
                 -->
-            <div class="label">
-                <span class="label-text">Orden en que se hace el reparto</span>
-            </div>
-            <input v-model="localOrden" type="text" placeholder="Ingresa un número"
-                class="input input-bordered w-full max-w-xs mb-2" />
 
             <div class="modal-action">
                 <label :for="nombreSector" class="btn">Salir</label>
@@ -69,7 +64,6 @@ export default {
         nombreSector: String,
         comuna: String,
         diareparto: String,
-        orden: Number,
     },
 
     data() {
@@ -79,7 +73,6 @@ export default {
             localComuna: this.comuna,
             localDiaReparto: this.diareparto,
             diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
-            localOrden: this.orden,
         };
     },
 
@@ -87,9 +80,8 @@ export default {
         editarSector(id) {
             let nombre = this.localNombreSector;
             let comuna = this.localComuna;
-            let orden = this.localOrden;
             let dia = this.localDiaReparto;
-            let url = `https://nuestrocampo.cl/api/sectores/update.php?id=${id}&nombresector=${nombre}&comuna=${comuna}&diareparto=${dia}&orden=${orden}`
+            let url = `https://nuestrocampo.cl/api/sectores/update.php?id=${id}&nombresector=${nombre}&comuna=${comuna}&diareparto=${dia}`
             axios.put(url);
             location.reload();
         },

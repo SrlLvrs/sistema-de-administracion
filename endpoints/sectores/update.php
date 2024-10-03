@@ -22,13 +22,12 @@ $id = isset($_GET['id']) ? $_GET['id'] : '';
 $nombresector = isset($_GET['nombresector']) ? $_GET['nombresector'] : '';
 $comuna = isset($_GET['comuna']) ? $_GET['comuna'] : '';
 $diareparto = isset($_GET['diareparto']) ? $_GET['diareparto'] : '';
-$orden = isset($_GET['orden']) ? $_GET['orden'] : ''; // ESTA VARIABLE ES UN INT
 
 // Verifica que los campos no estén vacíos
-if (!empty($nombresector) && !empty($comuna) && !empty($diareparto) && !empty($orden)) {
+if (!empty($nombresector) && !empty($comuna) && !empty($diareparto)) {
     // Se prepara la consulta SQL para actualizar el sector.
     $query = "  UPDATE sector 
-                SET NombreSector = :nombresector, Comuna = :comuna, DiaReparto = :diareparto, Orden = :orden
+                SET NombreSector = :nombresector, Comuna = :comuna, DiaReparto = :diareparto
                 WHERE ID = :id";
 
     // Se prepara la consulta para su ejecución.
@@ -38,7 +37,6 @@ if (!empty($nombresector) && !empty($comuna) && !empty($diareparto) && !empty($o
     $stmt->bindParam(":nombresector", $nombresector);
     $stmt->bindParam(":comuna", $comuna);
     $stmt->bindParam(":diareparto", $diareparto);
-    $stmt->bindParam(":orden", $orden);
 
     // Se ejecuta la consulta.
     if ($stmt->execute()) {

@@ -30,11 +30,6 @@
                     {{ dia }}
                 </option>
             </select>
-            <div class="label">
-                <span class="label-text">Orden en que se hace el reparto</span>
-            </div>
-            <input v-model="orden" type="text" placeholder="Ingresa un número"
-                class="input input-bordered w-full max-w-xs mb-2" />
             <div class="modal-action">
                 <form method="dialog">
                     <!-- if there is a button in form, it will close the modal -->
@@ -72,7 +67,6 @@ export default {
             comuna: "",
             diareparto: "",
             diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
-            orden: "",
         };
     },
 
@@ -80,9 +74,8 @@ export default {
         crearSector() {
             let nombresector = this.nombresector;
             let comuna = this.comuna;
-            let orden = this.orden;
             let diareparto = this.diareparto;
-            let url = `https://nuestrocampo.cl/api/sectores/create.php?nombresector=${nombresector}&comuna=${comuna}&diareparto=${diareparto}&orden=${orden}`
+            let url = `https://nuestrocampo.cl/api/sectores/create.php?nombresector=${nombresector}&comuna=${comuna}&diareparto=${diareparto}`
             axios.post(url);
             location.reload();
         }
