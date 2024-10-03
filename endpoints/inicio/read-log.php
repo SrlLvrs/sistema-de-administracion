@@ -15,7 +15,8 @@ $db = $database->getConnection();
 $query = "  SELECT id, changes, DATE_FORMAT(log_time, '%H:%i - %d/%m/%Y') AS log_time
             FROM logs
             WHERE changes IS NOT NULL
-            ORDER BY id DESC";
+            ORDER BY id DESC
+            LIMIT 200";
 
 $stmt = $db->prepare($query);
 

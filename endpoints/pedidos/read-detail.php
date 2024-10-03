@@ -1,4 +1,5 @@
 <?php
+//VISTA: Inicio.vue
 // Estos encabezados permiten el acceso a la API desde cualquier origen y especifican que el contenido de la respuesta será JSON.
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -16,10 +17,25 @@ $id = isset($_GET['id']) ? $_GET['id'] : ''; // NOT NULL
 // Verifica si el ID no está vacío
 if (!empty($id)) {
     // Se prepara la consulta SQL para seleccionar el registro correspondiente al ID proporcionado.
-    $query = "  SELECT pp.ID AS IDPedidoProducto, p.ID AS IDPedido, c.ID AS IDCliente, 
-                c.Nombre, pp.IDProducto, pro.Precio, pro.Descripcion, pp.Cantidad, pp.Total, 
-                p.Estado, p.Pagado, p.MedioPago, p.FechaEntrega, p.HoraCreacion, p.HoraCierre,
-                c.Direccion, s.NombreSector, s.Comuna, COALESCE (c.DiaRepartoExcepcional, s.DiaReparto) AS Dia_Reparto
+    $query = "  SELECT pp.ID AS IDPedidoProducto, 
+                    p.ID AS IDPedido, 
+                    c.ID AS IDCliente, 
+                    c.Nombre, 
+                    pp.IDProducto, 
+                    pro.Precio, 
+                    pro.Descripcion, 
+                    pp.Cantidad, 
+                    pp.Total, 
+                    p.Estado, 
+                    p.Pagado, 
+                    p.MedioPago, 
+                    DATE_FORMAT(p.FechaEntrega, '%d-%m-%Y') AS FechaEntrega, 
+                    p.HoraCreacion, 
+                    p.HoraCierre,
+                    c.Direccion, 
+                    s.NombreSector, 
+                    s.Comuna, 
+                    COALESCE(c.DiaRepartoExcepcional, s.DiaReparto) AS Dia_Reparto
                 FROM pedidos p
                 JOIN clientes c ON c.ID = p.IDCliente
                 JOIN pedidos_productos pp ON pp.IDPedido = p.ID
