@@ -1,4 +1,5 @@
 <?php
+//Componente: CrearSector.vue
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
@@ -11,16 +12,16 @@ $database = new Database();
 $db = $database->getConnection();
 
 /*
-Obtener los parámetros por url
-hay que crear una variable por cada columna
+Parámetros: nombresector, comuna, diareparto, repartidor
 */
 $nombresector = isset($_GET['nombresector']) ? $_GET['nombresector'] : '';
 $comuna = isset($_GET['comuna']) ? $_GET['comuna'] : '';
 $diareparto = isset($_GET['diareparto']) ? $_GET['diareparto'] : '';
+$repartidor = isset($_GET['repartidor']) ? $_GET['repartidor'] : '';
 
 //Comprueba que las variables NO estén vacías
 if (!empty($nombresector) && !empty($comuna) && !empty($diareparto)) {
-    $query = "INSERT INTO sector SET NombreSector=:nombresector, Comuna=:comuna, DiaReparto=:diareparto";
+    $query = "INSERT INTO sector SET NombreSector=:nombresector, Comuna=:comuna, DiaReparto=:diareparto, IDRepartidor=:repartidor";
 
     $stmt = $db->prepare($query);
 
@@ -28,6 +29,7 @@ if (!empty($nombresector) && !empty($comuna) && !empty($diareparto)) {
     $stmt->bindParam(":nombresector", $nombresector);
     $stmt->bindParam(":comuna", $comuna);
     $stmt->bindParam(":diareparto", $diareparto);
+    $stmt->bindParam(":repartidor", $repartidor);
 
     if ($stmt->execute()) {
         http_response_code(201);

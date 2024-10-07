@@ -12,17 +12,22 @@
     <dialog id="crearSectorModal" class="modal">
         <div class="modal-box">
             <h3 class="text-lg font-bold">Nuevo sector</h3>
+            <!--Nombre-->
             <div class="label">
                 <span class="label-text">Nombre del sector</span>
             </div>
             <input v-model="nombresector" type="text" placeholder="Ingresa el nombre del sector"
                 class="input input-bordered w-full max-w-xs mb-2" />
-            <div class="label">
+            
+            <!--Comuna-->
+                <div class="label">
                 <span class="label-text">Comuna</span>
             </div>
             <input v-model="comuna" type="text" placeholder="Ingresa la comuna"
                 class="input input-bordered w-full max-w-xs  mb-2" />
-            <div class="label">
+            
+            <!--Día de reparto-->
+                <div class="label">
                 <span class="label-text">Día de reparto</span>
             </div>
             <select v-model="diareparto" class="select select-bordered w-full max-w-xs">
@@ -30,9 +35,20 @@
                     {{ dia }}
                 </option>
             </select>
+
+            <!--Repartidor-->
+                <div class="label">
+                <span class="label-text">Repartidor</span>
+            </div>
+            <select v-model="repartidor" class="select select-bordered w-full max-w-xs">
+                <option v-for="(item, index) in items" :value="item.ID">
+                    {{ item.Username }}
+                </option>
+            </select>
+
+            <!--Acciones-->
             <div class="modal-action">
                 <form method="dialog">
-                    <!-- if there is a button in form, it will close the modal -->
                     <button class="btn btn-outline btn-success mr-2" @click="crearSector()">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
@@ -63,22 +79,30 @@ export default {
     data() {
         return {
             //Array para guardar datos de la API
+            items: [],
             nombresector: "",
             comuna: "",
             diareparto: "",
+            repartidor: '',
             diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
         };
     },
 
     methods: {
         crearSector() {
-            let nombresector = this.nombresector;
-            let comuna = this.comuna;
-            let diareparto = this.diareparto;
-            let url = `https://nuestrocampo.cl/api/sectores/create.php?nombresector=${nombresector}&comuna=${comuna}&diareparto=${diareparto}`
+            let ns = this.nombresector;
+            let c = this.comuna;
+            let dr = this.diareparto;
+            let r = this.repartidor;
+            let url = `https://nuestrocampo.cl/api/sectores/create.php?nombresector=${ns}&comuna=${c}&diareparto=${dr}&repartidor=${r}`
             axios.post(url);
             location.reload();
         }
     },
+
+    mounted() {
+        let url = `https://nuestrocampo.cl/api/users/read-deliver.php`
+        axios.get(url).then((response) => (this.items = response.data))
+    }
 };
 </script>

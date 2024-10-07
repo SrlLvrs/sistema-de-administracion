@@ -39,7 +39,7 @@ if ($num > 0) {
             "nombreSector" => $row["NombreSector"],
             "comuna" => $row["Comuna"],
             "diaReparto" => $row["DiaReparto"],
-            "orden" => $row["Orden"],
+            "repartidor" => $row["IDRepartidor"],
         );
 
         // Se agrega el sector actual al array de sectores.
