@@ -1,4 +1,5 @@
 <template>
+    <!-- Botón para abrir el modal -->
     <button class="btn btn-outline btn-success mb-4" onclick="crearSectorModal.showModal()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="size-6">
@@ -7,8 +8,8 @@
 
         Crear nuevo sector
     </button>
-    <!-- Modal CREAR NUEVO SECTOR -->
 
+    <!-- Modal CREAR NUEVO SECTOR -->
     <dialog id="crearSectorModal" class="modal">
         <div class="modal-box">
             <h3 class="text-lg font-bold">Nuevo sector</h3>

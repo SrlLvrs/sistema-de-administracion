@@ -13,16 +13,22 @@
     <div class="modal" role="dialog">
         <div class="modal-box">
             <h3 class="text-lg font-bold">Editar sector</h3>
+
+            <!-- Nombre -->
             <div class="label">
                 <span class="label-text">Nombre del sector</span>
             </div>
             <input v-model="localNombreSector" type="text" placeholder="Ingresa el nombre del sector"
                 class="input input-bordered w-full max-w-xs mb-2" />
+
+            <!-- Comuna -->
             <div class="label">
                 <span class="label-text">Comuna</span>
             </div>
             <input v-model="localComuna" type="text" placeholder="Ingresa la comuna"
                 class="input input-bordered w-full max-w-xs  mb-2" />
+
+            <!-- Dia de reparto -->
             <div class="label">
                 <span class="label-text">Día de reparto</span>
             </div>
@@ -32,9 +38,21 @@
                     {{ dia }}
                 </option>
             </select>
-            <!-- 
-                <p>El nuevo día de reparto es: {{ localDiaReparto }}</p>
-                -->
+
+            <!--Repartidor-->
+            <div class="label">
+                <span class="label-text">Repartidor</span>
+            </div>
+
+            <select v-model="localRepartidor" class="select select-bordered w-full max-w-xs">
+                <!-- Mostrar el Username del ID seleccionado -->
+                <option disabled selected> {{ selectedUsername || 'Selecciona un repartidor' }} </option>
+                <!-- Listar las opciones de usernames -->
+                <option v-for="(item, index) in items" :key="index" :value="item.ID">
+                    {{ item.Username }}
+                </option>
+            </select>
+
 
             <div class="modal-action">
                 <label :for="nombreSector" class="btn">Salir</label>
@@ -64,14 +82,17 @@ export default {
         nombreSector: String,
         comuna: String,
         diareparto: String,
+        repartidor: String,
     },
 
     data() {
         return {
             //Array para guardar datos de la API
+            items: [],
             localNombreSector: this.nombreSector,
             localComuna: this.comuna,
             localDiaReparto: this.diareparto,
+            localRepartidor: this.repartidor,
             diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
         };
     },
@@ -81,10 +102,23 @@ export default {
             let nombre = this.localNombreSector;
             let comuna = this.localComuna;
             let dia = this.localDiaReparto;
-            let url = `https://nuestrocampo.cl/api/sectores/update.php?id=${id}&nombresector=${nombre}&comuna=${comuna}&diareparto=${dia}`
+            let repartidor = this.localRepartidor;
+            let url = `https://nuestrocampo.cl/api/sectores/update.php?id=${id}&nombresector=${nombre}&comuna=${comuna}&diareparto=${dia}&repartidor=${repartidor}`
             axios.put(url);
             location.reload();
         },
     },
+
+    computed: {
+        selectedUsername() {
+            const selectedItem = this.items.find(item => item.ID === this.repartidor);
+            return selectedItem ? selectedItem.Username : null;
+        }
+    },
+
+    mounted() {
+        let url = `https://nuestrocampo.cl/api/users/read-deliver.php`
+        axios.get(url).then((response) => (this.items = response.data))
+    }
 };
 </script>

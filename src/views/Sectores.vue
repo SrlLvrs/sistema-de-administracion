@@ -50,7 +50,8 @@
                             :id="item.id" 
                             :nombreSector="item.nombreSector" 
                             :comuna="item.comuna" 
-                            :diareparto="item.diaReparto" />
+                            :diareparto="item.diaReparto"
+                            :repartidor="item.repartidor" />
                         <!-- Botón BORRAR SECTOR -->
                         <eliminarSectorModal 
                             v-if="this.rol != 'Repartidor'" 

@@ -1,4 +1,5 @@
 <?php
+// Componente: EditarSector.vue
 // Estos encabezados permiten el acceso a la API desde cualquier origen y especifican que el contenido de la respuesta será JSON.
 // También permiten el uso del método PUT y gestionan los encabezados para las solicitudes.
 header("Access-Control-Allow-Origin: *");
@@ -22,12 +23,13 @@ $id = isset($_GET['id']) ? $_GET['id'] : '';
 $nombresector = isset($_GET['nombresector']) ? $_GET['nombresector'] : '';
 $comuna = isset($_GET['comuna']) ? $_GET['comuna'] : '';
 $diareparto = isset($_GET['diareparto']) ? $_GET['diareparto'] : '';
+$repartidor = isset($_GET['repartidor']) ? $_GET['repartidor'] : '';
 
 // Verifica que los campos no estén vacíos
 if (!empty($nombresector) && !empty($comuna) && !empty($diareparto)) {
     // Se prepara la consulta SQL para actualizar el sector.
     $query = "  UPDATE sector 
-                SET NombreSector = :nombresector, Comuna = :comuna, DiaReparto = :diareparto
+                SET NombreSector = :nombresector, Comuna = :comuna, DiaReparto = :diareparto, IDRepartidor = :repartidor
                 WHERE ID = :id";
 
     // Se prepara la consulta para su ejecución.
@@ -37,6 +39,7 @@ if (!empty($nombresector) && !empty($comuna) && !empty($diareparto)) {
     $stmt->bindParam(":nombresector", $nombresector);
     $stmt->bindParam(":comuna", $comuna);
     $stmt->bindParam(":diareparto", $diareparto);
+    $stmt->bindParam(":repartidor", $repartidor);
 
     // Se ejecuta la consulta.
     if ($stmt->execute()) {
