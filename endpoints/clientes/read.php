@@ -44,7 +44,8 @@ $query = "  SELECT
             WHERE
                 c.Visible = 1
             ORDER BY
-                c.ID DESC";
+                c.ID DESC
+            LIMIT 100";
 
 $stmt = $db->prepare($query);
 

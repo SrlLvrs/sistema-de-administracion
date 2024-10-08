@@ -30,6 +30,7 @@
                     <th>Nombre del Sector</th>
                     <th>Comuna</th>
                     <th>Día de reparto</th>
+                    <th>Repartidor</th>
                     <th v-if="this.rol != 'Repartidor'">Acciones</th>
                 </tr>
             </thead>
@@ -40,9 +41,10 @@
                 <!-- Los resultados deben recorrerse dentro del TR 
                 -->
                 <tr v-for="item in filteredItems" :key="item.id">
-                    <td> {{ item.nombreSector }}</td>
-                    <td> {{ item.comuna }}</td>
-                    <td> {{ item.diaReparto }}</td>
+                    <td> {{ item.NombreSector }}</td>
+                    <td> {{ item.Comuna }}</td>
+                    <td> {{ item.DiaReparto }}</td>
+                    <td> {{ item.Repartidor }}</td>
                     <td>
                         <!-- Botón EDITAR SECTOR -->
                         <editarSectorModal 
@@ -98,8 +100,8 @@ export default {
         //Esta función filtra el array en base a el NOMBRE o la DIRECCION del cliente
         filteredItems() {
             return this.items.filter(item => {
-                return item.nombreSector.toLowerCase().includes(this.filterText.toLowerCase()) || //esta linea filtra texto
-                    item.comuna.toLowerCase().includes(this.filterText.toLowerCase());
+                return item.NombreSector.toLowerCase().includes(this.filterText.toLowerCase()) || //esta linea filtra texto
+                    item.Comuna.toLowerCase().includes(this.filterText.toLowerCase());
                 //item.edad.toString().includes(this.filterText); //esta linea filtra INTs
                 //hay que añadir una de estas 2 tipos de lineas, para cada una de las columnas a filtrar
 

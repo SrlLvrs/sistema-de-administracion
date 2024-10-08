@@ -53,28 +53,8 @@ if ($num > 0) {
 
     // Se recorren los resultados de la consulta.
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        // Extrae los valores de la fila actual.
-        extract($row);
-
-        // Se crea un array para el cliente actual
-        $cliente_item = array(
-            "id" => $row["ID"],
-            "nombre" => $row["Nombre"],
-            "direccion" => $row["Direccion"],
-            "idsector" => $row["IDSector"],
-            "sector" => $row["NombreSector"],
-            "comuna" => $row["Comuna"],
-            "telefono" => $row["Telefono"],
-            "telefono2" => $row["Telefono2"],
-            "linkmaps" => $row["LinkMaps"],
-            "frecuencia" => $row["Frecuencia"],
-            "observacion" => $row["Observacion"],
-            "reparto" => $row["diaDeReparto"],
-            "deuda" => $row["Deuda_Total"],
-        );
-
         // Se agrega el cliente actual al array de clientes.
-        array_push($clientes_arr, $cliente_item);
+        $clientes_arr[] = $row;
     }
 
     // Se establece el código de respuesta a 200 OK.

@@ -30,7 +30,7 @@ $query = "  SELECT
                 c.Direccion,
                 s.NombreSector,
                 s.Comuna,
-                p.IDRepartidor,
+                s.IDRepartidor,
                 p.Estado,
                 p.Pagado,
                 p.MedioPago,
@@ -46,7 +46,7 @@ $query = "  SELECT
             WHERE
                 p.Visible = 1
                 AND DATE(p.FechaEntrega) = CURDATE()
-                AND p.IDRepartidor = :id
+                AND s.IDRepartidor = :id
                 AND p.Estado = 'Agendado'
             ORDER BY
                 p.OrdenEntrega ASC";

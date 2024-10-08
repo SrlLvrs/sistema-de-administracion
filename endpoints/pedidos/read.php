@@ -19,7 +19,7 @@ $query = "  SELECT p.ID,
                 s.NombreSector,
                 s.Comuna,
                 c.LinkMaps,
-                p.IDRepartidor,
+                s.IDRepartidor,
                 u.Username AS NombreRepartidor,
                 p.Estado,
                 p.Pagado,
@@ -31,7 +31,7 @@ $query = "  SELECT p.ID,
             FROM pedidos p
             JOIN clientes c ON p.IDCliente = c.ID
             JOIN sector s ON c.IDSector = s.ID
-            JOIN usuarios u ON p.IDRepartidor = u.ID
+            JOIN usuarios u ON s.IDRepartidor = u.ID
             LEFT JOIN pedidos_automaticos pa ON p.IDPA = pa.ID
             WHERE p.Visible = 1
             ORDER BY p.FechaEntrega DESC";

@@ -11,10 +11,11 @@ $database = new Database();
 $db = $database->getConnection();
 
 // Se prepara la consulta SQL para seleccionar todos los registros de la tabla 'sector'.
-$query = "  SELECT * 
-            FROM sector 
-            WHERE Visible = 1
-            ORDER BY ID DESC";
+$query = "  SELECT s.*, u.Username as Repartidor
+            FROM sector s
+            LEFT JOIN usuarios u ON s.IDRepartidor = u.ID
+            WHERE s.Visible = 1
+            ORDER BY s.ID DESC";
 $stmt = $db->prepare($query);
 
 // Se ejecuta la consulta.
@@ -30,20 +31,8 @@ if ($num > 0) {
 
     // Se recorren los resultados de la consulta.
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        // Extrae los valores de la fila actual.
-        extract($row);
-
-        // Se crea un array para el sector actual
-        $sector_item = array(
-            "id" => $row["ID"],
-            "nombreSector" => $row["NombreSector"],
-            "comuna" => $row["Comuna"],
-            "diaReparto" => $row["DiaReparto"],
-            "repartidor" => $row["IDRepartidor"],
-        );
-
         // Se agrega el sector actual al array de sectores.
-        array_push($sectores_arr, $sector_item);
+        array_push($sectores_arr, $row);
     }
 
     // Se establece el código de respuesta a 200 OK.
