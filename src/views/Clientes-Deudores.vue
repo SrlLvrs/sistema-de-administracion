@@ -31,7 +31,6 @@
                     <th>Deuda Total</th>
                     <th>Teléfono</th>
                     <th>Teléfono 2</th>
-                    <th>Frecuencia</th>
                     <th>Día de reparto</th>
                     <th>Observaciones</th>
                     <th>Acciones</th>
@@ -43,14 +42,13 @@
                 <!-- el nombre del array es ITEMS, que debe ser el mismo que se define en DATA() RETURN -->
                 <!-- Los resultados deben recorrerse dentro del TR -->
                 <tr v-for="item in filteredItems" :key="item.id">
-                    <th> {{ item.nombre }}</th>
-                    <td> {{ item.direccion }}, {{ item.sector }}, {{ item.comuna }}</td>
-                    <td> {{ item.deuda }}</td>
-                    <td> {{ item.telefono }}</td>
-                    <td> {{ item.telefono2 }}</td>
-                    <td> {{ item.frecuencia }}</td>
-                    <td> {{ item.reparto }}</td>
-                    <td> {{ item.observacion }}</td>
+                    <th>{{ item.Nombre }}</th>
+                    <td>{{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</td>
+                    <td>{{ item.Deuda_Total }}</td>
+                    <td>{{ item.Telefono }}</td>
+                    <td>{{ item.Telefono2 }}</td>
+                    <td>{{ item.diaDeReparto }}</td>
+                    <td>{{ item.Observacion }}</td>
                     <td>
                         <!-- Detalle cliente -->
                          <DetalleCliente 

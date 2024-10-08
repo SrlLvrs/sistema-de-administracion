@@ -43,13 +43,26 @@ $query = "  SELECT
                 AND pa.Visible = 1
             WHERE
                 c.Visible = 1
+                AND (
+                    c.Nombre LIKE :busqueda
+                    OR c.Direccion LIKE :busqueda
+                    OR s.NombreSector LIKE :busqueda
+                    OR s.Comuna LIKE :busqueda
+                )
             ORDER BY
                 c.ID DESC
             LIMIT 100";
 
+// Preparar la declaración
 $stmt = $db->prepare($query);
 
-// Se ejecuta la consulta.
+// Obtener el término de búsqueda del parámetro GET
+$terminoBusqueda = isset($_GET['busqueda']) ? '%' . $_GET['busqueda'] . '%' : '%';
+
+// Vincular el parámetro
+$stmt->bindParam(':busqueda', $terminoBusqueda, PDO::PARAM_STR);
+
+// Ejecutar la consulta
 $stmt->execute();
 
 // Array para almacenar resultados
