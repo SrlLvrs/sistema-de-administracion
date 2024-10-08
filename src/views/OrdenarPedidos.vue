@@ -3,10 +3,10 @@
   <!-- ENCABEZADO -->
   <div class="prose max-w-none">
     <div class="grid grid-cols-1">
-      <h1 class="text-center p-4 m-0">Ordenar los pedidos de hoy</h1>
+      <h1 class="text-center p-4 m-0">Ordenar pedidos</h1>
       <p class="text-center p-4 m-0">Arrastra los pedidos para ordenarlos y presiona en guardar</p>
       <div class="flex justify-center mb-4">
-        <label class="btn btn-outline btn-success" @click="guardar()">
+        <label class="btn btn-outline btn-info" @click="guardar()">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -18,16 +18,16 @@
   </div>
   <!-- Resultados -->
   <div v-if="items.length > 0" class="overflow-x-auto">
-    <table class="table">
+    <table class="table table-zebra">
       <thead>
         <tr>
           <th></th>
           <th>Número de pedido</th>
           <th>Cliente</th>
           <th>Dirección</th>
-          <th>Estado</th>
+          <th>Teléfono</th>
+          <th>Teléfono 2</th>
           <th>Pagado</th>
-          <th>Medio de Pago</th>
           <th>Fecha de Entrega</th>
         </tr>
       </thead>
@@ -45,11 +45,11 @@
           </td>
           <td> {{ item.ID }}</td>
           <td> {{ item.Nombre }}</td>
-          <td> {{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</td>
-          <td> {{ item.Estado }}</td>
-          <td> {{ item.Pagado }}</td>
-          <td> {{ item.MedioPago }}</td>
-          <td> {{ item.FechaEntrega }}</td>
+          <td> {{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }} </td>
+          <td> {{ item.Telefono }} </td>
+          <td> {{ item.Telefono2 }} </td>
+          <td> {{ item.Pagado }} </td>  
+          <td> {{ item.FechaEntrega }} </td>
         </tr>
       </tbody>
     </table>

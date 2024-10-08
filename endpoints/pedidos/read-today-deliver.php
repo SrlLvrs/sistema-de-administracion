@@ -30,10 +30,11 @@ $query = "  SELECT
                 c.Direccion,
                 s.NombreSector,
                 s.Comuna,
+                c.Telefono,
+                c.Telefono2,
+                c.LinkMaps,
                 s.IDRepartidor,
-                p.Estado,
                 p.Pagado,
-                p.MedioPago,
                 DATE_FORMAT(p.FechaEntrega, '%d/%m/%Y') AS FechaEntrega,
                 DATE_FORMAT(
                     p.HoraCreacion, '%d/%m/%Y %H:%i'
@@ -45,11 +46,11 @@ $query = "  SELECT
                 JOIN sector s ON c.IDSector = s.ID
             WHERE
                 p.Visible = 1
-                AND DATE(p.FechaEntrega) = CURDATE()
-                AND s.IDRepartidor = :id
+                AND YEARWEEK(p.FechaEntrega, 1) = YEARWEEK(CURDATE(), 1)
+                AND s.IDRepartidor = 18
                 AND p.Estado = 'Agendado'
             ORDER BY
-                p.OrdenEntrega ASC";
+                p.FechaEntrega ASC, p.OrdenEntrega ASC";
 
 $stmt = $db->prepare($query);
 

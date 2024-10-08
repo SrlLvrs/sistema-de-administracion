@@ -7,7 +7,8 @@
             <div class="flex justify-center mb-4">
                 <!-- INPUT FILTRAR -->
                 <label class="input input-bordered flex items-center gap-2 mx-2 w-full max-w-xs">
-                    <input v-model="filterText" type="text" class="grow" placeholder="Cliente, dirección o ID de pedido" />
+                    <input v-model="filterText" type="text" class="grow"
+                        placeholder="Cliente, dirección o ID de pedido" />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                         class="h-4 w-4 opacity-70">
                         <path fill-rule="evenodd"
@@ -23,7 +24,7 @@
     </div>
     <!-- RESULTADOS -->
     <div v-if="items.length > 0" class="overflow-x-auto">
-        <table class="table">
+        <table class="table table-zebra">
             <!-- Encabezado -->
             <thead>
                 <tr>
@@ -31,9 +32,9 @@
                     <th>Número de pedido</th>
                     <th>Cliente</th>
                     <th>Dirección</th>
-                    <th>Estado</th>
+                    <th>Teléfono 1</th>
+                    <th>Teléfono 2</th>
                     <th>Pagado</th>
-                    <th>Medio de Pago</th>
                     <th>Fecha de Entrega</th>
                     <th>Acciones</th>
                 </tr>
@@ -55,10 +56,59 @@
                     </th>
                     <th> {{ item.ID }}</th>
                     <th> {{ item.Nombre }}</th>
-                    <td> {{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</td>
-                    <td> {{ item.Estado }}</td>
+                    <td>
+                        <div class="flex gap-2 items-center">
+                            <span>{{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</span>
+                            <a :href="item.LinkMaps" target="_blank" class="btn btn-outline btn-error">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                                </svg>
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex gap-2 items-center">
+                            <span>{{ item.Telefono }}</span>
+                            <a :href="'tel:' + item.Telefono" class="btn btn-outline btn-warning">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                                </svg>
+                            </a>
+                            <a :href="'https://wa.me/' + item.Telefono" target="_blank"
+                                class="btn btn-outline btn-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex gap-2 items-center">
+                            <span>{{ item.Telefono2 }}</span>
+                            <a :href="'tel:' + item.Telefono2" class="btn btn-outline btn-warning">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                                </svg>
+                            </a>
+                            <a :href="'https://wa.me/' + item.Telefono2" target="_blank"
+                                class="btn btn-outline btn-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </td>
                     <td> {{ item.Pagado }}</td>
-                    <td> {{ item.MedioPago }}</td>
                     <td> {{ item.FechaEntrega }}</td>
                     <td>
                         <!-- Detalle Pedido -->
@@ -70,7 +120,8 @@
         </table>
     </div>
     <div v-else class="flex justify-center items-center h-screen">
-        <p class="text-center">No hay pedidos asignados a ti, o no eres repartidor. Si crees que es un error, comunícate con el administrador.</p>
+        <p class="text-center">No hay pedidos asignados a ti, o no eres repartidor. Si crees que es un error, comunícate
+            con el administrador.</p>
     </div>
 </template>
 
