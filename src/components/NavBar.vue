@@ -41,8 +41,6 @@
                                 </li>
                                 <li @click="closeDropdown"><router-link to="/pedidos/automaticos">Pedidos
                                         automáticos</router-link></li>
-                                <li @click="closeDropdown"><router-link to="/pedidos/asignar">Asignar
-                                        Pedidos</router-link></li>
                             </ul>
                         </details>
                     </li>
@@ -82,7 +80,6 @@
                             <li><router-link to="/pedidos">Todos los pedidos</router-link></li>
                             <li><router-link to="/pedidos/hoy">Pedidos de hoy</router-link></li>
                             <li><router-link to="/pedidos/automaticos">Pedidos automáticos</router-link></li>
-                            <li><router-link to="/pedidos/asignar">Asignar Pedidos</router-link></li>
                         </ul>
                     </details>
                 </li>

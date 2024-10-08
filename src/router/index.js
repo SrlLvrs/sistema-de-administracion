@@ -49,11 +49,6 @@ const router = createRouter({
             name: "PedidosHoy",
             component: () => import("../views/Pedidos-hoy.vue") 
         },
-        { 
-            path: "/pedidos/asignar", 
-            name: "PedidosAsignar",
-            component: () => import("../views/Pedidos-Asignar.vue") 
-        },
         {
             path: "/pedidos/ordenar",
             name: "PedidosOrdenar",
