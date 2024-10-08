@@ -19,17 +19,16 @@ try {
     $db->beginTransaction();
 
     // 1. Total de dinero recibido
-    $query = "  SELECT 
-                    'Total de dinero recibido' AS Nombre, SUM(pp.Total) AS sumaTotal
-                FROM 
-                    pedidos p
-                JOIN 
-                    pedidos_productos pp ON pp.IDPedido = p.ID
-                WHERE 
-                    DATE(p.FechaEntrega) = CURDATE() 
-                    AND p.Estado = 'Entregado' 
-                    AND p.Pagado = 'Si' 
-                    AND p.IDRepartidor = :idr";
+    $query = "  SELECT 'Total de dinero recibido' AS Nombre,
+                    SUM(pp.Total) AS sumaTotal
+                FROM pedidos p
+                JOIN pedidos_productos pp ON pp.IDPedido = p.ID
+                JOIN clientes c ON p.IDCliente = c.ID
+                JOIN sector s ON c.IDSector = s.ID
+                WHERE DATE(p.FechaEntrega) = CURDATE()
+                AND p.Estado = 'Entregado'
+                AND p.Pagado = 'Si'
+                AND s.IDRepartidor = :idr";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':idr', $idr);
     $stmt->execute();
@@ -47,17 +46,17 @@ try {
     /************************************************************* */
 
     // 2. Total dinero recibido en efectivo
-    $query2 = " SELECT
-                    'Total de dinero recibido en efectivo' AS Nombre, SUM(pp.Total) AS totalEfectivo
-                FROM
-                    pedidos p
-                    JOIN pedidos_productos pp ON pp.IDPedido = p.ID
-                WHERE
-                    DATE(p.FechaEntrega) = CURDATE()
-                    AND p.Estado = 'Entregado'
-                    AND p.Pagado = 'Si'
-                    AND p.MedioPago = 'Efectivo'
-                    AND p.IDRepartidor = :idr";
+    $query2 = " SELECT 'Total de dinero recibido en efectivo' AS Nombre,
+                    SUM(pp.Total) AS totalEfectivo
+                FROM pedidos p
+                JOIN pedidos_productos pp ON pp.IDPedido = p.ID
+                JOIN clientes c ON p.IDCliente = c.ID
+                JOIN sector s ON c.IDSector = s.ID
+                WHERE DATE(p.FechaEntrega) = CURDATE()
+                AND p.Estado = 'Entregado'
+                AND p.Pagado = 'Si'
+                AND p.MedioPago = 'Efectivo'
+                AND s.IDRepartidor = :idr";
     $stmt2 = $db->prepare($query2);
     $stmt2->bindParam(':idr', $idr);
     $stmt2->execute();
@@ -75,17 +74,17 @@ try {
     /************************************************************* */
 
     // 3. Total de dinero recibido por transferencia
-    $query3 = " SELECT
-                    'Total de dinero recibido por transferencia' AS Nombre, SUM(pp.Total) AS totalTransferencia
-                FROM
-                    pedidos p
-                    JOIN pedidos_productos pp ON pp.IDPedido = p.ID
-                WHERE
-                    DATE(p.FechaEntrega) = CURDATE()
-                    AND p.Estado = 'Entregado'
-                    AND p.Pagado = 'Si'
-                    AND p.MedioPago = 'Transferencia'
-                    AND p.IDRepartidor = :idr";
+    $query3 = " SELECT 'Total de dinero recibido por transferencia' AS Nombre,
+                    SUM(pp.Total) AS totalTransferencia
+                FROM pedidos p
+                JOIN pedidos_productos pp ON pp.IDPedido = p.ID
+                JOIN clientes c ON p.IDCliente = c.ID
+                JOIN sector s ON c.IDSector = s.ID
+                WHERE DATE(p.FechaEntrega) = CURDATE()
+                AND p.Estado = 'Entregado'
+                AND p.Pagado = 'Si'
+                AND p.MedioPago = 'Transferencia'
+                AND s.IDRepartidor = :idr";
     $stmt3 = $db->prepare($query3);
     $stmt3->bindParam(':idr', $idr);
     $stmt3->execute();

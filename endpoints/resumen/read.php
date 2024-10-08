@@ -14,7 +14,7 @@ $db = $database->getConnection();
 // GET stock de la semana
 $query = "  SELECT 
                 u.Username AS Repartidor,                   -- Nombre del repartidor
-                p.IDRepartidor,                             -- ID del repartidor
+                s.IDRepartidor AS IDRepartidor,             -- ID del repartidor (ahora desde la tabla sector)
                 DATE_FORMAT(p.FechaEntrega, '%Y-%m-%d') AS FechaPedido,  -- Fecha formateada sin hora
                 prod.Descripcion AS Producto,               -- Descripción del producto
                 prod.Precio AS Precio,                      -- Precio del producto
@@ -25,7 +25,11 @@ $query = "  SELECT
             FROM 
                 pedidos p
             JOIN 
-                usuarios u ON p.IDRepartidor = u.ID         -- Unir con la tabla usuarios para obtener el nombre del repartidor
+                clientes c ON p.IDCliente = c.ID            -- Unir con la tabla clientes
+            JOIN 
+                sector s ON c.IDSector = s.ID               -- Unir con la tabla sector
+            JOIN 
+                usuarios u ON s.IDRepartidor = u.ID         -- Unir con la tabla usuarios para obtener el nombre del repartidor
             JOIN 
                 pedidos_productos pp ON p.ID = pp.IDPedido  -- Unir con pedidos_productos
             JOIN 
@@ -33,7 +37,7 @@ $query = "  SELECT
             WHERE 
                 DATE(p.FechaEntrega) = CURDATE()            -- Filtrar solo los pedidos de hoy
             GROUP BY 
-                u.Username, p.IDRepartidor, p.FechaEntrega, prod.Descripcion, prod.Precio
+                u.Username, s.ID, p.FechaEntrega, prod.Descripcion, prod.Precio
             ORDER BY 
                 p.FechaEntrega DESC";
 

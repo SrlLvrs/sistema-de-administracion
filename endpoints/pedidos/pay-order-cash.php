@@ -42,7 +42,7 @@ if (!empty($id)) {
         http_response_code(200);
         // Se envía una respuesta JSON indicando que el pedido fue actualizado.
         echo json_encode(array("message" => "El pedido fue marcado como pagado"));
-        logChange($id, "$user marcó el pedido $id de $msg como Pagado con Efectivo");
+        logChange($id, "$user marcó el pedido $id de $msg como Entregado / Efectivo");
     } else {
         // Si la ejecución falla, se establece el código de respuesta a 503 Service Unavailable.
         http_response_code(503);
