@@ -17,6 +17,10 @@
                     <li v-if="rol != 'Repartidor'" @click="closeDropdown">
                         <router-link to='/'>Inicio</router-link>
                     </li>    
+                    <!-- Últimos cambios (Repartidor) -->
+                    <li v-if="rol == 'Repartidor'" @click="closeDropdown">
+                        <router-link to='/iniciorepartidor'>Últimos cambios</router-link>
+                    </li>
                     <!-- Ordenar Pedidos (Repartidor) -->
                     <li v-if="rol == 'Repartidor'" @click="closeDropdown">
                         <router-link to='/pedidos/ordenar'>Ordenar
@@ -88,6 +92,8 @@
             <ul class="menu menu-horizontal px-1">
                 <!-- Inicio -->
                 <li v-if="rol != 'Repartidor'"><router-link to='/'>Inicio</router-link></li>
+                <!-- Últimos cambios (Repartidor) -->
+                <li v-if="rol == 'Repartidor'"><router-link to='/iniciorepartidor'>Últimos cambios</router-link></li>
                 <!-- Ordenar Pedidos (Repartidor) -->
                 <li v-if="rol == 'Repartidor'"><router-link to='/pedidos/ordenar'>Ordenar pedidos</router-link></li>
                 <!-- Repartos de hoy (Repartidor) -->

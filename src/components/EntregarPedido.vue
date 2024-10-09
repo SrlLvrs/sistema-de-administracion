@@ -77,6 +77,7 @@ export default {
     data() {
         return {
             user: '',
+            user_id: '',
             pedido: [],
         };
     },
@@ -90,6 +91,8 @@ export default {
         async getUser() {
             const sessionData = this.checkUserSession();
             this.user = sessionData.username
+            this.user_id = sessionData.id
+            console.log(this.user_id)
         },
         //Obtiene el pedido para el log
         async getPedido() {
@@ -101,7 +104,7 @@ export default {
         async entregado(idp, estado) {
             //Marcar como ${estado}
             let msg = this.pedido[0].Nombre + ', ' + this.pedido[0].Direccion + ', ' + this.pedido[0].NombreSector + ', ' + this.pedido[0].Comuna
-            let url = `https://nuestrocampo.cl/api/pedidos/update-state.php?id=${idp}&estado=${estado}&user=${this.user}&msg=${msg}`
+            let url = `https://nuestrocampo.cl/api/pedidos/update-state.php?id=${idp}&estado=${estado}&user=${this.user}&msg=${msg}&idrepartidor=${this.user_id}`
             await axios.put(url).then(function (response) {
                 console.log(response.data)
             }).then(() => {
@@ -112,7 +115,7 @@ export default {
             //Pagar con efectivo
             let idp = this.id
             let msg = this.pedido[0].Nombre + ', ' + this.pedido[0].Direccion + ', ' + this.pedido[0].NombreSector + ', ' + this.pedido[0].Comuna
-            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-cash.php?id=${idp}&user=${this.user}&msg=${msg}`
+            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-cash.php?id=${idp}&user=${this.user}&msg=${msg}&idrepartidor=${this.user_id}`
             await axios.put(url).then(function (response) {
                 console.log(response.data)
             })

@@ -17,15 +17,16 @@ $db = $database->getConnection();
 
 /*
 Obtener los parámetros por url
-//PEDIDOS: ID, IDCliente, IDRepartidor, Estado, Pagado, MedioPago, FechaEntrega, HoraCreacion, HoraCierra, Visible
+//idpedido, estado, user, msg, idrepartidor
 */
 $id = isset($_GET['id']) ? $_GET['id'] : ''; //NOT NULL
 $estado = isset($_GET['estado']) ? $_GET['estado'] : '';
 $user = isset($_GET['user']) ? $_GET['user'] : '';
 $msg = isset($_GET['msg']) ? $_GET['msg'] : '';
+$idrepartidor = isset($_GET['idrepartidor']) ? $_GET['idrepartidor'] : ''; // Nuevo parámetro
 
 // Verifica que los campos no estén vacíos
-if (!empty($id)) {
+if (!empty($id) && !empty($idrepartidor)) {
     // Se prepara la consulta SQL para actualizar el cliente.
     $query = "  UPDATE pedidos 
                 SET Estado = :estado, HoraCierre = NOW()
@@ -44,7 +45,7 @@ if (!empty($id)) {
         http_response_code(200);
         // Se envía una respuesta JSON indicando que el pedido fue actualizado.
         echo json_encode(array("message" => "El pedido fue actualizado"));
-        logChange($id, "$user marcó el pedido $id de $msg como $estado");
+        logChange($id, "$user marcó el pedido $id de $msg como $estado", $idrepartidor);
     } else {
         // Si la ejecución falla, se establece el código de respuesta a 503 Service Unavailable.
         http_response_code(503);
@@ -55,6 +56,6 @@ if (!empty($id)) {
     // Si los datos están incompletos, se establece el código de respuesta a 400 Bad Request.
     http_response_code(400);
     // Se envía una respuesta JSON indicando que los datos están incompletos.
-    echo json_encode(array("message" => "Falta informacion del pedido."));
+    echo json_encode(array("message" => "Falta información del pedido o del repartidor."));
 }
 ?>

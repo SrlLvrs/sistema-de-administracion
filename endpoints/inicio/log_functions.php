@@ -3,16 +3,17 @@
 
 require_once '../config/db.php';
 
-function logChange($idpedido, $changes) {
+function logChange($idpedido, $changes, $idrepartidor) {
     $database = new Database();
     $conn = $database->getConnection();
 
     // Preparar el log
-    $stmt = $conn->prepare("INSERT INTO logs (idpedido, changes) VALUES (:idpedido, :changes)");
+    $stmt = $conn->prepare("INSERT INTO logs (idpedido, changes, idrepartidor) VALUES (:idpedido, :changes, :idrepartidor)");
 
     // Vincular parámetros a la consulta
     $stmt->bindParam(':idpedido', $idpedido);
     $stmt->bindParam(':changes', $changes);
+    $stmt->bindParam(':idrepartidor', $idrepartidor);
 
     // Ejecutar el query
     try {
