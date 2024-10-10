@@ -27,11 +27,9 @@
 </template>
 
 <script>
-//Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
 
 export default {
-    //Nombre del componente
     name: "PagarPedidoTransferencia",
 
     props: {
@@ -41,18 +39,78 @@ export default {
 
     data() {
         return {
-            items: [],
+            pedido: [],
+            detalle_pedido: [],
+            user: '',
+            user_id: '',
         };
     },
 
     methods: {
-        //Obtiene el detalle del pedido desde la Base de Datos
-        pagarPedido() {
-            let idp = this.id
-            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-wire.php?id=${idp}`
-            axios.put(url).then(function (response) {
-                console.log(response.data)
+        checkUserSession() {
+            const sessionData = JSON.parse(localStorage.getItem('authUser'));
+            return sessionData ? sessionData : null;
+        },
+
+        async getUser() {
+            const sessionData = this.checkUserSession();
+            this.user = sessionData.username;
+            this.user_id = sessionData.id;
+        },
+
+        async getPedido() {
+            let idp = this.id;
+            let url = `https://nuestrocampo.cl/api/pedidos/read-by-id.php?id=${idp}`;
+            await axios.get(url).then((response) => {
+                this.pedido = response.data;
+                return axios.get(`https://nuestrocampo.cl/api/pedidos/read-detail.php?id=${idp}`);
+            }).then((detailResponse) => {
+                this.detalle_pedido = detailResponse.data;
+            });
+        },
+
+        enviarMensajeWhatsApp() {
+            let whatsappMsg = `Hola! Soy el repartidor de Nuestro Campo. Este mensaje se ha creado de forma automática.\n\n`
+            whatsappMsg += `Este es el detalle de tu pedido:\n`
+            this.detalle_pedido.forEach(item => {
+                whatsappMsg += `- Cantidad: ${item.Cantidad} | Descripción: ${item.Descripcion} | Total: $${item.Total}\n`
             })
+            whatsappMsg += `\nEstado del pedido: *${this.pedido[0].Estado}*\n`
+            whatsappMsg += `Medio de Pago: *${this.pedido[0].MedioPago}*\n`
+            whatsappMsg += `Pagado: *${this.pedido[0].Pagado}*\n`
+            whatsappMsg += `Fecha de Entrega: *${this.pedido[0].FechaEntrega}*\n`
+
+            let encodedMsg = encodeURIComponent(whatsappMsg)
+            let phoneNumber = this.pedido[0].Telefono
+
+            // Detectar si es un dispositivo móvil
+            let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
+            let whatsappUrl = isMobile
+              ? `whatsapp://send?phone=${phoneNumber}&text=${encodedMsg}`
+              : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMsg}`
+
+            window.open(whatsappUrl, '_blank')
+        },
+
+        async pagarPedido() {
+            await this.getUser();
+            await this.getPedido();
+
+            let idp = this.id
+            let msg = this.pedido[0].Nombre + ', ' + this.pedido[0].Direccion + ', ' + this.pedido[0].NombreSector + ', ' + this.pedido[0].Comuna
+            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-wire.php?id=${idp}&user=${this.user}&msg=${msg}&idrepartidor=${this.user_id}`
+            await axios.put(url).then((response) => {
+                console.log(response.data)
+                return this.getPedido()
+            }).then(() => {
+                console.log(this.pedido)
+            })
+
+            // Enviar mensaje de WhatsApp
+            this.enviarMensajeWhatsApp()
+
+            // Recargar la página
             location.reload()
         },
     },

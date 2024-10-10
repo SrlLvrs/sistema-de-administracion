@@ -46,7 +46,7 @@
                 <!-- GET -->
                 <!-- el nombre del array es ITEMS, que debe ser el mismo que se define en DATA() RETURN -->
                 <!-- Los resultados deben recorrerse dentro del TR -->
-                <tr v-for="item in filteredItems" :key="item.id">
+                <tr v-for="item in filteredItems" :key="item.ID">
                     <th>{{ item.Nombre }}</th>
                     <td>{{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</td>
                     <td>{{ item.Deuda_Total }}</td>
@@ -57,8 +57,8 @@
                     <td>
                         <!-- Detalle cliente -->
                          <DetalleCliente 
-                         :id="item.id"
-                         :label="item.id + 'detail'"/>
+                         :id="item.ID"
+                         :label="item.ID + 'detail'"/>
                     </td>
                 </tr>
             </tbody>

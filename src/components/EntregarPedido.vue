@@ -119,15 +119,15 @@ export default {
         },
 
         enviarMensajeWhatsApp() {
-            let whatsappMsg = `Gracias por tu compra. Este mensaje se ha creado de forma automática.\n\n`
+            let whatsappMsg = `Hola! Soy el repartidor de Nuestro Campo. Este mensaje se ha creado de forma automática.\n\n`
             whatsappMsg += `Este es el detalle de tu pedido:\n`
             this.detalle_pedido.forEach(item => {
                 whatsappMsg += `- Cantidad: ${item.Cantidad} | Descripción: ${item.Descripcion} | Total: $${item.Total}\n`
             })
-            whatsappMsg += `\nEstado del pedido: ${this.pedido[0].Estado}\n`
-            whatsappMsg += `Medio de Pago: ${this.pedido[0].MedioPago}\n`
-            whatsappMsg += `Pagado: ${this.pedido[0].Pagado}\n`
-            whatsappMsg += `Fecha de Entrega: ${this.pedido[0].FechaEntrega}\n`
+            whatsappMsg += `\nEstado del pedido: *${this.pedido[0].Estado}*\n`
+            whatsappMsg += `Medio de Pago: *${this.pedido[0].MedioPago}*\n`
+            whatsappMsg += `Pagado: *${this.pedido[0].Pagado}*\n`
+            whatsappMsg += `Fecha de Entrega: *${this.pedido[0].FechaEntrega}*\n`
 
             let encodedMsg = encodeURIComponent(whatsappMsg)
             let phoneNumber = this.pedido[0].Telefono
@@ -147,7 +147,7 @@ export default {
             // Pagar con efectivo
             let idp = this.id
             let msg = this.pedido[0].Nombre + ', ' + this.pedido[0].Direccion + ', ' + this.pedido[0].NombreSector + ', ' + this.pedido[0].Comuna
-            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-cash.php?id=${idp}&user=${this.user}&msg=${msg}&idrepartidor=${this.user_id}`
+            let url = `https://nuestrocampo.cl/api/pedidos/deliver-cash.php?id=${idp}&user=${this.user}&msg=${msg}&idrepartidor=${this.user_id}`
             await axios.put(url).then((response) => {
                 console.log(response.data)
                 return this.getPedido()
@@ -159,7 +159,7 @@ export default {
             this.enviarMensajeWhatsApp()
 
             // Recargar la página
-            //location.reload()
+            location.reload()
         },
 
         async entregado(idp, estado) {
@@ -177,7 +177,7 @@ export default {
             this.enviarMensajeWhatsApp()
 
             // Recargar la página
-            //location.reload()
+            location.reload()
         },
     },
 }

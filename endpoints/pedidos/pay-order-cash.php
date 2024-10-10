@@ -28,7 +28,7 @@ $idrepartidor = isset($_GET['idrepartidor']) ? $_GET['idrepartidor'] : ''; // Nu
 // Verifica que los campos no estén vacíos
 if (!empty($id) && !empty($idrepartidor)) {
     // Se prepara la consulta SQL para actualizar el cliente.
-    $query = "  UPDATE pedidos p SET p.Estado = 'Entregado', p.Pagado = 'Si', p.MedioPago = 'Efectivo'
+    $query = "  UPDATE pedidos p SET p.Pagado = 'Si', p.MedioPago = 'Efectivo'
                 WHERE p.ID = :id";
 
     // Se prepara la consulta para su ejecución.
@@ -42,8 +42,8 @@ if (!empty($id) && !empty($idrepartidor)) {
         // Si la ejecución es exitosa, se establece el código de respuesta a 200 OK.
         http_response_code(200);
         // Se envía una respuesta JSON indicando que el pedido fue actualizado.
-        echo json_encode(array("message" => "El pedido fue marcado como pagado"));
-        logChange($id, "$user marcó el pedido $id de $msg como Entregado / Efectivo", $idrepartidor);
+        echo json_encode(array("message" => "El pedido fue marcado como pagado con efectivo"));
+        logChange($id, "$user marcó el pedido $id de $msg como Pagado con Efectivo", $idrepartidor);
     } else {
         // Si la ejecución falla, se establece el código de respuesta a 503 Service Unavailable.
         http_response_code(503);
