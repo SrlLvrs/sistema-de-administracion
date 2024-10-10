@@ -11,12 +11,12 @@ include_once '../config/db.php';
 $database = new Database();
 $db = $database->getConnection();
 
-// Se prepara la consulta SQL para seleccionar toda la información de pedidos.
+// Información de logs del día
 $query = "  SELECT id, changes, DATE_FORMAT(log_time, '%H:%i - %d/%m/%Y') AS log_time
             FROM logs
             WHERE changes IS NOT NULL
-            ORDER BY id DESC
-            LIMIT 200";
+            AND DATE(log_time) = CURDATE()
+            ORDER BY id DESC";
 
 $stmt = $db->prepare($query);
 
