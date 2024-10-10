@@ -20,6 +20,7 @@ $query = "  SELECT
                 p.IDCliente,
                 c.Nombre,
                 c.Direccion,
+                c.Telefono,
                 s.NombreSector,
                 s.Comuna,
                 c.LinkMaps,

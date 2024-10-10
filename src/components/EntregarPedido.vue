@@ -8,7 +8,7 @@
     </label>
 
     <!-- Modal -->
-    <input type="checkbox" :id="label" class="modal-toggle" />
+    <input type="checkbox" :id="label" class="modal-toggle" v-model="isModalOpen" />
     <div class="modal" role="dialog">
         <div class="modal-box modal-pedido">
             <h3 class="text-lg font-bold mb-2 text-center">Entregar el pedido {{ id }}</h3>
@@ -31,13 +31,13 @@
 
             <!-- Entregado, sin pagar -->
             <div class="flex justify-center">
-                <label class="btn btn-outline btn-warning m-2 w-full h-auto text-sm flex flex-col items-center p-2" @click="entregado(id, 'Entregado / Pendiente de pago')">
+                <label class="btn btn-outline btn-warning m-2 w-full h-auto text-sm flex flex-col items-center p-2" @click="entregado(id, 'Entregado')">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-8 mb-1">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                     </svg>
-                    <span>Entregado / Pendiente de pago</span>
+                    <span>Entregado</span>
                 </label>
             </div>
 
@@ -62,11 +62,9 @@
 </template>
 
 <script>
-//Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
 
 export default {
-    //Nombre del componente
     name: "EntregarEfectivo",
 
     props: {
@@ -79,53 +77,108 @@ export default {
             user: '',
             user_id: '',
             pedido: [],
+            detalle_pedido: [],
+            isModalOpen: false, // Nuevo estado para controlar la apertura del modal
         };
     },
 
+    watch: {
+        isModalOpen(newValue) {
+            if (newValue) {
+                this.loadData();
+            }
+        }
+    },
+
     methods: {
+        async loadData() {
+            await this.getUser();
+            await this.getPedido();
+        },
+
         checkUserSession() {
             const sessionData = JSON.parse(localStorage.getItem('authUser'));
             return sessionData ? sessionData : null;
         },
-        //Obtiene el usuario para el log
+
         async getUser() {
             const sessionData = this.checkUserSession();
-            this.user = sessionData.username
-            this.user_id = sessionData.id
-            console.log(this.user_id)
+            this.user = sessionData.username;
+            this.user_id = sessionData.id;
         },
-        //Obtiene el pedido para el log
+
         async getPedido() {
-            let url = `https://nuestrocampo.cl/api/pedidos/read-by-id.php?id=${this.id}`
+            let idp = this.id;
+            let url = `https://nuestrocampo.cl/api/pedidos/read-by-id.php?id=${idp}`;
             await axios.get(url).then((response) => {
-                this.pedido = response.data
-            })
+                this.pedido = response.data;
+                return axios.get(`https://nuestrocampo.cl/api/pedidos/read-detail.php?id=${idp}`);
+            }).then((detailResponse) => {
+                this.detalle_pedido = detailResponse.data;
+            });
         },
-        async entregado(idp, estado) {
-            //Marcar como ${estado}
-            let msg = this.pedido[0].Nombre + ', ' + this.pedido[0].Direccion + ', ' + this.pedido[0].NombreSector + ', ' + this.pedido[0].Comuna
-            let url = `https://nuestrocampo.cl/api/pedidos/update-state.php?id=${idp}&estado=${estado}&user=${this.user}&msg=${msg}&idrepartidor=${this.user_id}`
-            await axios.put(url).then(function (response) {
-                console.log(response.data)
-            }).then(() => {
-                location.reload()
+
+        enviarMensajeWhatsApp() {
+            let whatsappMsg = `Gracias por tu compra. Este mensaje se ha creado de forma automática.\n\n`
+            whatsappMsg += `Este es el detalle de tu pedido:\n`
+            this.detalle_pedido.forEach(item => {
+                whatsappMsg += `- Cantidad: ${item.Cantidad} | Descripción: ${item.Descripcion} | Total: $${item.Total}\n`
             })
+            whatsappMsg += `\nEstado del pedido: ${this.pedido[0].Estado}\n`
+            whatsappMsg += `Medio de Pago: ${this.pedido[0].MedioPago}\n`
+            whatsappMsg += `Pagado: ${this.pedido[0].Pagado}\n`
+            whatsappMsg += `Fecha de Entrega: ${this.pedido[0].FechaEntrega}\n`
+
+            let encodedMsg = encodeURIComponent(whatsappMsg)
+            let phoneNumber = this.pedido[0].Telefono
+
+            // Detectar si es un dispositivo móvil
+            let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
+            let whatsappUrl = isMobile
+              ? `whatsapp://send?phone=${phoneNumber}&text=${encodedMsg}`
+              : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMsg}`
+
+            window.open(whatsappUrl, '_blank')
         },
+
         async efectivo() {
-            //Pagar con efectivo
+            console.log(this.pedido)
+            // Pagar con efectivo
             let idp = this.id
             let msg = this.pedido[0].Nombre + ', ' + this.pedido[0].Direccion + ', ' + this.pedido[0].NombreSector + ', ' + this.pedido[0].Comuna
             let url = `https://nuestrocampo.cl/api/pedidos/pay-order-cash.php?id=${idp}&user=${this.user}&msg=${msg}&idrepartidor=${this.user_id}`
-            await axios.put(url).then(function (response) {
+            await axios.put(url).then((response) => {
                 console.log(response.data)
+                return this.getPedido()
+            }).then(() => {
+                console.log(this.pedido)
             })
-            location.reload()
+
+            // Enviar mensaje de WhatsApp
+            this.enviarMensajeWhatsApp()
+
+            // Recargar la página
+            //location.reload()
+        },
+
+        async entregado(idp, estado) {
+            // Marcar como ${estado}
+            let msg = this.pedido[0].Nombre + ', ' + this.pedido[0].Direccion + ', ' + this.pedido[0].NombreSector + ', ' + this.pedido[0].Comuna
+            let url = `https://nuestrocampo.cl/api/pedidos/update-state.php?id=${idp}&estado=${estado}&user=${this.user}&msg=${msg}&idrepartidor=${this.user_id}`
+            await axios.put(url).then((response) => {
+                console.log(response.data)
+                return this.getPedido()
+            }).then(() => {
+                console.log(this.pedido)
+            })
+
+            // Enviar mensaje de WhatsApp
+            this.enviarMensajeWhatsApp()
+
+            // Recargar la página
+            //location.reload()
         },
     },
-
-    mounted() {
-        this.getUser()
-        this.getPedido()
-    }
-};
+}
 </script>
