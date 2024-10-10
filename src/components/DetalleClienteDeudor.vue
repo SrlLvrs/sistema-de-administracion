@@ -14,6 +14,9 @@
         <div class="modal-box modal-pedido">
             <h3 class="text-lg font-bold mb-2 text-center">Detalle de deudas del cliente</h3>
 
+            {{ id }}
+            {{ items }}
+
             <!-- Loading Spinner en Renderización condicional -->
             <div v-if="suma === null">
                 <span class="loading loading-spinner loading-md"></span>
@@ -176,17 +179,24 @@ export default {
             axios.get(url).then((response) => (this.items = response.data));
 
             let url2 = `https://nuestrocampo.cl/api/clientes/read-order-detail.php?id=${idc}`
-            axios.get(url2).then((response) => (this.detalle = response.data));
+            axios.get(url2).then((response) => {
+                this.detalle = Array.isArray(response.data) ? response.data : [];
+                this.calcularSuma();
+            });
+        },
 
-            //Sumar el total
-            setTimeout(() => {
-                let adicion = this.detalle.reduce((total, pedido) => {
+        calcularSuma() {
+            if (Array.isArray(this.detalle) && this.detalle.length > 0) {
+                this.suma = this.detalle.reduce((total, pedido) => {
                     return total + parseInt(pedido.Total_Pedido, 10);
                 }, 0);
-                this.suma = adicion
-                this.whatsapp()
-            }, 1000);
+                this.whatsapp();
+            } else {
+                this.suma = 0;
+                this.whatsapp();
+            }
         },
+
         whatsapp() {
             let array = this.detalle
             this.copy = 'Estimado cliente\n\nLe comentamos que al día de hoy mantiene una deuda con nosotros.\n\nEl detalle de la deuda es el siguiente:\n\n'

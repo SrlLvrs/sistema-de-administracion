@@ -36,7 +36,9 @@ $query = "  SELECT
                 p.Pagado = 'No'
                 AND p.Estado = 'Entregado'
             GROUP BY
-                c.ID ";
+                c.ID
+            ORDER BY
+                Deuda_Total DESC";
 
 $stmt = $db->prepare($query);
 

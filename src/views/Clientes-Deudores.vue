@@ -19,6 +19,11 @@
                 <Excel :items="filteredItems" />
             </div>
         </div>
+        
+        <!-- Mostrar la suma total de deudas -->
+        <div class="text-center mt-4 mb-4">
+            <span class="font-bold text-xl">Deuda Total: ${{ totalDeuda.toLocaleString('es-CL') }}</span>
+        </div>
     </div>
     <!-- RESULTADOS -->
     <div class="overflow-x-auto">
@@ -76,6 +81,7 @@ export default {
             //Array para guardar datos de la API
             items: [],
             filterText: '',
+            totalDeuda: 0,
         };
     },
 
@@ -86,7 +92,15 @@ export default {
         },
         async getClientesDeudores() {
             let url = "https://nuestrocampo.cl/api/clientes/read-debt.php";
-            await axios.get(url).then((response) => (this.items = response.data));
+            await axios.get(url).then((response) => {
+                this.items = response.data;
+                this.calcularTotalDeuda();
+            });
+        },
+        calcularTotalDeuda() {
+            this.totalDeuda = this.filteredItems.reduce((total, item) => {
+                return total + parseFloat(item.Deuda_Total.replace(/[^0-9.-]+/g,""));
+            }, 0);
         }
     },
 
@@ -94,22 +108,28 @@ export default {
         //Esta función filtra el array en base a el NOMBRE o la DIRECCION del cliente
         filteredItems() {
             const normalizeText = (text) => {
-                return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                return text ? text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : '';
             };
 
-            const filterTextNormalized = normalizeText(this.filterText);
+            const filterTextNormalized = normalizeText(this.filterText || '');
 
-            return this.items.filter(item => {
+            const filteredResults = this.items.filter(item => {
                 const matchesText =
                     !filterTextNormalized ||
-                    normalizeText(item.nombre).includes(filterTextNormalized) ||
-                    normalizeText(item.direccion).includes(filterTextNormalized) ||
-                    normalizeText(item.sector).includes(filterTextNormalized) ||
-                    normalizeText(item.comuna).includes(filterTextNormalized);
+                    normalizeText(item.Nombre || '').includes(filterTextNormalized) ||
+                    normalizeText(item.Direccion || '').includes(filterTextNormalized) ||
+                    normalizeText(item.NombreSector || '').includes(filterTextNormalized) ||
+                    normalizeText(item.Comuna || '').includes(filterTextNormalized);
 
                 // Devuelve los elementos que coincidan con todos los filtros activos
                 return matchesText;
             });
+
+            this.$nextTick(() => {
+                this.calcularTotalDeuda();
+            });
+
+            return filteredResults;
         }
     },
 
