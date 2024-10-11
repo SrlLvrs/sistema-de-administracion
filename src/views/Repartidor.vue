@@ -35,7 +35,6 @@
                     <th>Teléfono 1</th>
                     <th>Teléfono 2</th>
                     <th>Pagado</th>
-                    <th>Fecha de Entrega</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -109,11 +108,11 @@
                         </div>
                     </td>
                     <td> {{ item.Pagado }}</td>
-                    <td> {{ item.FechaEntrega }}</td>
                     <td>
-                        <!-- Detalle Pedido -->
+                        <!-- Acciones  -->
                         <EntregarPedido :label="item.ID + 'deliver'" :id="item.ID" />
                         <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
+                        <EditarPedido :label="item.ID + 'edit'" :id="item.ID" />
                     </td>
                 </tr>
             </tbody>
@@ -194,6 +193,6 @@ export default {
         }
     },
 
-    components: { EliminarPedido, DetallePedido, EditarPedido, Excel, EntregarPedido },
+    components: { EliminarPedido, DetallePedido, EditarPedido, Excel, EntregarPedido},
 }
 </script>

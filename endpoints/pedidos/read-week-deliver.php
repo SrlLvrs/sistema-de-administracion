@@ -46,7 +46,7 @@ $query = "  SELECT
                 JOIN sector s ON c.IDSector = s.ID
             WHERE
                 p.Visible = 1
-                AND DATE(p.FechaEntrega) = CURDATE()
+                AND YEARWEEK(p.FechaEntrega, 1) = YEARWEEK(CURDATE(), 1)
                 AND s.IDRepartidor = :id
                 AND p.Estado = 'Agendado'
             ORDER BY
