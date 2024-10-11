@@ -1,4 +1,5 @@
 <?php
+// components/Pedidos-hoy.vue
 // Estos encabezados permiten el acceso a la API desde cualquier origen y especifican que el contenido de la respuesta será JSON.
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -16,7 +17,7 @@ $query = "  SELECT
                 p.IDPA,
                 p.IDCliente,
                 c.Nombre,
-                p.IDRepartidor,
+                s.IDRepartidor,
                 p.Estado,
                 p.Pagado,
                 p.MedioPago,
@@ -26,8 +27,9 @@ $query = "  SELECT
             FROM
                 pedidos p
                 JOIN clientes c ON p.IDCliente = c.ID
+                JOIN sector s ON c.IDSector = s.ID
             WHERE
-                p.Visible = 1 AND DATE(p.FechaEntrega) = CURDATE()
+                p.Visible = 1 AND DATE(p.FechaEntrega) = CURDATE() AND p.Estado = 'No Entregado'
             ORDER BY
                 p.FechaEntrega DESC";
 

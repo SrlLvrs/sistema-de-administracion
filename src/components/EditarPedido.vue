@@ -211,7 +211,7 @@ export default {
             id_cliente_actual: "",
             id_cliente_nuevo: "",
             estado_actual: "",
-            estados: ["Agendado", "Entregado", "Rechazado"],
+            estados: ["Agendado", "Entregado", "No Entregado"],
             pagado: "",
             pagado_options: ["Si", "No"],
             mediopago: "",

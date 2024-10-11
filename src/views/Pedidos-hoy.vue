@@ -3,7 +3,7 @@
     <!-- ENCABEZADO -->
     <div class="prose max-w-none">
         <div class="grid grid-cols-1">
-            <h1 class="text-center p-4 m-0">Todos los pedidos de hoy</h1>
+            <h1 class="text-center p-4 m-0">Pedidos no entregados de hoy</h1>
             <div class="flex justify-center mb-4">
                 <!-- INPUT FILTRAR -->
                 <label class="input input-bordered flex items-center gap-2 mx-2">
