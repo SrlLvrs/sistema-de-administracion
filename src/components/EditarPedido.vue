@@ -89,6 +89,7 @@
                     </div>
                     <VCalendar v-model="fechaentrega" />
                 </div>
+                {{ fechaentrega }}
 
                 <!-- Todos los productos -->
                 <div>
@@ -244,7 +245,7 @@ export default {
             this.estado_actual = this.items[0].Estado;
             this.pagado = this.items[0].Pagado;
             this.mediopago = this.items[0].MedioPago;
-            this.fechaentrega = this.items[0].FechaEntrega;
+            this.fechaentrega = this.items[0].FechaEntregaMySQL;
 
             //Rellenar array DETALLEPEDIDO
             for (let i = 0; i < this.items.length; i++) {
@@ -366,7 +367,7 @@ export default {
             let e = this.estado_actual;
             let p = this.pagado;
             let mp = this.mediopago;
-            let fe = this.fechaentrega;
+            let fe = this.formatearFecha(this.fechaentrega);
 
             let url = `https://nuestrocampo.cl/api/pedidos/update.php?id=${idp}&idcliente=${idc}&idrepartidor=${idr}&estado=${e}&pagado=${p}&mediopago=${mp}&fechaentrega=${fe}`;
             axios.put(url).then(function (response) {
@@ -377,6 +378,17 @@ export default {
         //Limpia los arrays al salir
         limpiar() {
             this.detallepedido = []
+        },
+        formatearFecha(fecha) {
+            if (!fecha) return '';
+            const d = new Date(fecha);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const hours = String(d.getHours()).padStart(2, '0');
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            const seconds = String(d.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         },
     },
 

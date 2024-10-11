@@ -30,6 +30,7 @@ if (!empty($id)) {
                     p.Pagado, 
                     p.MedioPago, 
                     DATE_FORMAT(p.FechaEntrega, '%d-%m-%Y') AS FechaEntrega, 
+                    p.FechaEntrega as FechaEntregaMySQL,
                     p.HoraCreacion, 
                     p.HoraCierre,
                     c.Direccion, 
