@@ -16,11 +16,10 @@ $db = $database->getConnection();
 
 /*
 Obtener los parámetros por url
-//PEDIDOS: ID, IDCliente, IDRepartidor, Estado, Pagado, MedioPago, FechaEntrega, HoraCreacion, HoraCierra, Visible
+//PEDIDOS: ID, IDCliente, Estado, Pagado, MedioPago, FechaEntrega, HoraCreacion, HoraCierra, Visible
 */
 $id = isset($_GET['id']) ? $_GET['id'] : ''; //NOT NULL
 $idcliente = isset($_GET['idcliente']) ? $_GET['idcliente'] : '';
-$idrepartidor = isset($_GET['idrepartidor']) ? $_GET['idrepartidor'] : '';
 $estado = isset($_GET['estado']) ? $_GET['estado'] : '';
 $pagado = isset($_GET['pagado']) ? $_GET['pagado'] : '';
 $mediopago = isset($_GET['mediopago']) ? $_GET['mediopago'] : '';
@@ -30,7 +29,7 @@ $fechaentrega = isset($_GET['fechaentrega']) ? $_GET['fechaentrega'] : '';
 if (!empty($id)) {
     // Se prepara la consulta SQL para actualizar el cliente.
     $query = "  UPDATE pedidos 
-                SET IDCliente=:idc, IDRepartidor=:idr, Estado=:e, Pagado=:p, MedioPago=:m, FechaEntrega=:f
+                SET IDCliente=:idc, Estado=:e, Pagado=:p, MedioPago=:m, FechaEntrega=:f
                 WHERE ID = :id";
 
     // Se prepara la consulta para su ejecución.
@@ -39,7 +38,6 @@ if (!empty($id)) {
     //Bindear las variables usando bindParam
     $stmt->bindParam(":id", $id);
     $stmt->bindParam(":idc", $idcliente);
-    $stmt->bindParam(":idr", $idrepartidor);
     $stmt->bindParam(":e", $estado);
     $stmt->bindParam(":p", $pagado);
     $stmt->bindParam(":m", $mediopago);

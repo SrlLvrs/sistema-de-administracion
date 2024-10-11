@@ -62,7 +62,7 @@
                             <ul class="bg-base-100 rounded-t-none p-2">
                                 <li @click="closeDropdown"><router-link to="/pedidos">Todos los pedidos</router-link>
                                 </li>
-                                <li @click="closeDropdown"><router-link to="/pedidos/hoy">Pedidos de hoy</router-link>
+                                <li @click="closeDropdown"><router-link to="/pedidos/hoy">Pedidos no entregados</router-link>
                                 </li>
                                 <li @click="closeDropdown"><router-link to="/pedidos/automaticos">Pedidos
                                         automáticos</router-link></li>
@@ -120,7 +120,7 @@
                         <summary>Pedidos</summary>
                         <ul class="bg-base-100 rounded-t-none p-2">
                             <li><router-link to="/pedidos">Todos los pedidos</router-link></li>
-                            <li><router-link to="/pedidos/hoy">Pedidos de hoy</router-link></li>
+                            <li><router-link to="/pedidos/hoy">Pedidos no entregados</router-link></li>
                             <li><router-link to="/pedidos/automaticos">Pedidos automáticos</router-link></li>
                         </ul>
                     </details>

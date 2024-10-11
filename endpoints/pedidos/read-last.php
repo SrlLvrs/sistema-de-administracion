@@ -14,7 +14,7 @@ $db = $database->getConnection();
 // PEDIDOS: ID, IDCliente, IDRepartidor, Estado, Pagado, MedioPago, FechaEntrega HoraCreacion, HoraCierre, Visible
 // CLIENTES: ID, Nombre, Direccion, IDSector, Telefono, Telefono2, LinkMaps, Frecuencia, DiaRepartoExcepcional, Preferencia, Observacion, Visible
 
-$query = "  SELECT p.ID, p.IDCliente, c.Nombre, c.Direccion, s.NombreSector, s.Comuna, COALESCE (c.DiaRepartoExcepcional, s.DiaReparto) AS DiaReparto, p.IDRepartidor, p.FechaEntrega
+$query = "  SELECT p.ID, p.IDCliente, c.Nombre, c.Direccion, s.NombreSector, s.Comuna, COALESCE (c.DiaRepartoExcepcional, s.DiaReparto) AS DiaReparto, s.IDRepartidor, p.FechaEntrega
             FROM pedidos p
             JOIN clientes c ON p.IDCliente = c.ID
             JOIN sector s ON c.IDSector = s.ID

@@ -245,7 +245,7 @@ export default {
             let idc = this.cliente;
             let h = this.fecha_creacion_local;
             let hmysql = this.formatToMySQLDateTime(h);
-            let url = `https://nuestrocampo.cl/api/pedidos/create.php?id_cliente=${idc}&hora_creacion=${hmysql}`
+            let url = `https://nuestrocampo.cl/api/pedidos/create.php?id_cliente=${idc}&hora_creacion=${hmysql}&fecha_reparto=${hmysql}`
             axios.post(url).then(function (response) {
                 console.log(response.data);
             });
@@ -305,14 +305,13 @@ export default {
             //Editar campos en tabla PEDIDOS
             let id = this.items[0].id
             let idc = this.items[0].id_cliente
-            let idr = this.items[0].id_repartidor
             let e = 'Agendado'
             let p = 'No'
             let m = 'No definido'
             let f = this.fecha_reparto_local
             let fmysql = this.formatToMySQLDateTime(f);
 
-            let url = `https://nuestrocampo.cl/api/pedidos/update.php?id=${id}&idcliente=${idc}&idrepartidor=${idr}&estado=${e}&pagado=${p}&mediopago=${m}&fechaentrega=${fmysql}`
+            let url = `https://nuestrocampo.cl/api/pedidos/update.php?id=${id}&idcliente=${idc}&estado=${e}&pagado=${p}&mediopago=${m}&fechaentrega=${fmysql}`
             axios.put(url).then(function (response) {
                 console.log(response.data);
             });
