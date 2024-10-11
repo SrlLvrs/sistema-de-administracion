@@ -11,21 +11,27 @@ include_once '../config/db.php';
 $database = new Database();
 $db = $database->getConnection();
 
-// GET stock de la semana
+// GET stock de la semana y entregados
 $query = "  SELECT 
-                IDProducto AS idproducto,
+                p.ID AS idproducto,
                 CONCAT('[', 
-                    IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 2 THEN Stock END), 0), ',',  -- Lunes
-                    IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 3 THEN Stock END), 0), ',',  -- Martes
-                    IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 4 THEN Stock END), 0), ',',  -- Miércoles
-                    IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 5 THEN Stock END), 0), ',',  -- Jueves
-                    IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 6 THEN Stock END), 0), ',',  -- Viernes
-                    IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 7 THEN Stock END), 0), ',',  -- Sábado
-                    IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 1 THEN Stock END), 0)        -- Domingo
-                , ']') AS stock
-            FROM stock
-            WHERE YEARWEEK(Fecha, 1) = YEARWEEK(CURDATE(), 1)  -- Filtrar por semana actual
-            GROUP BY IDProducto";
+                    IFNULL(MAX(CASE WHEN DAYOFWEEK(s.Fecha) = 2 THEN s.Stock END), 0), ',',  -- Lunes
+                    IFNULL(MAX(CASE WHEN DAYOFWEEK(s.Fecha) = 3 THEN s.Stock END), 0), ',',  -- Martes
+                    IFNULL(MAX(CASE WHEN DAYOFWEEK(s.Fecha) = 4 THEN s.Stock END), 0), ',',  -- Miércoles
+                    IFNULL(MAX(CASE WHEN DAYOFWEEK(s.Fecha) = 5 THEN s.Stock END), 0), ',',  -- Jueves
+                    IFNULL(MAX(CASE WHEN DAYOFWEEK(s.Fecha) = 6 THEN s.Stock END), 0), ',',  -- Viernes
+                    IFNULL(MAX(CASE WHEN DAYOFWEEK(s.Fecha) = 7 THEN s.Stock END), 0), ',',  -- Sábado
+                    IFNULL(MAX(CASE WHEN DAYOFWEEK(s.Fecha) = 1 THEN s.Stock END), 0)        -- Domingo
+                , ']') AS stock,
+                IFNULL((SELECT SUM(pp2.cantidad)
+                        FROM pedidos_productos pp2
+                        JOIN pedidos ped2 ON pp2.IDPedido = ped2.ID
+                        WHERE pp2.IDProducto = p.ID
+                        AND YEARWEEK(ped2.FechaEntrega, 1) = YEARWEEK(CURDATE(), 1)
+                        AND ped2.Estado = 'Entregado'), 0) AS entregados
+            FROM productos p
+            LEFT JOIN stock s ON p.ID = s.IDProducto AND YEARWEEK(s.Fecha, 1) = YEARWEEK(CURDATE(), 1)
+            GROUP BY p.ID";
 
 $stmt = $db->prepare($query);
 

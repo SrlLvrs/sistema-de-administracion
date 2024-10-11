@@ -13,7 +13,9 @@
                     <th>Productos</th>
                     <th>Stock semana anterior</th>
                     <th v-for="(day, index) in daysOfWeek" :key="index">{{ day }}</th>
-                    <th>Total</th>
+                    <th>Total proyectado</th>
+                    <th>Total entregado</th>
+                    <th>Total hasta hoy</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,7 +27,9 @@
                             type="number" placeholder="Ingresa el Stock"
                             class="input input-bordered w-full max-w-xs mb-2" />
                     </td>
-                    <td>{{ calculateTotal(producto.stock, producto.stock_semana_anterior) }}</td>
+                    <td>{{ calculateTotalProjected(producto.stock, producto.stock_semana_anterior) }}</td>
+                    <td>{{ stockData.find(item => item.idproducto === producto.id).entregados }}</td>
+                    <td>{{ calculateTotalUntilToday(producto.stock, producto.stock_semana_anterior, producto.id) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -210,6 +214,22 @@ export default {
                     console.error('Error al obtener el stock de la semana anterior:', error);
                 }
             }
+        },
+
+        calculateTotalProjected(stock, stock_semana_anterior) {
+            const totalStock = stock.reduce((total, num) => total + num, 0);
+            return totalStock + parseInt(stock_semana_anterior);
+        },
+
+        calculateTotalUntilToday(stock, stock_semana_anterior, idProducto) {
+            const today = new Date().getDay(); // 0 es domingo, 1 es lunes, ..., 6 es sábado
+            const adjustedToday = today === 0 ? 6 : today - 1; // Ajustamos para que 0 sea lunes y 6 domingo
+
+            const totalStock = stock.slice(0, adjustedToday + 1).reduce((total, num) => total + num, 0);
+            const stockDataItem = this.stockData.find(item => item.idproducto === idProducto);
+            const entregados = stockDataItem ? parseInt(stockDataItem.entregados) || 0 : 0;
+
+            return totalStock + parseInt(stock_semana_anterior) - entregados;
         }
     }
 }
