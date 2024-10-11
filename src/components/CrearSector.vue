@@ -47,6 +47,13 @@
                 </option>
             </select>
 
+            <!--Orden-->
+            <div class="label">
+                <span class="label-text">Orden</span>
+            </div>
+            <input v-model="orden" type="number" placeholder="Orden en relación a otros sectores de la misma comuna"
+                class="input input-bordered w-full max-w-xs mb-2" />
+            
             <!--Acciones-->
             <div class="modal-action">
                 <form method="dialog">
@@ -86,6 +93,7 @@ export default {
             diareparto: "",
             repartidor: '',
             diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
+            orden: 1, // Nuevo campo para el orden
         };
     },
 
@@ -95,7 +103,8 @@ export default {
             let c = this.comuna;
             let dr = this.diareparto;
             let r = this.repartidor;
-            let url = `https://nuestrocampo.cl/api/sectores/create.php?nombresector=${ns}&comuna=${c}&diareparto=${dr}&repartidor=${r}`
+            let o = this.orden; // Nuevo campo orden
+            let url = `https://nuestrocampo.cl/api/sectores/create.php?nombresector=${ns}&comuna=${c}&diareparto=${dr}&repartidor=${r}&orden=${o}`
             axios.post(url);
             location.reload();
         }

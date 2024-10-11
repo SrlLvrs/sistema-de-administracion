@@ -18,10 +18,11 @@ $nombresector = isset($_GET['nombresector']) ? $_GET['nombresector'] : '';
 $comuna = isset($_GET['comuna']) ? $_GET['comuna'] : '';
 $diareparto = isset($_GET['diareparto']) ? $_GET['diareparto'] : '';
 $repartidor = isset($_GET['repartidor']) ? $_GET['repartidor'] : '';
+$orden = isset($_GET['orden']) ? $_GET['orden'] : '';
 
 //Comprueba que las variables NO estén vacías
 if (!empty($nombresector) && !empty($comuna) && !empty($diareparto)) {
-    $query = "INSERT INTO sector SET NombreSector=:nombresector, Comuna=:comuna, DiaReparto=:diareparto, IDRepartidor=:repartidor";
+    $query = "INSERT INTO sector SET NombreSector=:nombresector, Comuna=:comuna, DiaReparto=:diareparto, IDRepartidor=:repartidor, Orden=:orden";
 
     $stmt = $db->prepare($query);
 
@@ -30,7 +31,8 @@ if (!empty($nombresector) && !empty($comuna) && !empty($diareparto)) {
     $stmt->bindParam(":comuna", $comuna);
     $stmt->bindParam(":diareparto", $diareparto);
     $stmt->bindParam(":repartidor", $repartidor);
-
+    $stmt->bindParam(":orden", $orden);
+    
     if ($stmt->execute()) {
         http_response_code(201);
         echo json_encode(array("message" => "El sector fue creado."));

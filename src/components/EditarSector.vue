@@ -1,6 +1,6 @@
 <template>
     <!-- Botón para abrir el modal -->
-    <label :for="nombreSector" class="btn btn-outline btn-warning mr-2">
+    <label :for="id" class="btn btn-outline btn-warning mr-2">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -9,7 +9,7 @@
     </label>
 
     <!-- Modal -->
-    <input type="checkbox" :id="nombreSector" class="modal-toggle" />
+    <input type="checkbox" :id="id" class="modal-toggle" v-model="isModalOpen" />
     <div class="modal" role="dialog">
         <div class="modal-box">
             <h3 class="text-lg font-bold">Editar sector</h3>
@@ -53,9 +53,15 @@
                 </option>
             </select>
 
+            <!-- Orden -->
+            <div class="label">
+                <span class="label-text">Orden</span>
+            </div>
+            <input v-model="localOrden" type="number" placeholder="Orden en relación a otros sectores de la misma comuna"
+                class="input input-bordered w-full max-w-xs mb-2" />
 
             <div class="modal-action">
-                <label :for="nombreSector" class="btn">Salir</label>
+                <label :for="id" class="btn">Salir</label>
                 <button class="btn btn-outline btn-warning" @click="editarSector(id)">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
@@ -70,11 +76,9 @@
 </template>
 
 <script>
-//Para usar axios, primero hay que instalarlo usando: 'npm install axios'
 import axios from "axios";
 
 export default {
-    //Nombre del componente
     name: "CrearSectorModal",
 
     props: {
@@ -83,27 +87,44 @@ export default {
         comuna: String,
         diareparto: String,
         repartidor: String,
+        orden: Number, // Nueva prop
     },
 
     data() {
         return {
-            //Array para guardar datos de la API
             items: [],
             localNombreSector: this.nombreSector,
             localComuna: this.comuna,
             localDiaReparto: this.diareparto,
             localRepartidor: this.repartidor,
+            localOrden: this.orden, // Nuevo campo local
             diasdelasemana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', "Viernes", "Sábado", "Domingo"],
+            isModalOpen: false,
         };
     },
 
+    watch: {
+        isModalOpen(newValue) {
+            if (newValue) {
+                this.loadData();
+            }
+        }
+    },
+
     methods: {
+        async loadData() {
+            let url = `https://nuestrocampo.cl/api/users/read-deliver.php`
+            await axios.get(url).then((response) => (this.items = response.data))
+            console.log('Cargando datos para editar sector')
+        },
+
         editarSector(id) {
             let nombre = this.localNombreSector;
             let comuna = this.localComuna;
             let dia = this.localDiaReparto;
             let repartidor = this.localRepartidor;
-            let url = `https://nuestrocampo.cl/api/sectores/update.php?id=${id}&nombresector=${nombre}&comuna=${comuna}&diareparto=${dia}&repartidor=${repartidor}`
+            let orden = this.localOrden; // Nuevo campo
+            let url = `https://nuestrocampo.cl/api/sectores/update.php?id=${id}&nombresector=${nombre}&comuna=${comuna}&diareparto=${dia}&repartidor=${repartidor}&orden=${orden}`
             axios.put(url);
             location.reload();
         },
@@ -115,10 +136,5 @@ export default {
             return selectedItem ? selectedItem.Username : null;
         }
     },
-
-    mounted() {
-        let url = `https://nuestrocampo.cl/api/users/read-deliver.php`
-        axios.get(url).then((response) => (this.items = response.data))
-    }
 };
 </script>

@@ -31,6 +31,7 @@
                     <th>Comuna</th>
                     <th>Día de reparto</th>
                     <th>Repartidor</th>
+                    <th>Orden</th>
                     <th v-if="this.rol != 'Repartidor'">Acciones</th>
                 </tr>
             </thead>
@@ -40,24 +41,26 @@
                 <!-- el nombre del array es SECTORES, que debe ser el mismo que se define en DATA() RETURN -->
                 <!-- Los resultados deben recorrerse dentro del TR 
                 -->
-                <tr v-for="item in filteredItems" :key="item.id">
+                <tr v-for="item in filteredItems" :key="item.ID">
                     <td> {{ item.NombreSector }}</td>
                     <td> {{ item.Comuna }}</td>
                     <td> {{ item.DiaReparto }}</td>
                     <td> {{ item.Repartidor }}</td>
+                    <td> {{ item.Orden }}</td>
                     <td>
                         <!-- Botón EDITAR SECTOR -->
                         <editarSectorModal 
                             v-if="this.rol != 'Repartidor'"
-                            :id="item.id" 
-                            :nombreSector="item.nombreSector" 
-                            :comuna="item.comuna" 
-                            :diareparto="item.diaReparto"
-                            :repartidor="item.repartidor" />
+                            :id="item.ID + 'edit'" 
+                            :nombreSector="item.NombreSector" 
+                            :comuna="item.Comuna" 
+                            :diareparto="item.DiaReparto"
+                            :repartidor="item.IDRepartidor"
+                            :orden="item.Orden" />
                         <!-- Botón BORRAR SECTOR -->
                         <eliminarSectorModal 
                             v-if="this.rol != 'Repartidor'" 
-                            :id="item.id" />
+                            :id="item.ID + 'delete'" />
                     </td>
                 </tr>
             </tbody>

@@ -24,12 +24,13 @@ $nombresector = isset($_GET['nombresector']) ? $_GET['nombresector'] : '';
 $comuna = isset($_GET['comuna']) ? $_GET['comuna'] : '';
 $diareparto = isset($_GET['diareparto']) ? $_GET['diareparto'] : '';
 $repartidor = isset($_GET['repartidor']) ? $_GET['repartidor'] : '';
+$orden = isset($_GET['orden']) ? $_GET['orden'] : '';
 
 // Verifica que los campos no estén vacíos
 if (!empty($nombresector) && !empty($comuna) && !empty($diareparto)) {
     // Se prepara la consulta SQL para actualizar el sector.
     $query = "  UPDATE sector 
-                SET NombreSector = :nombresector, Comuna = :comuna, DiaReparto = :diareparto, IDRepartidor = :repartidor
+                SET NombreSector = :nombresector, Comuna = :comuna, DiaReparto = :diareparto, IDRepartidor = :repartidor, Orden = :orden
                 WHERE ID = :id";
 
     // Se prepara la consulta para su ejecución.
@@ -40,7 +41,8 @@ if (!empty($nombresector) && !empty($comuna) && !empty($diareparto)) {
     $stmt->bindParam(":comuna", $comuna);
     $stmt->bindParam(":diareparto", $diareparto);
     $stmt->bindParam(":repartidor", $repartidor);
-
+    $stmt->bindParam(":orden", $orden);
+    
     // Se ejecuta la consulta.
     if ($stmt->execute()) {
         // Si la ejecución es exitosa, se establece el código de respuesta a 200 OK.
