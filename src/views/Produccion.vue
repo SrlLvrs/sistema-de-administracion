@@ -48,7 +48,7 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            daysOfWeek: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
+            daysOfWeek: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
             weeklyStock: [], // Almacena el stock de la semana actual
             productos: [],
             stockData: [], // Aquí guardamos los datos de la API
@@ -122,7 +122,7 @@ export default {
                         const stockData = this.stockData.find(item => item.idproducto === producto.id);
                         return {
                             ...producto,
-                            stock: stockData ? JSON.parse(stockData.stock) : [0, 0, 0, 0, 0]
+                            stock: stockData ? JSON.parse(stockData.stock) : [0, 0, 0, 0, 0, 0, 0]
                         };
                     });
                 })
@@ -140,7 +140,7 @@ export default {
                 await this.getProductos()
                 await this.getLastWeek()
             } catch (error) {
-                this.postStock()
+                await this.postStock()
                 console.error('Error al obtener el stock de la semana actual:', error);
             }
         },

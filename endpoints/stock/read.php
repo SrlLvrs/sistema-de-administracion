@@ -19,7 +19,9 @@ $query = "  SELECT
                     IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 3 THEN Stock END), 0), ',',  -- Martes
                     IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 4 THEN Stock END), 0), ',',  -- Miércoles
                     IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 5 THEN Stock END), 0), ',',  -- Jueves
-                    IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 6 THEN Stock END), 0)        -- Viernes
+                    IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 6 THEN Stock END), 0), ',',  -- Viernes
+                    IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 7 THEN Stock END), 0), ',',  -- Sábado
+                    IFNULL(MAX(CASE WHEN DAYOFWEEK(Fecha) = 1 THEN Stock END), 0)        -- Domingo
                 , ']') AS stock
             FROM stock
             WHERE YEARWEEK(Fecha, 1) = YEARWEEK(CURDATE(), 1)  -- Filtrar por semana actual
