@@ -9,26 +9,6 @@
             <div class="stat-value">{{ item.Valor }}</div>
         </div>
     </div>
-    <!-- Stock de la semana -->
-    <div class="prose max-w-none">
-        <h1 class="text-center p-8">Stock de la semana</h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Bandejas necesarias</th>
-                    <th>Bandejas reales</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="item in stock" :key="stock.IDProducto">
-                    <td>{{ item.Descripcion }}</td>
-                    <td>{{ item.StockNecesario }}</td>
-                    <td>{{ item.TotalStockDividido }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
     <!-- 2 columnas: Pedidos hoy y log -->
     <div class="flex h-screen prose max-w-none">
         <div class="flex-1 px-4">
@@ -92,7 +72,6 @@ export default {
             items: [],
             pendientes: [],
             logs: [],
-            stock: [],
         };
     },
 
@@ -106,7 +85,6 @@ export default {
                 'https://nuestrocampo.cl/api/inicio/read.php',
                 'https://nuestrocampo.cl/api/inicio/read-pendientes.php',
                 'https://nuestrocampo.cl/api/inicio/read-log.php',
-                'https://nuestrocampo.cl/api/inicio/read-stock.php',
             ];
 
             const promises = urls.map(url => axios.get(url));
@@ -122,8 +100,6 @@ export default {
                             this.pendientes = resultado.value.data;
                         } else if (indice === 2) {
                             this.logs = resultado.value.data;
-                        } else if (indice === 3) {
-                            this.stock = resultado.value.data;
                         }
                     } else {
                         // Si la promesa fue rechazada
