@@ -11,7 +11,7 @@ include_once '../config/db.php';
 $database = new Database();
 $db = $database->getConnection();
 
-// GET stock de la semana
+// GET stock de la semana (modificado para mostrar solo los entregados de hoy)
 $query = "  SELECT 
                 s.IDRepartidor,
                 pp.IDProducto,
@@ -25,6 +25,8 @@ $query = "  SELECT
             JOIN clientes c ON p.IDCliente = c.ID
             JOIN sector s ON c.IDSector = s.ID
             JOIN productos prod ON pp.IDProducto = prod.ID
+            WHERE p.Estado = 'entregado' 
+            AND DATE(p.FechaEntrega) = CURDATE() -- Filtro para mostrar solo los entregados de hoy
             GROUP BY s.IDRepartidor, pp.IDProducto, prod.Descripcion
             ORDER BY s.IDRepartidor, pp.IDProducto";
 
