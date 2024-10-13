@@ -14,8 +14,10 @@
                     <th>Stock semana anterior</th>
                     <th v-for="(day, index) in daysOfWeek" :key="index">{{ day }}</th>
                     <th>Total proyectado</th>
-                    <th>Total entregado</th>
                     <th>Total hasta hoy</th>
+                    <th>Bandejas totales</th>
+                    <th>Bandejas entregadas</th>
+                    <th>Bandejas en stock</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,8 +30,10 @@
                             class="input input-bordered w-full max-w-xs mb-2" />
                     </td>
                     <td>{{ calculateTotalProjected(producto.stock, producto.stock_semana_anterior) }}</td>
-                    <td>{{ stockData.find(item => item.idproducto === producto.id).entregados }}</td>
-                    <td>{{ calculateTotalUntilToday(producto.stock, producto.stock_semana_anterior, producto.id) }}</td>
+                    <td>{{ calculateTotalUntilToday(producto.stock, producto.stock_semana_anterior) }}</td>
+                    <td>{{ calculateBandejasTotales(producto.stock, producto.stock_semana_anterior) }}</td>
+                    <td>{{ calculateBandejasEntregadas(producto.id) }}</td>
+                    <td>{{ calculateBandejasEnStock(producto.id, producto.stock, producto.stock_semana_anterior) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -221,16 +225,32 @@ export default {
             return totalStock + parseInt(stock_semana_anterior);
         },
 
-        calculateTotalUntilToday(stock, stock_semana_anterior, idProducto) {
-            const today = new Date().getDay(); // 0 es domingo, 1 es lunes, ..., 6 es sábado
-            const adjustedToday = today === 0 ? 6 : today - 1; // Ajustamos para que 0 sea lunes y 6 domingo
+        calculateTotalUntilToday(stock, stock_semana_anterior) {
+            const today = new Date().getDay();
+            const adjustedToday = today === 0 ? 6 : today - 1;
 
             const totalStock = stock.slice(0, adjustedToday + 1).reduce((total, num) => total + num, 0);
+
+            return totalStock + parseInt(stock_semana_anterior);
+        },
+
+        calculateBandejasTotales(stock, stock_semana_anterior) {
+            const totalHastaHoy = this.calculateTotalUntilToday(stock, stock_semana_anterior);
+            return Math.floor(totalHastaHoy / 30);
+        },
+
+        calculateBandejasEntregadas(idProducto) {
             const stockDataItem = this.stockData.find(item => item.idproducto === idProducto);
             const entregados = stockDataItem ? parseInt(stockDataItem.entregados) || 0 : 0;
+            return entregados;
+        },
 
-            return totalStock + parseInt(stock_semana_anterior) - entregados;
+        calculateBandejasEnStock(idProducto, stock, stock_semana_anterior) {
+            const bandejasTotales = this.calculateBandejasTotales(stock, stock_semana_anterior);
+            const bandejasEntregadas = this.calculateBandejasEntregadas(idProducto);
+            return bandejasTotales - bandejasEntregadas;
         }
     }
 }
 </script>
+
