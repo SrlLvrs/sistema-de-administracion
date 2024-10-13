@@ -13,6 +13,11 @@ const router = createRouter({
             name: "InicioRepartidor",
             component: () => import("../views/Inicio-Repartidor.vue"),
         },
+        {
+            path: "/despacharcamion",
+            name: "DespacharCamion",
+            component: () => import("../views/Despachar-Camion.vue"),
+        },
         { 
             path: "/clientes",
             name: "Clientes", 

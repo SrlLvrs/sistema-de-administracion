@@ -15,7 +15,6 @@ $db = $database->getConnection();
 $query = "  SELECT 
                 u.Username AS Repartidor,                   -- Nombre del repartidor
                 s.IDRepartidor AS IDRepartidor,             -- ID del repartidor (ahora desde la tabla sector)
-                DATE_FORMAT(p.FechaEntrega, '%Y-%m-%d') AS FechaPedido,  -- Fecha formateada sin hora
                 prod.Descripcion AS Producto,               -- Descripción del producto
                 prod.Precio AS Precio,                      -- Precio del producto
                 SUM(pp.Cantidad) AS TotalCantidad,          -- Cantidad total de productos
@@ -37,9 +36,9 @@ $query = "  SELECT
             WHERE 
                 DATE(p.FechaEntrega) = CURDATE()            -- Filtrar solo los pedidos de hoy
             GROUP BY 
-                u.Username, s.ID, p.FechaEntrega, prod.Descripcion, prod.Precio
+                u.Username, s.IDRepartidor, prod.Descripcion, prod.Precio
             ORDER BY 
-                p.FechaEntrega DESC";
+                u.Username, prod.Descripcion";
 
 $stmt = $db->prepare($query);
 

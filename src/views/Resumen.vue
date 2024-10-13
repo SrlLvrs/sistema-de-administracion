@@ -12,7 +12,6 @@
                 <table class="table table-zebra">
                     <thead>
                         <tr>
-                            <th>Fecha</th>
                             <th>Producto</th>
                             <th>Cantidad Necesaria</th>
                             <th>Cantidad Entregada</th>
@@ -24,7 +23,6 @@
                     <tbody>
                         <tr v-for="item in items.filter(i => i.IDRepartidor === repartidor.IDRepartidor)"
                             :key="item.ID">
-                            <td>{{ item.FechaPedido }}</td>
                             <td>{{ item.Producto }}</td>
                             <td>{{ item.TotalCantidad }}</td>
                             <td>{{ item.CantidadEntregada }}</td>
