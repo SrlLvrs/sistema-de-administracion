@@ -18,9 +18,9 @@ try {
     // Iniciar una transacción
     $db->beginTransaction();
 
-    // 1. Total de dinero recibido
-    $query = "  SELECT 'Total de dinero recibido' AS Nombre,
-                    SUM(pp.Total) AS sumaTotal
+    // 1. Total dinero recibido en efectivo
+    $query = " SELECT 'Total de dinero recibido en efectivo' AS Nombre,
+                    SUM(pp.Total) AS totalEfectivo
                 FROM pedidos p
                 JOIN pedidos_productos pp ON pp.IDPedido = p.ID
                 JOIN clientes c ON p.IDCliente = c.ID
@@ -28,6 +28,7 @@ try {
                 WHERE DATE(p.FechaEntrega) = CURDATE()
                 AND p.Estado = 'Entregado'
                 AND p.Pagado = 'Si'
+                AND p.MedioPago = 'Efectivo'
                 AND s.IDRepartidor = :idr";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':idr', $idr);
@@ -40,14 +41,14 @@ try {
 
     // Almacenar el valor de la primera consulta en una variable
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    $total = $result['sumaTotal'];
+    $total = $result['totalEfectivo'];
     $nombre = $result['Nombre'];
 
     /************************************************************* */
 
-    // 2. Total dinero recibido en efectivo
-    $query2 = " SELECT 'Total de dinero recibido en efectivo' AS Nombre,
-                    SUM(pp.Total) AS totalEfectivo
+    // 2. Total de dinero recibido por transferencia
+    $query2 = " SELECT 'Total de dinero recibido por transferencia' AS Nombre,
+                    SUM(pp.Total) AS totalTransferencia
                 FROM pedidos p
                 JOIN pedidos_productos pp ON pp.IDPedido = p.ID
                 JOIN clientes c ON p.IDCliente = c.ID
@@ -55,7 +56,7 @@ try {
                 WHERE DATE(p.FechaEntrega) = CURDATE()
                 AND p.Estado = 'Entregado'
                 AND p.Pagado = 'Si'
-                AND p.MedioPago = 'Efectivo'
+                AND p.MedioPago = 'Transferencia'
                 AND s.IDRepartidor = :idr";
     $stmt2 = $db->prepare($query2);
     $stmt2->bindParam(':idr', $idr);
@@ -68,39 +69,10 @@ try {
 
     // Almacenar el valor de la segunda consulta en una variable
     $result2 = $stmt2->fetch(PDO::FETCH_ASSOC);
-    $total2 = $result2['totalEfectivo'];
+    $total2 = $result2['totalTransferencia'];
     $nombre2 = $result2['Nombre'];
 
     /************************************************************* */
-
-    // 3. Total de dinero recibido por transferencia
-    $query3 = " SELECT 'Total de dinero recibido por transferencia' AS Nombre,
-                    SUM(pp.Total) AS totalTransferencia
-                FROM pedidos p
-                JOIN pedidos_productos pp ON pp.IDPedido = p.ID
-                JOIN clientes c ON p.IDCliente = c.ID
-                JOIN sector s ON c.IDSector = s.ID
-                WHERE DATE(p.FechaEntrega) = CURDATE()
-                AND p.Estado = 'Entregado'
-                AND p.Pagado = 'Si'
-                AND p.MedioPago = 'Transferencia'
-                AND s.IDRepartidor = :idr";
-    $stmt3 = $db->prepare($query3);
-    $stmt3->bindParam(':idr', $idr);
-    $stmt3->execute();
-
-    // Verificar si la tercera consulta se ejecutó correctamente
-    if ($stmt3->errorCode() !== '00000') {
-        throw new PDOException($stmt3->errorInfo()[2]);
-    }
-
-    // Almacenar el valor de la tercera consulta en una variable
-    $result3 = $stmt3->fetch(PDO::FETCH_ASSOC);
-    $total3 = $result3['totalTransferencia'];
-    $nombre3 = $result3['Nombre'];
-
-    /************************************************************* */
-
 
     // Crear un array de objetos
     $data = array(
@@ -111,10 +83,6 @@ try {
         array(
             "Nombre" => $nombre2,
             "Valor" => $total2
-        ),
-        array(
-            "Nombre" => $nombre3,
-            "Valor" => $total3
         )
     );
 

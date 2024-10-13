@@ -9,44 +9,33 @@
         <div v-else>
             <div v-for="(repartidor, index) in repartidores" :key="index">
                 <h2>{{ repartidor.Username }}</h2>
-                <table class="table table-zebra">
+                <table class="table table-zebra" v-if="repartidorDetails[repartidor.IDRepartidor]">
                     <thead>
                         <tr>
-                            <th>Producto</th>
-                            <th>Cantidad Necesaria</th>
-                            <th>Cantidad Entregada</th>
-                            <th>Cantidad Restante</th>
-                            <th>Precio</th>
-                            <th>Total</th>
+                            <th>Concepto</th>
+                            <th>Valor</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in items.filter(i => i.IDRepartidor === repartidor.IDRepartidor)"
-                            :key="item.ID">
-                            <td>{{ item.Producto }}</td>
-                            <td>{{ item.TotalCantidad }}</td>
-                            <td>{{ item.CantidadEntregada }}</td>
-                            <td>{{ item.TotalRestante }}</td>
-                            <td>{{ item.Precio }}</td>
-                            <td>{{ item.Total }}</td>
+                        <tr v-for="(item, idx) in repartidorDetails[repartidor.IDRepartidor]" :key="idx">
+                            <td>{{ item.Nombre }}</td>
+                            <td>{{ item.Valor }}</td>
+                        </tr>
+                        <tr class="font-bold">
+                            <td>Total esperado del Repartidor</td>
+                            <td>{{ totalRepartidor(repartidor.IDRepartidor).toLocaleString('es-CL') }}</td>
                         </tr>
                     </tbody>
                 </table>
-                <div class="label">
-                    <span class="label-text font-bold">Total esperado del Repartidor: {{
-                        totalRepartidor(repartidor.IDRepartidor).toLocaleString('es-CL') }}</span>
-                </div>
-
-                <div v-if="repartidorDetails[repartidor.IDRepartidor]"
-                    v-for="(item, idx) in repartidorDetails[repartidor.IDRepartidor]" :key="idx" class="label">
-                    <span class="label-text font-bold">
-                        {{ item.Nombre }}: {{ item.Valor }}
-                    </span>
-                </div>
             </div>
-            <div class="label">
-                <span class="label-text font-bold">Total esperado General: {{ total.toLocaleString('es-CL') }}</span>
-            </div>
+            <table class="table table-zebra mt-4">
+                <tbody>
+                    <tr class="font-bold">
+                        <td>Total esperado General</td>
+                        <td>{{ total.toLocaleString('es-CL') }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
@@ -78,13 +67,19 @@ export default {
             });
         },
         totalRepartidor(idRepartidor) {
-            const total = this.items
-                .filter(item => item.IDRepartidor === idRepartidor)
-                .reduce((acc, item) => acc + parseInt(item.Total), 0);
-
-            return total;
+            if (this.repartidorDetails[idRepartidor]) {
+                return this.repartidorDetails[idRepartidor]
+                    .reduce((acc, item) => {
+                        if (item && item.Valor && typeof item.Valor === 'string') {
+                            return acc + parseFloat(item.Valor.replace(/[^0-9,-]+/g,"")) || 0;
+                        }
+                        return acc;
+                    }, 0);
+            }
+            return 0;
         },
         getDetail(idRepartidor) {
+            console.log('Obteniendo detalle para el repartidor:', idRepartidor);
             // Verifica si los detalles ya están almacenados
             if (!this.repartidorDetails[idRepartidor]) {
                 let url = `https://nuestrocampo.cl/api/resumen/read-detail.php?idr=${idRepartidor}`;
@@ -132,3 +127,4 @@ export default {
     },
 };
 </script>
+
