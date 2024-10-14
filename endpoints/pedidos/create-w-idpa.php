@@ -11,17 +11,20 @@ $database = new Database();
 $db = $database->getConnection();
 
 /*
-Obtiene por url el ID de cliente y la fecha de creación, lo demás se rellena por default.
+Obtiene por url el ID de cliente, la fecha de creación, el estado y la observación.
 */
 $id_cliente = isset($_GET['id_cliente']) ? $_GET['id_cliente'] : '';
 $hora_creacion = isset($_GET['hora_creacion']) ? $_GET['hora_creacion'] : '';
 $fecha_reparto = isset($_GET['fecha_reparto']) ? $_GET['fecha_reparto'] : '';
 $idpa = isset($_GET['idpa']) ? $_GET['idpa'] : '';
+$estado = isset($_GET['estado']) ? $_GET['estado'] : 'Agendado';
+$observacion = isset($_GET['observacion']) ? $_GET['observacion'] : '';
 
-//Comprueba que las variables NO estén vacías
+//Comprueba que las variables necesarias NO estén vacías
 if (!empty($id_cliente) && !empty($hora_creacion)) {
     $query = "  INSERT INTO pedidos 
-                SET IDCliente = :id, HoraCreacion = :hora, FechaEntrega = :fecha, IDPA = :idpa";
+                SET IDCliente = :id, HoraCreacion = :hora, FechaEntrega = :fecha, 
+                    IDPA = :idpa, Estado = :estado, ObservacionPA = :observacion";
 
     $stmt = $db->prepare($query);
 
@@ -30,6 +33,8 @@ if (!empty($id_cliente) && !empty($hora_creacion)) {
     $stmt->bindParam(":hora", $hora_creacion);
     $stmt->bindParam(":fecha", $fecha_reparto);
     $stmt->bindParam(":idpa", $idpa);
+    $stmt->bindParam(":estado", $estado);
+    $stmt->bindParam(":observacion", $observacion);
     
     if ($stmt->execute()) {
         //Obtener ultimo id

@@ -68,7 +68,7 @@
                             <span class="label-text font-bold">Observaciones</span>
                         </div>
                         <input v-model="observaciones" type="text" placeholder="3er lunes de cada mes."
-                        class="input input-bordered w-full max-w-xs mb-2">
+                            class="input input-bordered w-full max-w-xs mb-2">
                     </div>
 
                 </div>
@@ -351,20 +351,21 @@ export default {
         },
         /** 4. Crea los pedidos base */
         async crearTodoslosPedidos(fecha) {
-            //POST nuevo pedido
             let idc = this.cliente;
             let h = new Date();
             let hsql = this.formatToMySQLDateTime(h)
             let idpa = this.last_idpa;
+            let estado = this.observaciones ? 'Pendiente' : 'Agendado';
             let ultimoid = ''
-            let url = `https://nuestrocampo.cl/api/pedidos/create-w-idpa.php?id_cliente=${idc}&hora_creacion=${hsql}&fecha_reparto=${fecha}&idpa=${idpa}`
+
+            let url = `https://nuestrocampo.cl/api/pedidos/create-w-idpa.php?id_cliente=${idc}&hora_creacion=${hsql}&fecha_reparto=${fecha}&idpa=${idpa}&estado=${estado}&observacion=${this.observaciones}`
             await axios.post(url).then(function (response) {
                 console.log(response.data);
                 ultimoid = response.data.id
             });
 
-            //Crear detalle con el ultimo id
-            this.crearDetalle(ultimoid)
+            // Crear detalle con el ultimo id
+            await this.crearDetalle(ultimoid)
         },
         /** 5. Inserta los productos de la tabla en la base de datos en la tabla intermedia PEDIDOS_PRODUCTOS*/
         async crearDetalle(id_pedido) {

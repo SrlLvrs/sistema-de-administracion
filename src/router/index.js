@@ -64,6 +64,11 @@ const router = createRouter({
             name: "PedidosOrdenar",
             component: () => import("../views/OrdenarPedidos.vue"),
         },
+        {
+            path: "/pedidos/aprobar",
+            name: "PedidosAprobar",
+            component: () => import("../views/Pedidos-Aprobar.vue"),
+        },
         { 
             path: "/produccion", 
             name: "Produccion",
