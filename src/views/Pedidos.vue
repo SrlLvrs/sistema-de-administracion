@@ -5,9 +5,9 @@
         <div class="grid grid-cols-1">
             <h1 class="text-center p-4 m-0">Todos los pedidos</h1>
             <div class="flex justify-center mb-4">
-                <!-- INPUT FILTRAR -->
-                <label class="input input-bordered flex items-center gap-2 mx-2 w-full max-w-xs">
-                    <input v-model="filterText" type="text" class="grow" placeholder="Cliente, dirección o ID de pedido" />
+                <!-- Nuevo input de búsqueda -->
+                <label class="input input-bordered flex items-center gap-2">
+                    <input v-model="busquedaTexto" type="text" class="grow" placeholder="Cliente, dirección o ID de pedido" />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                         class="h-4 w-4 opacity-70">
                         <path fill-rule="evenodd"
@@ -15,6 +15,10 @@
                             clip-rule="evenodd" />
                     </svg>
                 </label>
+                <button class="btn btn-outline btn-primary ml-2" @click="getPedidos()" :disabled="isLoading">
+                    {{ isLoading ? 'Buscando...' : 'Buscar' }}
+                    <span v-if="isLoading" class="loading loading-spinner loading-sm"></span>
+                </button>
 
                 <!-- Botón Excel -->
                 <Excel :items="filteredItems" />
@@ -51,7 +55,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+                                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0V7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
                             </svg>
                         </div>
                     </th>
@@ -103,6 +107,8 @@ export default {
             items: [],
             filterText: '',
             rol: '',
+            busquedaTexto: '',
+            isLoading: false,
         };
     },
 
@@ -112,8 +118,18 @@ export default {
             return sessionData ? sessionData : null;
         },
         async getPedidos() {
-            let url = "https://nuestrocampo.cl/api/pedidos/read.php";
-            await axios.get(url).then((response) => (this.items = response.data));
+            this.isLoading = true;
+            let search = this.busquedaTexto;
+            let url = `https://nuestrocampo.cl/api/pedidos/read.php?busqueda=${search}`;
+            try {
+                const response = await axios.get(url);
+                this.items = response.data;
+            } catch (error) {
+                console.error("Error al obtener pedidos:", error);
+                // Aquí puedes agregar lógica para manejar el error, como mostrar un mensaje al usuario
+            } finally {
+                this.isLoading = false;
+            }
         }
     },
 
@@ -135,8 +151,10 @@ export default {
                     normalizeText(item.NombreSector).includes(filterTextNormalized) ||
                     normalizeText(item.Comuna).includes(filterTextNormalized);
 
-                // Devuelve los elementos que coincidan con todos los filtros activos
-                return matchesText;
+                // Añadir esta línea para excluir pedidos 'Pendientes'
+                const notPendiente = item.Estado !== 'Pendiente';
+
+                return matchesText && notPendiente;
             });
         },
     },
@@ -146,7 +164,6 @@ export default {
         if (sessionData) {
             console.log('Sesión iniciada. Montando...');
             this.rol = sessionData.rol;
-            this.getPedidos()
         } else {
             console.log('No hay sesión iniciada. Redireccionando a login');
             this.$router.push({ name: 'LogIn' });

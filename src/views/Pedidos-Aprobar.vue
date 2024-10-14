@@ -1,7 +1,11 @@
 <template>
-    <div class="table table-zebra">
-        <h2>Pedidos Pendientes</h2>
-        <table>
+    <div class="prose max-w-none">
+        <div class="grid grid-cols-1">
+            <h1 class="text-center p-4 m-0">Pedidos Pendientes</h1>
+        </div>
+    </div>
+    <div class="overflow-x-auto">
+        <table v-if="pedidosPendientes.length > 0" class="table table-zebra">
             <thead>
                 <tr>
                     <th>Cliente</th>
@@ -16,18 +20,21 @@
                     <td>{{ pedido.FechaEntrega }}</td>
                     <td>{{ pedido.ObservacionPA }}</td>
                     <td>
-                        <button @click="agendarPedido(pedido.ID)" class="btn btn-outline btn-success">
+                        <button @click="agendarPedido(pedido.ID)" class="btn btn-outline btn-success mr-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                             </svg>
-                            Agendar
+                            Aprobar
                         </button>
                         <EditarPedido :id="pedido.ID" :label="'editar-pedido-' + pedido.ID" />
                     </td>
                 </tr>
             </tbody>
         </table>
+        <div v-else class="flex justify-center items-center h-screen">
+            <p class="text-center">No se encontraron pedidos pendientes</p>
+        </div>
     </div>
 </template>
 
@@ -35,22 +42,29 @@
 import axios from 'axios';
 import EditarPedido from '../components/EditarPedido.vue';
 
-
 export default {
+    name: "PedidosAprobar",
     data() {
         return {
-            pedidosPendientes: []
+            pedidosPendientes: [],
         }
     },
     methods: {
         async getPedidosPendientes() {
-            const response = await axios.get('https://nuestrocampo.cl/api/pedidos/get-pending.php');
-            this.pedidosPendientes = response.data;
+            try {
+                const response = await axios.get('https://nuestrocampo.cl/api/pedidos/get-pending.php');
+                this.pedidosPendientes = response.data;
+            } catch (error) {
+                console.error("Error al obtener pedidos pendientes:", error);
+            }
         },
         async agendarPedido(id) {
-            await axios.post(`https://nuestrocampo.cl/api/pedidos/schedule.php?id_pedido=${id}`);
-            
-            location.reload();
+            try {
+                await axios.post(`https://nuestrocampo.cl/api/pedidos/schedule.php?id=${id}`);
+                this.getPedidosPendientes();
+            } catch (error) {
+                console.error("Error al agendar pedido:", error);
+            }
         }
     },
     mounted() {

@@ -10,35 +10,43 @@ include_once '../config/db.php';
 $database = new Database();
 $db = $database->getConnection();
 
+// Obtener el término de búsqueda del parámetro GET
+$terminoBusqueda = isset($_GET['busqueda']) ? '%' . $_GET['busqueda'] . '%' : '%';
+
 // GET todos los pedidos.
-$query = "  SELECT p.ID,
-                p.IDPA,
-                p.IDCliente,
-                c.Nombre,
-                c.Direccion,
-                s.NombreSector,
-                s.Comuna,
-                c.LinkMaps,
-                s.IDRepartidor,
-                u.Username AS NombreRepartidor,
-                p.Estado,
-                p.Pagado,
-                p.MedioPago,
-                COALESCE(pa.Observacion, c.Observacion) AS Observacion,
-                DATE_FORMAT(p.FechaEntrega, '%d/%m/%Y') AS FechaEntrega,
-                DATE_FORMAT(p.HoraCreacion, '%d/%m/%Y %H:%i') AS HoraCreacion,
-                DATE_FORMAT(p.HoraCierre, '%d/%m/%Y %H:%i') AS HoraCierre
-            FROM pedidos p
-            JOIN clientes c ON p.IDCliente = c.ID
-            JOIN sector s ON c.IDSector = s.ID
-            JOIN usuarios u ON s.IDRepartidor = u.ID
-            LEFT JOIN pedidos_automaticos pa ON p.IDPA = pa.ID
-            WHERE p.Visible = 1
-            ORDER BY p.FechaEntrega DESC";
+$query = "SELECT p.ID,
+            p.IDPA,
+            p.IDCliente,
+            c.Nombre,
+            c.Direccion,
+            s.NombreSector,
+            s.Comuna,
+            c.LinkMaps,
+            s.IDRepartidor,
+            u.Username AS NombreRepartidor,
+            p.Estado,
+            p.Pagado,
+            p.MedioPago,
+            COALESCE(pa.Observacion, c.Observacion) AS Observacion,
+            DATE_FORMAT(p.FechaEntrega, '%d/%m/%Y') AS FechaEntrega,
+            DATE_FORMAT(p.HoraCreacion, '%d/%m/%Y %H:%i') AS HoraCreacion,
+            DATE_FORMAT(p.HoraCierre, '%d/%m/%Y %H:%i') AS HoraCierre
+          FROM pedidos p
+          JOIN clientes c ON p.IDCliente = c.ID
+          JOIN sector s ON c.IDSector = s.ID
+          JOIN usuarios u ON s.IDRepartidor = u.ID
+          LEFT JOIN pedidos_automaticos pa ON p.IDPA = pa.ID
+          WHERE p.Visible = 1
+            AND p.Estado != 'Pendiente'
+            AND (c.Nombre LIKE :busqueda
+              OR c.Direccion LIKE :busqueda
+              OR s.NombreSector LIKE :busqueda
+              OR s.Comuna LIKE :busqueda
+              OR p.ID LIKE :busqueda)
+          ORDER BY p.FechaEntrega DESC";
 
 $stmt = $db->prepare($query);
-
-// Se ejecuta la consulta.
+$stmt->bindParam(':busqueda', $terminoBusqueda, PDO::PARAM_STR);
 $stmt->execute();
 
 // Array para almacenar resultados
