@@ -66,10 +66,16 @@
                                 </li>
                                 <li @click="closeDropdown"><router-link to="/pedidos/automaticos">Pedidos
                                         automáticos</router-link></li>
+                                <li @click="closeDropdown"><router-link to="/pedidos/aprobar">Aprobar pedidos</router-link>
+                                </li>
                             </ul>
                         </details>
                     </li>
-                        <!-- Producción -->
+                    <!-- Despachar Camión -->
+                    <li v-if="rol != 'Repartidor'" @click="closeDropdown">
+                        <router-link to='/despacharcamion'>Despachar Camión</router-link>
+                    </li>
+                    <!-- Producción -->
                     <li v-if="rol != 'Repartidor'" @click="closeDropdown">
                         <router-link to='/produccion'>Producción</router-link>
                     </li>
@@ -122,9 +128,12 @@
                             <li><router-link to="/pedidos">Todos los pedidos</router-link></li>
                             <li><router-link to="/pedidos/hoy">Pedidos no entregados</router-link></li>
                             <li><router-link to="/pedidos/automaticos">Pedidos automáticos</router-link></li>
+                            <li><router-link to="/pedidos/aprobar">Aprobar pedidos</router-link></li>
                         </ul>
                     </details>
                 </li>
+                <!-- Despachar Camión -->
+                <li v-if="rol != 'Repartidor'"><router-link to='/despacharcamion'>Despachar Camión</router-link></li>
                 <!-- Producción -->
                 <li v-if="rol != 'Repartidor'"><router-link to='/produccion'>Producción</router-link></li>
                 <!-- Administrar usuarios -->

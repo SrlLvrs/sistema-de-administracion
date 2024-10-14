@@ -23,22 +23,6 @@
 
             <!-- Todo lo demás -->
             <div v-else>
-                <!-- Nombre cliente -->
-                <div>
-                    <div class="label">
-                        <span class="label-text font-bold">Cliente</span>
-                    </div>
-
-                    <select v-model="id_cliente_nuevo" class="select select-bordered w-full max-w-xs">
-                        <option disabled selected>
-                            {{ this.items[0].Nombre }}
-                        </option>
-                        <option v-for="cliente in clientes" :key="cliente.id" :value="cliente.id">
-                            {{ cliente.Nombre }}
-                        </option>
-                    </select>
-                </div>
-
                 <!-- Estado -->
                 <div>
                     <div class="label">
@@ -89,7 +73,6 @@
                     </div>
                     <VCalendar v-model="fechaentrega" />
                 </div>
-                {{ fechaentrega }}
 
                 <!-- Todos los productos -->
                 <div>
