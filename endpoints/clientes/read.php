@@ -50,8 +50,7 @@ $query = "  SELECT
                     OR s.Comuna LIKE :busqueda
                 )
             ORDER BY
-                c.ID DESC
-            LIMIT 100";
+                c.ID DESC";
 
 // Preparar la declaración
 $stmt = $db->prepare($query);
