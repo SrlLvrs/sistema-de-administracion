@@ -10,10 +10,10 @@ include_once '../config/db.php';
 $database = new Database();
 $db = $database->getConnection();
 
-// Obtener el término de búsqueda del parámetro GET
-$terminoBusqueda = isset($_GET['busqueda']) ? '%' . $_GET['busqueda'] . '%' : '%';
+// Obtener la fecha del parámetro GET
+$fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
 
-// GET todos los pedidos.
+// Modificar la consulta SQL para usar DATE() en la comparación
 $query = "SELECT p.ID,
             p.IDPA,
             p.IDCliente,
@@ -38,15 +38,11 @@ $query = "SELECT p.ID,
           LEFT JOIN pedidos_automaticos pa ON p.IDPA = pa.ID
           WHERE p.Visible = 1
             AND p.Estado != 'Pendiente'
-            AND (c.Nombre LIKE :busqueda
-              OR c.Direccion LIKE :busqueda
-              OR s.NombreSector LIKE :busqueda
-              OR s.Comuna LIKE :busqueda
-              OR p.ID LIKE :busqueda)
+            AND DATE(p.FechaEntrega) = :fechaBusqueda
           ORDER BY p.FechaEntrega DESC";
 
 $stmt = $db->prepare($query);
-$stmt->bindParam(':busqueda', $terminoBusqueda, PDO::PARAM_STR);
+$stmt->bindParam(':fechaBusqueda', $fechaBusqueda, PDO::PARAM_STR);
 $stmt->execute();
 
 // Array para almacenar resultados
@@ -63,6 +59,6 @@ if (count($resultados) > 0) {
     echo json_encode($resultados);
 } else {
     http_response_code(404);
-    echo json_encode(array("message" => "No se encontraron pedidos"));
+    echo json_encode(array("message" => "No se encontraron pedidos para la fecha seleccionada"));
     exit();
 }

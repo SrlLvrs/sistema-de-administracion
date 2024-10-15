@@ -5,17 +5,10 @@
         <div class="grid grid-cols-1">
             <h1 class="text-center p-4 m-0">Todos los pedidos</h1>
             <div class="flex justify-center mb-4">
-                <!-- Nuevo input de búsqueda -->
-                <label class="input input-bordered flex items-center gap-2">
-                    <input v-model="busquedaTexto" type="text" class="grow" placeholder="Cliente, dirección o ID de pedido" />
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                        class="h-4 w-4 opacity-70">
-                        <path fill-rule="evenodd"
-                            d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </label>
-                <button class="btn btn-outline btn-primary ml-2" @click="getPedidos()" :disabled="isLoading">
+                <!-- Selector de fechas -->
+                <VCalendar v-model="fechaSeleccionada" />
+                
+                <button class="btn btn-outline btn-primary mx-2" @click="getPedidos()" :disabled="isLoading">
                     {{ isLoading ? 'Buscando...' : 'Buscar' }}
                     <span v-if="isLoading" class="loading loading-spinner loading-sm"></span>
                 </button>
@@ -96,6 +89,7 @@ import EliminarPedido from "../components/EliminarPedido.vue";
 import DetallePedido from "../components/DetallesPedido.vue";
 import EditarPedido from "../components/EditarPedido.vue";
 import Excel from "../components/Excel.vue";
+import VCalendar from "../components/VCalendar.vue";
 
 export default {
     //Nombre del componente
@@ -107,7 +101,7 @@ export default {
             items: [],
             filterText: '',
             rol: '',
-            busquedaTexto: '',
+            fechaSeleccionada: new Date(),
             isLoading: false,
         };
     },
@@ -119,8 +113,8 @@ export default {
         },
         async getPedidos() {
             this.isLoading = true;
-            let search = this.busquedaTexto;
-            let url = `https://nuestrocampo.cl/api/pedidos/read.php?busqueda=${search}`;
+            let fechaFormateada = this.formatearFecha(this.fechaSeleccionada);
+            let url = `https://nuestrocampo.cl/api/pedidos/read.php?fecha=${fechaFormateada}`;
             try {
                 const response = await axios.get(url);
                 this.items = response.data;
@@ -130,6 +124,20 @@ export default {
             } finally {
                 this.isLoading = false;
             }
+        },
+
+        formatearFecha(fecha) {
+            let d = new Date(fecha);
+            let month = '' + (d.getMonth() + 1);
+            let day = '' + d.getDate();
+            let year = d.getFullYear();
+
+            if (month.length < 2) 
+                month = '0' + month;
+            if (day.length < 2) 
+                day = '0' + day;
+
+            return [year, month, day].join('-');
         }
     },
 
@@ -170,6 +178,6 @@ export default {
         }
     },
 
-    components: { EliminarPedido, DetallePedido, EditarPedido, Excel },
+    components: { EliminarPedido, DetallePedido, EditarPedido, Excel, VCalendar },
 }
 </script>
