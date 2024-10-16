@@ -32,8 +32,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in items" :key="index" draggable="true" @dragstart="dragStart(index)"
-          @drop="drop(index)" @dragover.prevent>
+        <tr v-for="(item, index) in items" :key="index" 
+            :class="{ 'bg-blue-200': isDragging && draggedIndex === index, 'opacity-50': isDragging && draggedIndex !== index }"
+            draggable="true" 
+            @dragstart="dragStart(index, $event)"
+            @dragend="dragEnd"
+            @drop="drop(index)" 
+            @dragover.prevent
+            @touchstart="touchStart(index, $event)"
+            @touchmove.prevent="touchMove($event)"
+            @touchend="touchEnd(index)">
           <td>
             <div v-if="item.IDPA" class="tooltip tooltip-right" data-tip="Pedido creado automáticamente">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -68,8 +76,10 @@ export default {
   data() {
     return {
       items: [],
+      isDragging: false,
       draggedIndex: null,
       ids: [],
+      touchStartY: null,
     };
   },
   methods: {
@@ -77,13 +87,50 @@ export default {
       const sessionData = JSON.parse(localStorage.getItem('authUser'));
       return sessionData ? sessionData : null;
     },
-    dragStart(index) {
+    dragStart(index, event) {
+      this.isDragging = true;
       this.draggedIndex = index;
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', index);
+    },
+    dragEnd() {
+      this.isDragging = false;
+      this.draggedIndex = null;
     },
     drop(index) {
-      const draggedItem = this.items.splice(this.draggedIndex, 1)[0];
-      this.items.splice(index, 0, draggedItem);
+      if (this.draggedIndex !== null) {
+        const draggedItem = this.items.splice(this.draggedIndex, 1)[0];
+        this.items.splice(index, 0, draggedItem);
+      }
+      this.isDragging = false;
       this.draggedIndex = null;
+    },
+    touchStart(index, event) {
+      this.isDragging = true;
+      this.draggedIndex = index;
+      this.touchStartY = event.touches[0].clientY;
+    },
+    touchMove(event) {
+      if (!this.isDragging) return;
+      const touchY = event.touches[0].clientY;
+      const row = event.target.closest('tr');
+      const tableBody = row.parentNode;
+      const rowHeight = row.offsetHeight;
+      const moveDistance = touchY - this.touchStartY;
+
+      if (Math.abs(moveDistance) > rowHeight / 2) {
+        const newIndex = this.draggedIndex + (moveDistance > 0 ? 1 : -1);
+        if (newIndex >= 0 && newIndex < this.items.length) {
+          this.items.splice(newIndex, 0, this.items.splice(this.draggedIndex, 1)[0]);
+          this.draggedIndex = newIndex;
+          this.touchStartY = touchY;
+        }
+      }
+    },
+    touchEnd(index) {
+      this.isDragging = false;
+      this.draggedIndex = null;
+      this.touchStartY = null;
     },
     guardar() {
       for (let i = 0; i < this.items.length; i++) {
@@ -114,3 +161,10 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+tr {
+  cursor: move;
+  transition: background-color 0.3s, opacity 0.3s;
+}
+</style>
