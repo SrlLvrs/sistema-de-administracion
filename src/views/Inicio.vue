@@ -39,7 +39,10 @@
         </div>
         <div class="flex-1 px-4">
             <h1 class="text-center p-8">Ultimas modificaciones</h1>
-            <table class="table">
+            <div v-if="logs.length === 0" class="flex justify-center items-center">
+                <p class="text-center">No hay cambios registrados el día de hoy</p>
+            </div>
+            <table v-else class="table">
                 <thead>
                     <tr>
                         <th>Hora</th>
@@ -53,7 +56,6 @@
                     </tr>
                 </tbody>
             </table>
-
         </div>
     </div>
 </template>

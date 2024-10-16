@@ -14,13 +14,13 @@
                 </button>
 
                 <!-- Botón Excel -->
-                <Excel :items="filteredItems" />
+                <Excel :items="items" />
             </div>
         </div>
     </div>
     <!-- RESULTADOS -->
     <div class="overflow-x-auto">
-        <table v-if="filteredItems.length > 0" class="table table-zebra">
+        <table v-if="items.length > 0" class="table table-zebra">
             <!-- Encabezado -->
             <thead>
                 <tr>
@@ -41,7 +41,7 @@
             </thead>
             <!-- Body -->
             <tbody>
-                <tr v-for="item in filteredItems" :key="item.ID">
+                <tr v-for="item in items" :key="item.ID">
                     <th>
                         <div v-if="item.IDPA" class="tooltip tooltip-right"
                             data-tip="Pedido creado automáticamente">
@@ -99,7 +99,6 @@ export default {
         return {
             //Array para guardar datos de la API
             items: [],
-            filterText: '',
             rol: '',
             fechaSeleccionada: new Date(),
             isLoading: false,
@@ -107,10 +106,6 @@ export default {
     },
 
     methods: {
-        checkUserSession() {
-            const sessionData = JSON.parse(localStorage.getItem('authUser'));
-            return sessionData ? sessionData : null;
-        },
         async getPedidos() {
             this.isLoading = true;
             let fechaFormateada = this.formatearFecha(this.fechaSeleccionada);
@@ -141,37 +136,12 @@ export default {
         }
     },
 
-    computed: {
-        //Esta función filtra el array en base a la ID o el Nombre del cliente
-        filteredItems() {
-            const normalizeText = (text) => {
-                return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-            };
-
-            const filterTextNormalized = normalizeText(this.filterText);
-
-            return this.items.filter(item => {
-                const matchesText =
-                    !filterTextNormalized ||
-                    normalizeText(item.ID).includes(filterTextNormalized) ||
-                    normalizeText(item.Nombre).includes(filterTextNormalized) ||
-                    normalizeText(item.Direccion).includes(filterTextNormalized) ||
-                    normalizeText(item.NombreSector).includes(filterTextNormalized) ||
-                    normalizeText(item.Comuna).includes(filterTextNormalized);
-
-                // Añadir esta línea para excluir pedidos 'Pendientes'
-                const notPendiente = item.Estado !== 'Pendiente';
-
-                return matchesText && notPendiente;
-            });
-        },
-    },
-
     mounted() {
-        const sessionData = this.checkUserSession();
+        const sessionData = JSON.parse(localStorage.getItem('authUser'));
         if (sessionData) {
             console.log('Sesión iniciada. Montando...');
             this.rol = sessionData.rol;
+            this.getPedidos();
         } else {
             console.log('No hay sesión iniciada. Redireccionando a login');
             this.$router.push({ name: 'LogIn' });

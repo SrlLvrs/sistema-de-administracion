@@ -38,7 +38,7 @@ export default {
     name: "EliminarSectorModal",
 
     props: {
-        id: Number,
+        id: String,
     },
 
     data() {

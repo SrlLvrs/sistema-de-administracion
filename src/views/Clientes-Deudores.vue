@@ -27,7 +27,7 @@
     </div>
     <!-- RESULTADOS -->
     <div class="overflow-x-auto">
-        <table class="table">
+        <table class="table" v-if="filteredItems.length > 0">
             <!-- Head -->
             <thead>
                 <tr>
@@ -63,6 +63,9 @@
                 </tr>
             </tbody>
         </table>
+        <div v-else class="text-center p-4">
+            <p>No se encontraron clientes deudores</p>
+        </div>
     </div>
 </template>
 

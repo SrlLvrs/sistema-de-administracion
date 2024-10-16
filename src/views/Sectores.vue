@@ -22,7 +22,10 @@
         </div>
     </div>
     <!-- RESULTADOS -->
-    <div class="overflow-x-auto">
+    <div v-if="isLoading" class="flex justify-center items-center h-64">
+        <span class="loading loading-spinner"></span>
+    </div>
+    <div v-else class="overflow-x-auto">
         <table class="table w-11/12">
             <!-- head -->
             <thead>
@@ -85,6 +88,7 @@ export default {
             items: [],
             filterText: '',
             rol: '',
+            isLoading: true,
         };
     },
 
@@ -94,8 +98,16 @@ export default {
             return sessionData ? sessionData : null;
         },
         async getSectores() {
+            this.isLoading = true;
             let url = "https://nuestrocampo.cl/api/sectores/read.php";
-            await axios.get(url).then((response) => (this.items = response.data));
+            try {
+                const response = await axios.get(url);
+                this.items = response.data;
+            } catch (error) {
+                console.error("Error al cargar los sectores:", error);
+            } finally {
+                this.isLoading = false;
+            }
         }
     },
 

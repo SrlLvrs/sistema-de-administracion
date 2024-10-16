@@ -79,15 +79,15 @@
 import axios from "axios";
 
 export default {
-    name: "CrearSectorModal",
+    name: "EditarSectorModal",
 
     props: {
-        id: Number,
+        id: String,
         nombreSector: String,
         comuna: String,
         diareparto: String,
         repartidor: String,
-        orden: Number, // Nueva prop
+        orden: String, // Nueva prop
     },
 
     data() {
