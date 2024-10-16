@@ -50,7 +50,8 @@ $query = "  SELECT
                 AND s.IDRepartidor = :id
                 AND p.Estado = 'Agendado'
             ORDER BY
-                p.FechaEntrega ASC, p.OrdenEntrega ASC";
+                DATE(p.FechaEntrega) ASC,
+                p.OrdenEntrega ASC";
 
 $stmt = $db->prepare($query);
 
