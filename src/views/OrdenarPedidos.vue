@@ -32,8 +32,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in items" :key="index" draggable="true" @dragstart="dragStart(index)"
-          @drop="drop(index)" @dragover.prevent>
+        <tr v-for="(item, index) in items" :key="index" 
+            draggable="true" 
+            @dragstart="dragStart(index)"
+            @drop="drop(index)" 
+            @dragover.prevent
+            @touchstart="touchStart(index)"
+            @touchmove.prevent="touchMove"
+            @touchend="touchEnd(index)">
           <td>
             <div v-if="item.IDPA" class="tooltip tooltip-right" data-tip="Pedido creado automáticamente">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -70,6 +76,8 @@ export default {
       items: [],
       draggedIndex: null,
       ids: [],
+      touchStartIndex: null,
+      touchEndIndex: null,
     };
   },
   methods: {
@@ -84,6 +92,22 @@ export default {
       const draggedItem = this.items.splice(this.draggedIndex, 1)[0];
       this.items.splice(index, 0, draggedItem);
       this.draggedIndex = null;
+    },
+    touchStart(index) {
+      this.touchStartIndex = index;
+    },
+    touchMove(event) {
+      // Opcional: puedes agregar lógica aquí si quieres feedback visual durante el movimiento
+    },
+    touchEnd(index) {
+      this.touchEndIndex = index;
+      if (this.touchStartIndex !== null && this.touchEndIndex !== null) {
+        const itemToMove = this.items[this.touchStartIndex];
+        this.items.splice(this.touchStartIndex, 1);
+        this.items.splice(this.touchEndIndex, 0, itemToMove);
+      }
+      this.touchStartIndex = null;
+      this.touchEndIndex = null;
     },
     guardar() {
       for (let i = 0; i < this.items.length; i++) {
@@ -114,3 +138,9 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+tr {
+  cursor: move;
+}
+</style>
