@@ -1,12 +1,10 @@
 <template>
-    <!-- Usar la clase prose para estilos, y max-w-none para usar el ancho completo -->
-    <!-- ENCABEZADO -->
     <div class="prose max-w-none">
         <div class="grid grid-cols-1">
             <h1 class="text-center p-4 m-0">Todos los pedidos pendientes de hoy</h1>
-            <div class="flex justify-center mb-4">
+            <div class="flex flex-col items-center mb-4">
                 <!-- INPUT FILTRAR -->
-                <label class="input input-bordered flex items-center gap-2 mx-2 w-full max-w-xs">
+                <label class="input input-bordered flex items-center gap-2 mx-2 w-full max-w-xs mb-2">
                     <input v-model="filterText" type="text" class="grow"
                         placeholder="Cliente, dirección o ID de pedido" />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
@@ -29,7 +27,6 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th>Número de pedido</th>
                     <th>Cliente</th>
                     <th>Dirección</th>
                     <th>Teléfono 1</th>
@@ -40,9 +37,6 @@
             </thead>
             <!-- Body -->
             <tbody>
-                <!-- GET -->
-                <!-- el nombre del array es FILTEREDITEMS, que es una función que toma el JSON y lo convierte en array, para poder filtrarlo -->
-                <!-- Los resultados deben recorrerse dentro del TR -->
                 <tr v-for="item in filteredItems" :key="item.ID">
                     <th>
                         <div v-if="item.IDPA" class="tooltip tooltip-right" data-tip="Pedido creado automáticamente">
@@ -53,23 +47,14 @@
                             </svg>
                         </div>
                     </th>
-                    <th> {{ item.ID }}</th>
                     <th> {{ item.Nombre }}</th>
                     <td>
-                        <div class="flex gap-2 items-center">
-                            <span>{{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</span>
-                            <a :href="item.LinkMaps" target="_blank" class="btn btn-outline btn-error">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-                                </svg>
-                            </a>
-                        </div>
+                        <a :href="item.LinkMaps" target="_blank">
+                            {{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}
+                        </a>
                     </td>
                     <td>
-                        <div class="flex gap-2 items-center">
-                            <span>{{ item.Telefono }}</span>
+                        <div class="flex flex-wrap gap-2">
                             <a :href="'tel:' + item.Telefono" class="btn btn-outline btn-warning">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -88,8 +73,7 @@
                         </div>
                     </td>
                     <td>
-                        <div class="flex gap-2 items-center">
-                            <span>{{ item.Telefono2 }}</span>
+                        <div class="flex flex-wrap gap-2">
                             <a :href="'tel:' + item.Telefono2" class="btn btn-outline btn-warning">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -110,9 +94,11 @@
                     <td> {{ item.Pagado }}</td>
                     <td>
                         <!-- Acciones  -->
-                        <EntregarPedido :label="item.ID + 'deliver'" :id="item.ID" />
-                        <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
-                        <EditarPedido :label="item.ID + 'edit'" :id="item.ID" />
+                        <div class="flex flex-wrap gap-2">
+                            <EntregarPedido :label="item.ID + 'deliver'" :id="item.ID" />
+                            <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
+                            <EditarPedido :label="item.ID + 'edit'" :id="item.ID" />
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -196,3 +182,4 @@ export default {
     components: { EliminarPedido, DetallePedido, EditarPedido, Excel, EntregarPedido},
 }
 </script>
+

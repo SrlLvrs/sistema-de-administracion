@@ -12,61 +12,65 @@
                     </svg>
                 </div>  
                 <!-- Dropdown -->
-                <ul v-show="isDropdownOpen" tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                <ul v-show="isDropdownOpen" tabindex="0" class="menu menu-lg dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-64 p-2 shadow">
                     <!-- Inicio -->
-                    <li v-if="rol != 'Repartidor'" @click="closeDropdown">
-                        <router-link to='/'>Inicio</router-link>
+                    <li v-if="rol != 'Repartidor'" @click="closeDropdown" class="py-2 border-b border-base-300">
+                        <router-link to='/' class="text-lg">Inicio</router-link>
                     </li>    
                     <!-- Últimos cambios (Repartidor) -->
-                    <li v-if="rol == 'Repartidor'" @click="closeDropdown">
-                        <router-link to='/iniciorepartidor'>Últimos cambios</router-link>
+                    <li v-if="rol == 'Repartidor'" @click="closeDropdown" class="py-2 border-b border-base-300">
+                        <router-link to='/iniciorepartidor' class="text-lg">Últimos cambios</router-link>
                     </li>
                     <!-- Ordenar Pedidos (Repartidor) -->
-                    <li v-if="rol == 'Repartidor'" @click="closeDropdown">
-                        <router-link to='/pedidos/ordenar'>Ordenar
-                            Pedidos</router-link>
+                    <li v-if="rol == 'Repartidor'" @click="closeDropdown" class="py-2 border-b border-base-300">
+                        <router-link to='/pedidos/ordenar' class="text-lg">Ordenar Pedidos</router-link>
                     </li>
                     <!-- Repartos de hoy (Repartidor) -->
-                    <li v-if="rol == 'Repartidor'" @click="closeDropdown">
-                        <router-link to='/repartidor'>Repartos de
-                            hoy</router-link>
+                    <li v-if="rol == 'Repartidor'" @click="closeDropdown" class="py-2 border-b border-base-300">
+                        <router-link to='/repartidor' class="text-lg">Repartos de hoy</router-link>
                     </li>
                     <!-- Resumen diario -->
-                    <li @click="closeDropdown">
-                        <router-link to='/resumen'>Resumen diario</router-link>
+                    <li @click="closeDropdown" class="py-2 border-b border-base-300">
+                        <router-link to='/resumen' class="text-lg">Resumen diario</router-link>
                     </li>
                     <!-- Clientes -->
-                    <li v-if="rol != 'Repartidor'">
+                    <li v-if="rol != 'Repartidor'" @click="closeDropdown" class="py-2 border-b border-base-300">
                         <details>
-                            <summary>Clientes</summary>
+                            <summary class="text-lg">Clientes</summary>
                             <ul class="bg-base-100 rounded-t-none p-2">
-                                <li @click="closeDropdown">
-                                    <router-link to="/clientes">Todos los Clientes</router-link>
+                                <li @click="closeDropdown" class="py-2 border-b border-base-300">
+                                    <router-link to="/clientes" class="text-lg">Todos los Clientes</router-link>
                                 </li>
-                                <li @click="closeDropdown">
-                                    <router-link to="/clientes/deudores">Clientes
-                                        deudores</router-link></li>
+                                <li @click="closeDropdown" class="py-2">
+                                    <router-link to="/clientes/deudores" class="text-lg">Clientes deudores</router-link>
+                                </li>
                             </ul>
                         </details>
                     </li>
                     <!-- Productos -->
-                    <li v-if="rol != 'Repartidor'" @click="closeDropdown">
-                        <router-link to='/productos'>Productos</router-link></li>
+                    <li v-if="rol != 'Repartidor'" @click="closeDropdown" class="py-2 border-b border-base-300">
+                        <router-link to='/productos' class="text-lg">Productos</router-link>
+                    </li>
                     <!-- Sectores de Reparto -->
-                    <li v-if="rol != 'Repartidor'" @click="closeDropdown">
-                        <router-link to='/sectores'>Sectores de Reparto</router-link></li>
+                    <li v-if="rol != 'Repartidor'" @click="closeDropdown" class="py-2 border-b border-base-300">
+                        <router-link to='/sectores' class="text-lg">Sectores de Reparto</router-link>
+                    </li>
                     <!-- Pedidos -->
-                    <li v-if="rol != 'Repartidor'">
+                    <li v-if="rol != 'Repartidor'" @click="closeDropdown" class="py-2 border-b border-base-300">
                         <details>
-                            <summary>Pedidos</summary>
+                            <summary class="text-lg">Pedidos</summary>
                             <ul class="bg-base-100 rounded-t-none p-2">
-                                <li @click="closeDropdown"><router-link to="/pedidos">Todos los pedidos</router-link>
+                                <li @click="closeDropdown" class="py-2 border-b border-base-300">
+                                    <router-link to="/pedidos" class="text-lg">Todos los pedidos</router-link>
                                 </li>
-                                <li @click="closeDropdown"><router-link to="/pedidos/hoy">Pedidos no entregados</router-link>
+                                <li @click="closeDropdown" class="py-2 border-b border-base-300">
+                                    <router-link to="/pedidos/hoy" class="text-lg">Pedidos no entregados</router-link>
                                 </li>
-                                <li @click="closeDropdown"><router-link to="/pedidos/automaticos">Pedidos
-                                        automáticos</router-link></li>
-                                <li @click="closeDropdown"><router-link to="/pedidos/aprobar">Aprobar pedidos</router-link>
+                                <li @click="closeDropdown" class="py-2 border-b border-base-300">
+                                    <router-link to="/pedidos/automaticos" class="text-lg">Pedidos automáticos</router-link>
+                                </li>
+                                <li @click="closeDropdown" class="py-2">
+                                    <router-link to="/pedidos/aprobar" class="text-lg">Aprobar pedidos</router-link>
                                 </li>
                             </ul>
                         </details>
@@ -85,8 +89,8 @@
                             usuarios</router-link>
                     </li>
                     <!-- Cerrar sesión -->
-                    <li @click="logout()" class="text-red-500">
-                        <router-link to='/login' @click="closeDropdown">Cerrar sesión</router-link>
+                    <li @click="logout()" class="py-2 mt-2">
+                        <router-link to='/login' @click="closeDropdown" class="text-lg text-red-500">Cerrar sesión</router-link>
                     </li>
                 </ul>
             </div>  

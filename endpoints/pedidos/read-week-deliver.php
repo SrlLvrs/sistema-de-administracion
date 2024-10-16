@@ -30,10 +30,9 @@ $query = "  SELECT
                 c.Direccion,
                 s.NombreSector,
                 s.Comuna,
-                c.Telefono,
-                c.Telefono2,
                 c.LinkMaps,
                 s.IDRepartidor,
+                s.Orden AS OrdenSector,
                 p.Pagado,
                 DATE_FORMAT(p.FechaEntrega, '%d/%m/%Y') AS FechaEntrega,
                 DATE_FORMAT(
@@ -50,6 +49,7 @@ $query = "  SELECT
                 AND s.IDRepartidor = :id
                 AND p.Estado = 'Agendado'
             ORDER BY
+                s.Orden ASC,
                 DATE(p.FechaEntrega) ASC,
                 p.OrdenEntrega ASC";
 
