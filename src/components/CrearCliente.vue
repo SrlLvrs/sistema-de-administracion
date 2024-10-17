@@ -34,8 +34,8 @@
                 <span class="label-text font-bold">Sector</span>
             </div>
             <select v-model="sectorSeleccionado" class="select select-bordered w-full max-w-xs">
-                <option v-for="sector in sectoresFiltrados" :key="sector.id" :value="sector.id">{{
-                sector.nombreSector }}</option>
+                <option v-for="sector in sectoresFiltrados" :key="sector.ID" :value="sector.ID">{{
+                sector.NombreSector }}</option>
             </select>
             <p v-if="diaReparto">Día de reparto sugerido: {{ diaReparto }}</p>
 
@@ -136,15 +136,15 @@ export default {
     computed: {
         ciudades() {
             // Obtener una lista única de comunas (ciudades)
-            const ciudadesUnicas = new Set(this.sectores.map(sector => sector.comuna));
+            const ciudadesUnicas = new Set(this.sectores.map(sector => sector.Comuna));
             return Array.from(ciudadesUnicas);
         },
         sectoresFiltrados() {
-            return this.sectores.filter(sector => sector.comuna === this.ciudadSeleccionada);
+            return this.sectores.filter(sector => sector.Comuna === this.ciudadSeleccionada);
         },
         diaReparto() {
-            const sector = this.sectores.find(sector => sector.id === this.sectorSeleccionado);
-            return sector ? sector.diaReparto : null;
+            const sector = this.sectores.find(sector => sector.ID === this.sectorSeleccionado);
+            return sector ? sector.DiaReparto : null;
         },
     },
 
