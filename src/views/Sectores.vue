@@ -50,20 +50,20 @@
                     <td> {{ item.DiaReparto }}</td>
                     <td> {{ item.Repartidor }}</td>
                     <td> {{ item.Orden }}</td>
-                    <td>
-                        <!-- Botón EDITAR SECTOR -->
-                        <editarSectorModal 
-                            v-if="this.rol != 'Repartidor'"
-                            :id="item.ID + 'edit'" 
-                            :nombreSector="item.NombreSector" 
-                            :comuna="item.Comuna" 
-                            :diareparto="item.DiaReparto"
-                            :repartidor="item.IDRepartidor"
-                            :orden="item.Orden" />
-                        <!-- Botón BORRAR SECTOR -->
-                        <eliminarSectorModal 
-                            v-if="this.rol != 'Repartidor'" 
-                            :id="item.ID + 'delete'" />
+                    <td v-if="this.rol != 'Repartidor'">
+                        <div class="flex gap-2">
+                            <!-- Botón EDITAR SECTOR -->
+                            <editarSectorModal 
+                                :id="item.ID + 'edit'" 
+                                :nombreSector="item.NombreSector" 
+                                :comuna="item.Comuna" 
+                                :diareparto="item.DiaReparto"
+                                :repartidor="item.IDRepartidor"
+                                :orden="item.Orden" />
+                            <!-- Botón BORRAR SECTOR -->
+                            <eliminarSectorModal 
+                                :id="item.ID + 'delete'" />
+                        </div>
                     </td>
                 </tr>
             </tbody>

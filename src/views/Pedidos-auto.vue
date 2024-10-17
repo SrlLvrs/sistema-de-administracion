@@ -51,11 +51,13 @@
                     <td> {{ item.Observacion }}</td>
                     <td> {{ item.UltimoPedido }}</td>
                     <td>
-                        <!-- Detalle Pedido -->
-                        <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
+                        <div class="flex gap-2">
+                            <!-- Detalle Pedido -->
+                            <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
 
-                        <!-- Eliminar Pedido -->
-                        <EliminarPedido :id="item.ID" />
+                            <!-- Eliminar Pedido -->
+                            <EliminarPedido :id="item.ID" />
+                        </div>
                     </td>
                 </tr>
             </tbody>

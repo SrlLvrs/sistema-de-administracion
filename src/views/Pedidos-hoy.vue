@@ -64,14 +64,16 @@
                     <td> {{ item.HoraCreacion }}</td>
                     <td> {{ item.HoraCierre }}</td>
                     <td>
-                        <!-- Detalle Pedido -->
-                        <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
+                        <div class="flex gap-2">
+                            <!-- Detalle Pedido -->
+                            <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
 
-                        <!-- Editar Pedido -->
-                        <EditarPedido :label="item.ID + 'edit'" :id="item.ID" />
+                            <!-- Editar Pedido -->
+                            <EditarPedido :label="item.ID + 'edit'" :id="item.ID" />
 
-                        <!-- Eliminar Pedido -->
-                        <EliminarPedido :id="item.ID" />
+                            <!-- Eliminar Pedido -->
+                            <EliminarPedido :id="item.ID" />
+                        </div>
                     </td>
                 </tr>
             </tbody>

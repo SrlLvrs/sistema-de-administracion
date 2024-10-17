@@ -118,19 +118,20 @@
                     <td> {{ item.diaDeReparto }}</td>
                     <td> {{ item.Observacion }}</td>
                     <td>
-                        <!-- Crear Pedido -->
-                        <CrearPedido :id="item.ID + 'pdd'" :cliente="item.ID" />
-                        <!-- Crear Pedido Auto -->
-                        <CrearPedidoAuto :id="item.ID + 'auto'" :cliente="item.ID" />
-                        <!-- Editar Cliente -->
-                        <EditarCliente v-if="this.rol != 'Repartidor'" :id="item.ID" :nombre="item.Nombre"
-                            :comuna="item.Comuna" :sector="item.NombreSector" :id_sector="item.IDSector"
-                            :dia="item.diaDeReparto" :direccion="item.Direccion" :telefono="item.Telefono"
-                            :telefono2="item.Telefono2" :linkmaps="item.LinkMaps" :frecuencia="item.freq"
-                            :observaciones="item.Observacion" producto_preferido="no" id_producto_preferido="noid" />
-
-                        <!-- Eliminar Cliente -->
-                        <EliminarCliente v-if="this.rol != 'Repartidor'" :id="item.ID + 'eliminar'" />
+                        <div class="flex gap-2">
+                            <!-- Crear Pedido -->
+                            <CrearPedido :id="item.ID + 'pdd'" :cliente="item.ID" />
+                            <!-- Crear Pedido Auto -->
+                            <CrearPedidoAuto :id="item.ID + 'auto'" :cliente="item.ID" />
+                            <!-- Editar Cliente -->
+                            <EditarCliente v-if="this.rol != 'Repartidor'" :id="item.ID" :nombre="item.Nombre"
+                                :comuna="item.Comuna" :sector="item.NombreSector" :id_sector="item.IDSector"
+                                :dia="item.diaDeReparto" :direccion="item.Direccion" :telefono="item.Telefono"
+                                :telefono2="item.Telefono2" :linkmaps="item.LinkMaps" :frecuencia="item.freq"
+                                :observaciones="item.Observacion" producto_preferido="no" id_producto_preferido="noid" />
+                            <!-- Eliminar Cliente -->
+                            <EliminarCliente v-if="this.rol != 'Repartidor'" :id="item.ID + 'eliminar'" />
+                        </div>
                     </td>
                 </tr>
             </tbody>

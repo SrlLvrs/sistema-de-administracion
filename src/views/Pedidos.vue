@@ -65,14 +65,16 @@
                     <td> {{ item.HoraCreacion }}</td>
                     <td> {{ item.HoraCierre }}</td>
                     <td>
-                        <!-- Detalle Pedido -->
-                        <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
+                        <div class="flex gap-2">
+                            <!-- Detalle Pedido -->
+                            <DetallePedido :label="item.ID + 'detail'" :id="item.ID" />
 
-                        <!-- Editar Pedido (No se muestra si el rol es repartidor) -->
-                        <EditarPedido v-if="this.rol != 'Repartidor'" :label="item.ID + 'edit'" :id="item.ID" />
+                            <!-- Editar Pedido (No se muestra si el rol es repartidor) -->
+                            <EditarPedido v-if="this.rol != 'Repartidor'" :label="item.ID + 'edit'" :id="item.ID" />
 
-                        <!-- Eliminar Pedido (No se muestra si el rol es repartidor) -->
-                        <EliminarPedido v-if="this.rol != 'Repartidor'" :id="item.ID" />
+                            <!-- Eliminar Pedido (No se muestra si el rol es repartidor) -->
+                            <EliminarPedido v-if="this.rol != 'Repartidor'" :id="item.ID" />
+                        </div>
                     </td>
                 </tr>
             </tbody>

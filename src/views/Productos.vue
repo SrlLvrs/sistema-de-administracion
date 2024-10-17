@@ -46,15 +46,17 @@
                     <td> {{ item.descripcion }}</td>
                     <td> {{ item.precio }}</td>
                     <td>
-                        <!-- Editar Producto -->
-                        <EditarProducto 
-                        :label="item.id + 'edit'" 
-                        :id="item.id"
-                        :descripcion="item.descripcion"
-                        :precio="item.precio" />
+                        <div class="flex gap-2">
+                            <!-- Editar Producto -->
+                            <EditarProducto 
+                            :label="item.id + 'edit'" 
+                            :id="item.id"
+                            :descripcion="item.descripcion"
+                            :precio="item.precio" />
 
-                        <!-- Eliminar Producto -->
-                        <EliminarProducto :id="item.id" />
+                            <!-- Eliminar Producto -->
+                            <EliminarProducto :id="item.id" />
+                        </div>
                     </td>
                 </tr>
             </tbody>

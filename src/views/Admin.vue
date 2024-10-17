@@ -23,9 +23,11 @@
                     <td>{{ item.Username }}</td>
                     <td>{{ item.Rol }}</td>
                     <td>
-                        <EditarPass :id=item.ID :label="item.ID + 'pass'" />
-                        <EditarRol :id=item.ID :label="item.ID + 'rol'" />
-                        <EliminarUsuario :id=item.ID :label="item.ID + 'eliminar'" />
+                        <div class="flex gap-2">
+                            <EditarPass :id=item.ID :label="item.ID + 'pass'" />
+                            <EditarRol :id=item.ID :label="item.ID + 'rol'" />
+                            <EliminarUsuario :id=item.ID :label="item.ID + 'eliminar'" />
+                        </div>
                     </td>
                 </tr>
             </tbody>
