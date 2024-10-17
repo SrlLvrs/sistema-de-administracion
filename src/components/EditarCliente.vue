@@ -43,7 +43,7 @@
 
             <!-- Dia de reparto -->
             <p class="my-2 mx-1 font-bold">Día de reparto actual: {{ dia }}</p>
-            <p class="my-2 mx-1 font-bold text-red-500" v-if="diaReparto">Día de reparto sugerido: {{ diaReparto }}</p>
+            <p class="my-2 mx-1 font-bold text-red-500" v-if="diaReparto">Nuevo día de reparto: {{ diaReparto }}</p>
 
             <div class="label">
                 <span class="label-text font-bold">Día de reparto excepcional</span>
