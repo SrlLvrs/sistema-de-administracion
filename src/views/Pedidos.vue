@@ -4,15 +4,16 @@
     <div class="prose max-w-none">
         <div class="grid grid-cols-1">
             <h1 class="text-center p-4 m-0">Todos los pedidos</h1>
-            <div class="flex justify-center mb-4">
+            <div class="flex justify-center mb-4 items-center gap-2">
                 <!-- Selector de fechas -->
                 <VCalendar v-model="fechaSeleccionada" />
                 
-                <button class="btn btn-outline btn-primary mx-2" @click="getPedidos()" :disabled="isLoading">
+                <!-- Botón Buscar -->
+                <button @click="getPedidos" class="btn btn-outline btn-primary" :disabled="isLoading">
                     {{ isLoading ? 'Buscando...' : 'Buscar' }}
                     <span v-if="isLoading" class="loading loading-spinner loading-sm"></span>
                 </button>
-
+                
                 <!-- Botón Excel -->
                 <Excel :items="items" />
             </div>
@@ -79,6 +80,16 @@
         <div v-else class="flex justify-center items-center h-screen">
             <p class="text-center">No se encontraron pedidos con el filtro de búsqueda actual</p>
         </div>
+        
+        <!-- Nuevo calendario y botón para cambiar fecha de reparto -->
+        <div class="flex justify-center items-center mt-8 gap-2">
+            <VCalendar v-model="nuevaFechaReparto" />
+            
+            <button class="btn btn-outline btn-primary" @click="cambiarFechaReparto" :disabled="isLoading">
+                {{ isLoading ? 'Cambiando...' : 'Cambiar fecha de reparto' }}
+                <span v-if="isLoading" class="loading loading-spinner loading-sm"></span>
+            </button>
+        </div>
     </div>
 </template>
 
@@ -101,11 +112,49 @@ export default {
             items: [],
             rol: '',
             fechaSeleccionada: new Date(),
+            nuevaFechaReparto: new Date(),
             isLoading: false,
         };
     },
 
     methods: {
+        formatearFecha(fecha) {
+            let d = new Date(fecha);
+            let year = d.getFullYear();
+            let month = '' + (d.getMonth() + 1);
+            let day = '' + d.getDate();
+
+            if (month.length < 2) 
+                month = '0' + month;
+            if (day.length < 2) 
+                day = '0' + day;
+
+            return `${year}-${month}-${day}`;
+        },
+
+        formatearFechaHora(fecha) {
+            let d = new Date(fecha);
+            let year = d.getFullYear();
+            let month = '' + (d.getMonth() + 1);
+            let day = '' + d.getDate();
+            let hours = '' + d.getHours();
+            let minutes = '' + d.getMinutes();
+            let seconds = '' + d.getSeconds();
+
+            if (month.length < 2) 
+                month = '0' + month;
+            if (day.length < 2) 
+                day = '0' + day;
+            if (hours.length < 2)
+                hours = '0' + hours;
+            if (minutes.length < 2)
+                minutes = '0' + minutes;
+            if (seconds.length < 2)
+                seconds = '0' + seconds;
+
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        },
+
         async getPedidos() {
             this.isLoading = true;
             let fechaFormateada = this.formatearFecha(this.fechaSeleccionada);
@@ -115,24 +164,40 @@ export default {
                 this.items = response.data;
             } catch (error) {
                 console.error("Error al obtener pedidos:", error);
-                // Aquí puedes agregar lógica para manejar el error, como mostrar un mensaje al usuario
+                alert('Hubo un error al buscar los pedidos');
             } finally {
                 this.isLoading = false;
             }
         },
 
-        formatearFecha(fecha) {
-            let d = new Date(fecha);
-            let month = '' + (d.getMonth() + 1);
-            let day = '' + d.getDate();
-            let year = d.getFullYear();
-
-            if (month.length < 2) 
-                month = '0' + month;
-            if (day.length < 2) 
-                day = '0' + day;
-
-            return [year, month, day].join('-');
+        async cambiarFechaReparto() {
+            this.isLoading = true;
+            const fechaFormateada = this.formatearFechaHora(this.nuevaFechaReparto);
+            const errores = [];
+            
+            for (const item of this.items) {
+                try {
+                    const url = `https://nuestrocampo.cl/api/pedidos/update_fecha_reparto.php?id=${item.ID}&nuevaFecha=${encodeURIComponent(fechaFormateada)}`;
+                    const response = await axios.get(url);
+                    
+                    if (response.data.success) {
+                        item.FechaEntrega = fechaFormateada;
+                    } else {
+                        throw new Error(`No se pudo actualizar la fecha para el pedido ${item.ID}`);
+                    }
+                } catch (error) {
+                    console.error(`Error al cambiar la fecha del pedido ${item.ID}:`, error);
+                    errores.push(item.ID);
+                }
+            }
+            
+            this.isLoading = false;
+            
+            if (errores.length === 0) {
+                alert('Todas las fechas de reparto se actualizaron con éxito');
+            } else {
+                alert(`Se actualizaron algunas fechas, pero hubo errores con los pedidos: ${errores.join(', ')}`);
+            }
         }
     },
 
