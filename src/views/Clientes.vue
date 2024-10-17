@@ -66,7 +66,7 @@
     </div>
     <!-- RESULTADOS -->
     <div class="overflow-x-auto">
-        <table v-if="filteredItems.length > 0" class="table">
+        <table v-if="itemsToShow.length > 0" class="table">
             <!-- Head -->
             <thead>
                 <tr>
@@ -89,7 +89,7 @@
                 <!-- GET -->
                 <!-- el nombre del array es ITEMS, que debe ser el mismo que se define en DATA() RETURN -->
                 <!-- Los resultados deben recorrerse dentro del TR -->
-                <tr v-for="item in filteredItems" :key="item.ID">
+                <tr v-for="item in itemsToShow" :key="item.ID">
                     <th>
                         <div v-if="item.Deuda" class="tooltip tooltip-right" data-tip="Cliente con deuda pendiente">
                             <!--
@@ -135,7 +135,10 @@
                 </tr>
             </tbody>
         </table>
-        <div v-else class="flex justify-center items-center h-screen">
+        <div v-if="itemsToShow.length < filteredItems.length" class="text-center my-4">
+            <button @click="loadMore" class="btn btn-primary btn-outline">Cargar más resultados</button>
+        </div>
+        <div v-if="filteredItems.length === 0" class="flex justify-center items-center h-screen">
             <p class="text-center">No se encontraron clientes con el filtro de búsqueda actual</p>
         </div>
     </div>
@@ -174,6 +177,8 @@ export default {
             rol: '',
             busquedaTexto: '',
             isLoading: false,
+            itemsPerPage: 50,
+            currentPage: 1,
         };
     },
 
@@ -227,6 +232,9 @@ export default {
             console.log(this.busquedaTexto);
 
         },
+        loadMore() {
+            this.currentPage++;
+        },
     },
 
     computed: {
@@ -265,6 +273,9 @@ export default {
                 // Devuelve los elementos que cumplen con todos los criterios de filtrado
                 return matchesText && matchesDay && matchesSus;
             });
+        },
+        itemsToShow() {
+            return this.filteredItems.slice(0, this.currentPage * this.itemsPerPage);
         },
     },
 

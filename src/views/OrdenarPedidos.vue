@@ -17,48 +17,51 @@
     </div>
   </div>
   <!-- Resultados -->
-  <div v-if="items.length > 0" class="overflow-x-auto">
-    <table class="table table-zebra">
-      <thead>
-        <tr>
-          <th></th>
-          <th></th>
-          <th>Cliente</th>
-          <th>Dirección</th>
-          <th>Fecha de Entrega</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in items" :key="index" 
-            :class="{ 'bg-blue-200': isDragging && draggedIndex === index, 'opacity-50': isDragging && draggedIndex !== index }"
-            @drop="drop(index)" 
-            @dragover.prevent>
-          <td class="drag-handle"
-              draggable="true" 
-              @dragstart="dragStart(index, $event)"
-              @dragend="dragEnd"
-              @touchstart="touchStart(index, $event)"
-              @touchmove.prevent="touchMove($event)"
-              @touchend="touchEnd(index)">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-          </td>
-          <td>
-            <div v-if="item.IDPA" class="tooltip tooltip-right" data-tip="Pedido creado automáticamente">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 0 2.25-2.25h13.5A2.25 2.25 0 0 0 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+  <div v-if="pedidosPorFecha.length > 0" class="overflow-x-auto">
+    <div v-for="(grupo, index) in pedidosPorFecha" :key="index" class="mb-8">
+      <h2 class="text-xl font-bold mb-4">{{ grupo.fecha }}</h2>
+      <table class="table table-zebra">
+        <thead>
+          <tr>
+            <th></th>
+            <th></th>
+            <th>Cliente</th>
+            <th>Dirección</th>
+            <th>Fecha de Entrega</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, itemIndex) in grupo.pedidos" :key="itemIndex" 
+              :class="{ 'bg-blue-200': isDragging && draggedIndex === [index, itemIndex], 'opacity-50': isDragging && draggedIndex !== [index, itemIndex] }"
+              @drop="drop(index, itemIndex)" 
+              @dragover.prevent>
+            <td class="drag-handle"
+                draggable="true" 
+                @dragstart="dragStart(index, itemIndex, $event)"
+                @dragend="dragEnd"
+                @touchstart="touchStart(index, itemIndex, $event)"
+                @touchmove.prevent="touchMove($event)"
+                @touchend="touchEnd(index)">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
               </svg>
-            </div>
-          </td>
-          <td>{{ item.Nombre }}</td>
-          <td>{{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</td>
-          <td>{{ item.FechaEntrega }}</td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+            <td>
+              <div v-if="item.IDPA" class="tooltip tooltip-right" data-tip="Pedido creado automáticamente">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 0 2.25-2.25h13.5A2.25 2.25 0 0 0 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+                </svg>
+              </div>
+            </td>
+            <td>{{ item.Nombre }}</td>
+            <td>{{ item.Direccion }}, {{ item.NombreSector }}, {{ item.Comuna }}</td>
+            <td>{{ item.FechaEntrega }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   <div v-else class="flex justify-center items-center h-screen">
     <p class="text-center">No hay pedidos asignados a ti, o no eres repartidor. Si crees que es un error, comunícate con
@@ -74,6 +77,7 @@ export default {
   data() {
     return {
       items: [],
+      pedidosPorFecha: [],
       isDragging: false,
       draggedIndex: null,
       ids: [],
@@ -85,34 +89,35 @@ export default {
       const sessionData = JSON.parse(localStorage.getItem('authUser'));
       return sessionData ? sessionData : null;
     },
-    dragStart(index, event) {
+    dragStart(grupoIndex, itemIndex, event) {
       if (!event.target.closest('.drag-handle')) {
         event.preventDefault();
         return;
       }
       this.isDragging = true;
-      this.draggedIndex = index;
+      this.draggedIndex = [grupoIndex, itemIndex];
       event.dataTransfer.effectAllowed = 'move';
-      event.dataTransfer.setData('text/plain', index);
+      event.dataTransfer.setData('text/plain', JSON.stringify([grupoIndex, itemIndex]));
     },
     dragEnd() {
       this.isDragging = false;
       this.draggedIndex = null;
     },
-    drop(index) {
+    drop(grupoIndex, itemIndex) {
       if (this.draggedIndex !== null) {
-        const draggedItem = this.items.splice(this.draggedIndex, 1)[0];
-        this.items.splice(index, 0, draggedItem);
+        const [draggedGrupoIndex, draggedItemIndex] = this.draggedIndex;
+        const draggedItem = this.pedidosPorFecha[draggedGrupoIndex].pedidos.splice(draggedItemIndex, 1)[0];
+        this.pedidosPorFecha[grupoIndex].pedidos.splice(itemIndex, 0, draggedItem);
       }
       this.isDragging = false;
       this.draggedIndex = null;
     },
-    touchStart(index, event) {
+    touchStart(index, itemIndex, event) {
       if (!event.target.closest('.drag-handle')) {
         return;
       }
       this.isDragging = true;
-      this.draggedIndex = index;
+      this.draggedIndex = [index, itemIndex];
       this.touchStartY = event.touches[0].clientY;
     },
     touchMove(event) {
@@ -124,10 +129,10 @@ export default {
       const moveDistance = touchY - this.touchStartY;
 
       if (Math.abs(moveDistance) > rowHeight / 2) {
-        const newIndex = this.draggedIndex + (moveDistance > 0 ? 1 : -1);
-        if (newIndex >= 0 && newIndex < this.items.length) {
-          this.items.splice(newIndex, 0, this.items.splice(this.draggedIndex, 1)[0]);
-          this.draggedIndex = newIndex;
+        const newIndex = this.draggedIndex[0] + (moveDistance > 0 ? 1 : -1);
+        if (newIndex >= 0 && newIndex < this.pedidosPorFecha.length) {
+          this.pedidosPorFecha[newIndex].pedidos.splice(this.draggedIndex[1], 0, this.pedidosPorFecha[this.draggedIndex[0]].pedidos.splice(this.draggedIndex[1], 1)[0]);
+          this.draggedIndex = [newIndex, this.draggedIndex[1]];
           this.touchStartY = touchY;
         }
       }
@@ -138,32 +143,57 @@ export default {
       this.touchStartY = null;
     },
     guardar() {
-      for (let i = 0; i < this.items.length; i++) {
-        console.log('index: ' + i)
-        let url = `https://nuestrocampo.cl/api/pedidos/order.php?orden=${i}&idp=${this.items[i].ID}`;
-        axios.put(url)        
+      let orden = 0;
+      for (const grupo of this.pedidosPorFecha) {
+        for (const item of grupo.pedidos) {
+          let url = `https://nuestrocampo.cl/api/pedidos/order.php?orden=${orden}&idp=${item.ID}`;
+          axios.put(url);
+          orden++;
+        }
       }
+      location.reload();
+    },
 
-      location.reload()
-    }
+    agruparPedidosPorFecha() {
+      const grupos = this.items.reduce((acc, pedido) => {
+        const fecha = pedido.FechaEntrega.split(' ')[0]; // Obtener solo la fecha
+        if (!acc[fecha]) {
+          acc[fecha] = [];
+        }
+        acc[fecha].push(pedido);
+        return acc;
+      }, {});
+
+      this.pedidosPorFecha = Object.entries(grupos)
+        .map(([fecha, pedidos]) => ({ fecha, pedidos }))
+        .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+    },
+
+    formatearFecha(fecha) {
+      const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(fecha).toLocaleDateString('es-ES', opciones);
+    },
   },
 
   mounted() {
-        const sessionData = this.checkUserSession();
-        if (sessionData) {
-            console.log('Sesión iniciada');
-            let id_user = sessionData.id;
-            if (sessionData.rol === 'Repartidor') {
-                let url = `https://nuestrocampo.cl/api/pedidos/read-week-deliver.php?id=${id_user}`;
-                axios.get(url).then((response) => (this.items = response.data));
-            } else {
-                console.log('El usuario no es repartidor');
-            }
-        } else {
-            console.log('No hay sesión iniciada');
-            this.$router.push({ name: 'LogIn' });
-        }
-    },
+    const sessionData = this.checkUserSession();
+    if (sessionData) {
+      console.log('Sesión iniciada');
+      let id_user = sessionData.id;
+      if (sessionData.rol === 'Repartidor') {
+        let url = `https://nuestrocampo.cl/api/pedidos/read-week-deliver.php?id=${id_user}`;
+        axios.get(url).then((response) => {
+          this.items = response.data;
+          this.agruparPedidosPorFecha();
+        });
+      } else {
+        console.log('El usuario no es repartidor');
+      }
+    } else {
+      console.log('No hay sesión iniciada');
+      this.$router.push({ name: 'LogIn' });
+    }
+  },
 };
 </script>
 
