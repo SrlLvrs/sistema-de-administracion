@@ -29,6 +29,7 @@
                                 Aprobar
                             </button>
                             <EditarPedido :id="pedido.ID" :label="'editar-pedido-' + pedido.ID" />
+                            <DetallesPedido :id="pedido.ID" :label="'detalles-pedido-' + pedido.ID" />
                         </div>
                     </td>
                 </tr>
@@ -43,6 +44,7 @@
 <script>
 import axios from 'axios';
 import EditarPedido from '../components/EditarPedido.vue';
+import DetallesPedido from '../components/DetallesPedido.vue';
 
 export default {
     name: "PedidosAprobar",
@@ -73,7 +75,8 @@ export default {
         this.getPedidosPendientes();
     },
     components: {
-        EditarPedido
+        EditarPedido,
+        DetallesPedido
     }
 }
 </script>
