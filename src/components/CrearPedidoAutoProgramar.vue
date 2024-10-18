@@ -23,24 +23,12 @@
                 <div>
                     <div class="label">
                         <span class="label-text font-bold">Creando pedido {{ ciclo_pedido }} para {{ nombre }}</span>
+                        {{ observaciones }}
                     </div>
                     <progress class="progress w-56"></progress>
                 </div>
 
-                <!-- Acciones -->
-                <div class="modal-action">
-                    <!-- Descartar pedido -->
-                    <label class="btn" for="programar">Descartar Pedido Automático</label>
-
-                    <!-- Crear pedido -->
-                    <button class="btn btn-outline btn-success" @click="exec()">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                        </svg>
-                        Crear Pedido Automático
-                    </button>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -66,6 +54,7 @@ export default {
             last_idp: null,
             nombre: '',
             ciclo_pedido: '',
+            observaciones: '', // Añadir esta línea
         };
     },
 
@@ -81,6 +70,8 @@ export default {
                 this.freq = arrayPA[i].Frecuencia
                 //Obtener cliente
                 this.cliente = arrayPA[i].IDCliente
+                //Obtener observaciones
+                this.observaciones = arrayPA[i].Observacion
                 //Obtener IDPA
                 this.last_idpa = arrayPA[i].ID
                 //fecha de ultimopedido de mysql a Date()
@@ -126,7 +117,13 @@ export default {
         async getPA() {
             //GET pedidos automaticos
             let url = `https://nuestrocampo.cl/api/pedidos/read-auto.php`;
-            await axios.get(url).then((response) => (this.items = response.data));
+            await axios.get(url).then((response) => {
+                this.items = response.data;
+                // Añadir estas líneas
+                if (this.items.length > 0) {
+                    this.observaciones = this.items[0].Observaciones || '';
+                }
+            });
         },
         /** 2. Crea los pedidos base */
         async postP(fecha) {
@@ -135,7 +132,8 @@ export default {
             let h = new Date();
             let hsql = this.formatToMySQLDateTime(h)
             let idpa = this.last_idpa;
-            let url = `https://nuestrocampo.cl/api/pedidos/create-w-idpa.php?id_cliente=${idc}&hora_creacion=${hsql}&fecha_reparto=${fecha}&idpa=${idpa}`
+            let estado = this.observaciones ? 'Pendiente' : 'Agendado'; // Añadir esta línea
+            let url = `https://nuestrocampo.cl/api/pedidos/create-w-idpa.php?id_cliente=${idc}&hora_creacion=${hsql}&fecha_reparto=${fecha}&idpa=${idpa}&estado=${estado}&observacion=${this.observaciones}` // Modificar esta línea
             await axios.post(url).then(response => {
                 console.log(response.data);
                 this.last_idp = response.data.id

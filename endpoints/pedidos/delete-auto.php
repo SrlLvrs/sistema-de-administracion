@@ -29,8 +29,8 @@ if (!empty($id)) {
         $stmt1->bindParam(":id", $id);
         $stmt1->execute();
 
-        // Segunda consulta: actualizar 'pedidos' con Estado 'Agendado'
-        $query2 = "UPDATE pedidos SET Visible = 0 WHERE IDPA = :id AND Estado = 'Agendado'";
+        // Segunda consulta: actualizar 'pedidos' con Estado 'Agendado' o 'Pendiente'
+        $query2 = "UPDATE pedidos SET Visible = 0 WHERE IDPA = :id AND (Estado = 'Agendado' OR Estado = 'Pendiente')";
         $stmt2 = $db->prepare($query2);
         $stmt2->bindParam(":id", $id);
         $stmt2->execute();
