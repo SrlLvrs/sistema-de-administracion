@@ -111,7 +111,7 @@ export default {
                     this.detalle_auto = []
                 }
             }
-            location.reload()
+            //location.reload()
         },
         /** 1. Obtiene todos los pedidos automáticos */
         async getPA() {
