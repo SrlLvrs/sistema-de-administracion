@@ -219,7 +219,7 @@ export default {
         },
         //GET detalle del pedido en base al IDPEDIDO
         async leerDetalles(id) {
-            let url = `https://nuestrocampo.cl/api/pedidos/read-detail.php?id=${id}`;
+            let url = `https://nuestrocampo.cl/demo/pedidos/read-detail.php?id=${id}`;
             await axios.get(url).then((response) => (this.items = response.data));
 
             //Base de datos => Variables locales
@@ -246,11 +246,11 @@ export default {
             }
 
             //GET clientes
-            let url2 = `https://nuestrocampo.cl/api/clientes/read.php`;
+            let url2 = `https://nuestrocampo.cl/demo/clientes/read.php`;
             axios.get(url2).then((response) => (this.clientes = response.data));
 
             //GET productos
-            let url3 = `https://nuestrocampo.cl/api/productos/read.php`;
+            let url3 = `https://nuestrocampo.cl/demo/productos/read.php`;
             axios
                 .get(url3)
                 .then((response) => (this.productos = response.data));
@@ -267,7 +267,7 @@ export default {
             let c = this.detallepedido[i].Cantidad;
             let t = this.detallepedido[i].Total;
 
-            let url = `https://nuestrocampo.cl/api/pedidos/update-detail.php?idpedido=${idp}&idproducto=${idpro}&cantidad=${c}&total=${t}`;
+            let url = `https://nuestrocampo.cl/demo/pedidos/update-detail.php?idpedido=${idp}&idproducto=${idpro}&cantidad=${c}&total=${t}`;
             axios.put(url).then(function (response) {
                 console.log(response.data);
             });
@@ -285,7 +285,7 @@ export default {
                 let c = this.detallepedido[i].Cantidad;
                 let t = this.detallepedido[i].Total;
 
-                let url = `https://nuestrocampo.cl/api/pedidos/update-detail.php?idpedido=${idp}&idproducto=${idpro}&cantidad=${c}&total=${t}`;
+                let url = `https://nuestrocampo.cl/demo/pedidos/update-detail.php?idpedido=${idp}&idproducto=${idpro}&cantidad=${c}&total=${t}`;
                 axios.put(url).then(function (response) {
                     console.log(response.data);
                 });
@@ -298,7 +298,7 @@ export default {
             let idp = this.detallepedido[i].IDPedido;
             let c = this.detallepedido[i].Cantidad;
 
-            let url = `https://nuestrocampo.cl/api/pedidos/delete-detail.php?id=${idp}&cantidad=${c}`;
+            let url = `https://nuestrocampo.cl/demo/pedidos/delete-detail.php?id=${idp}&cantidad=${c}`;
             axios.delete(url).then(function (response) {
                 console.log(response.data);
             });
@@ -327,7 +327,7 @@ export default {
             let c = this.cantidad;
             let t = this.cantidad * this.productos[ps].precio;
 
-            let url = `https://nuestrocampo.cl/api/pedidos/create-detail.php?id_pedido=${idp}&id_producto=${idpro}&cantidad=${c}&total=${t}`;
+            let url = `https://nuestrocampo.cl/demo/pedidos/create-detail.php?id_pedido=${idp}&id_producto=${idpro}&cantidad=${c}&total=${t}`;
             axios.post(url).then(function (response) {
                 console.log(response.data);
             });
@@ -352,7 +352,7 @@ export default {
             let mp = this.mediopago;
             let fe = this.formatearFecha(this.fechaentrega);
 
-            let url = `https://nuestrocampo.cl/api/pedidos/update.php?id=${idp}&idcliente=${idc}&idrepartidor=${idr}&estado=${e}&pagado=${p}&mediopago=${mp}&fechaentrega=${fe}`;
+            let url = `https://nuestrocampo.cl/demo/pedidos/update.php?id=${idp}&idcliente=${idc}&idrepartidor=${idr}&estado=${e}&pagado=${p}&mediopago=${mp}&fechaentrega=${fe}`;
             axios.put(url).then(function (response) {
                 console.log(response.data);
             });

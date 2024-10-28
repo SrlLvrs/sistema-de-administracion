@@ -73,7 +73,7 @@ export default {
     },
     methods: {
         async getProductos() {
-            const url = 'https://nuestrocampo.cl/api/productos/read.php';
+            const url = 'https://nuestrocampo.cl/demo/productos/read.php';
 
             try {
                 const response = await axios.get(url);
@@ -86,11 +86,11 @@ export default {
             }
         },
         async getUsers() {
-            let url = `https://nuestrocampo.cl/api/users/read.php`;
+            let url = `https://nuestrocampo.cl/demo/users/read.php`;
             await axios.get(url).then((response) => (this.usuarios = response.data));
         },
         async getDespachos() {
-            const url = 'https://nuestrocampo.cl/api/despacho/read.php';
+            const url = 'https://nuestrocampo.cl/demo/despacho/read.php';
             try {
                 const respuesta = await axios.get(url);
                 this.despachos = respuesta.data;
@@ -99,7 +99,7 @@ export default {
             }
         },
         async getDespachados() {
-            const url = 'https://nuestrocampo.cl/api/despacho/read-entregados.php';
+            const url = 'https://nuestrocampo.cl/demo/despacho/read-entregados.php';
             try {
                 const respuesta = await axios.get(url);
                 this.despachados = respuesta.data;
@@ -123,7 +123,7 @@ export default {
             for (let producto of this.productos) {
                 if (producto.cantidad > 0) {
                     try {
-                        await axios.post(`https://nuestrocampo.cl/api/despacho/create.php?idproducto=${producto.id}&cantidad=${producto.cantidad}&idrepartidor=${this.selectedUser}&fecha=${fechaHoy}`);
+                        await axios.post(`https://nuestrocampo.cl/demo/despacho/create.php?idproducto=${producto.id}&cantidad=${producto.cantidad}&idrepartidor=${this.selectedUser}&fecha=${fechaHoy}`);
                     } catch (error) {
                         console.error(`Error al despachar ${producto.descripcion}:`, error);
                     }

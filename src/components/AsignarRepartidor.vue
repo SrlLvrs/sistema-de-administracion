@@ -64,14 +64,14 @@ export default {
 
     methods: {
         async getRepartidores() {
-            let url = `https://nuestrocampo.cl/api/users/read-deliver.php`;
+            let url = `https://nuestrocampo.cl/demo/users/read-deliver.php`;
             await axios.get(url).then((response) => (this.items = response.data));
         },
         async updateRepartidor() {
             let idr = this.repartidor;
             let ids = this.id;
 
-            let url = `https://nuestrocampo.cl/api/pedidos/update-delivery.php?idsector=${ids}&idrepartidor=${idr}&orden=${this.orden}`
+            let url = `https://nuestrocampo.cl/demo/pedidos/update-delivery.php?idsector=${ids}&idrepartidor=${idr}&orden=${this.orden}`
             await axios.put(url).then(function (response) {
                 console.log(response.data);
             })

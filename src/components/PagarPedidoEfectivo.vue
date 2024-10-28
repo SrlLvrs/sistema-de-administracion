@@ -59,10 +59,10 @@ export default {
 
         async getPedido() {
             let idp = this.id;
-            let url = `https://nuestrocampo.cl/api/pedidos/read-by-id.php?id=${idp}`;
+            let url = `https://nuestrocampo.cl/demo/pedidos/read-by-id.php?id=${idp}`;
             await axios.get(url).then((response) => {
                 this.pedido = response.data;
-                return axios.get(`https://nuestrocampo.cl/api/pedidos/read-detail.php?id=${idp}`);
+                return axios.get(`https://nuestrocampo.cl/demo/pedidos/read-detail.php?id=${idp}`);
             }).then((detailResponse) => {
                 this.detalle_pedido = detailResponse.data;
             });
@@ -98,7 +98,7 @@ export default {
 
             let idp = this.id
             let msg = this.pedido[0].Nombre + ', ' + this.pedido[0].Direccion + ', ' + this.pedido[0].NombreSector + ', ' + this.pedido[0].Comuna
-            let url = `https://nuestrocampo.cl/api/pedidos/pay-order-cash.php?id=${idp}&user=${this.user}&msg=${msg}&idrepartidor=${this.user_id}`
+            let url = `https://nuestrocampo.cl/demo/pedidos/pay-order-cash.php?id=${idp}&user=${this.user}&msg=${msg}&idrepartidor=${this.user_id}`
             await axios.put(url).then((response) => {
                 console.log(response.data)
                 return this.getPedido()

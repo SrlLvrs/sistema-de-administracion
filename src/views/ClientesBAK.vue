@@ -183,7 +183,7 @@ export default {
             return sessionData ? sessionData : null;
         },
         async getClientes() {
-            let url = "https://nuestrocampo.cl/api/clientes/read.php";
+            let url = "https://nuestrocampo.cl/demo/clientes/read.php";
             await axios.get(url).then((response) => (this.items = response.data));
         },
         borrarFiltros() {

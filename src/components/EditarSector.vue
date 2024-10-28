@@ -113,7 +113,7 @@ export default {
 
     methods: {
         async loadData() {
-            let url = `https://nuestrocampo.cl/api/users/read-deliver.php`
+            let url = `https://nuestrocampo.cl/demo/users/read-deliver.php`
             await axios.get(url).then((response) => (this.items = response.data))
             console.log('Cargando datos para editar sector')
         },
@@ -124,7 +124,7 @@ export default {
             let dia = this.localDiaReparto;
             let repartidor = this.localRepartidor;
             let orden = this.localOrden; // Nuevo campo
-            let url = `https://nuestrocampo.cl/api/sectores/update.php?id=${id}&nombresector=${nombre}&comuna=${comuna}&diareparto=${dia}&repartidor=${repartidor}&orden=${orden}`
+            let url = `https://nuestrocampo.cl/demo/sectores/update.php?id=${id}&nombresector=${nombre}&comuna=${comuna}&diareparto=${dia}&repartidor=${repartidor}&orden=${orden}`
             axios.put(url);
             location.reload();
         },

@@ -94,6 +94,11 @@ const router = createRouter({
             name: "LogIn",
             component: () => import("../views/LogIn.vue"),
         },
+        {
+            path: "/supabase",
+            name: "Supabase",
+            component: () => import("../views/Supabase.vue"),
+        },
     ],
 });
 

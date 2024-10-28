@@ -56,7 +56,7 @@ export default {
     methods: {
         async getPedidosPendientes() {
             try {
-                const response = await axios.get('https://nuestrocampo.cl/api/pedidos/get-pending.php');
+                const response = await axios.get('https://nuestrocampo.cl/demo/pedidos/get-pending.php');
                 this.pedidosPendientes = response.data;
             } catch (error) {
                 console.error("Error al obtener pedidos pendientes:", error);
@@ -64,7 +64,7 @@ export default {
         },
         async agendarPedido(id) {
             try {
-                await axios.post(`https://nuestrocampo.cl/api/pedidos/schedule.php?id=${id}`);
+                await axios.post(`https://nuestrocampo.cl/demo/pedidos/schedule.php?id=${id}`);
                 this.getPedidosPendientes();
             } catch (error) {
                 console.error("Error al agendar pedido:", error);

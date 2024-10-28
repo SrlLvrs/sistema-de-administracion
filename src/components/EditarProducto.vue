@@ -71,7 +71,7 @@ export default {
         editarProducto(id) {
             let d = this.localDescripcion;
             let p = this.localPrecio;
-            let url = `https://nuestrocampo.cl/api/productos/update.php?id=${id}&descripcion=${d}&precio=${p}`
+            let url = `https://nuestrocampo.cl/demo/productos/update.php?id=${id}&descripcion=${d}&precio=${p}`
             axios.put(url);
             location.reload();
         },

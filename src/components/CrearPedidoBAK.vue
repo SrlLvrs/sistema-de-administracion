@@ -245,23 +245,23 @@ export default {
             let idc = this.cliente;
             let h = this.fecha_creacion_local;
             let hmysql = this.formatToMySQLDateTime(h);
-            let url = `https://nuestrocampo.cl/api/pedidos/create.php?id_cliente=${idc}&hora_creacion=${hmysql}`
+            let url = `https://nuestrocampo.cl/demo/pedidos/create.php?id_cliente=${idc}&hora_creacion=${hmysql}`
             axios.post(url).then(function (response) {
                 console.log(response.data);
             });
 
             //GET último pedido
-            let url2 = "https://nuestrocampo.cl/api/pedidos/read-last.php";
+            let url2 = "https://nuestrocampo.cl/demo/pedidos/read-last.php";
             setTimeout(() => {
                 axios.get(url2).then((response) => (this.items = response.data));
             }, 1000);
 
             //GET todos los productos
-            let url3 = "https://nuestrocampo.cl/api/productos/read.php";
+            let url3 = "https://nuestrocampo.cl/demo/productos/read.php";
             axios.get(url3).then((response) => (this.productos = response.data));
 
             //Get pedidos previamente agendados
-            let url4 = `https://nuestrocampo.cl/api/clientes/read-previous-order.php?id=${idc}`;
+            let url4 = `https://nuestrocampo.cl/demo/clientes/read-previous-order.php?id=${idc}`;
             axios.get(url4).then((response) => (this.pedidos_agendados = response.data));
 
             this.fecha_reparto_local = new Date();
@@ -312,7 +312,7 @@ export default {
             let f = this.fecha_reparto_local
             let fmysql = this.formatToMySQLDateTime(f);
 
-            let url = `https://nuestrocampo.cl/api/pedidos/update.php?id=${id}&idcliente=${idc}&idrepartidor=${idr}&estado=${e}&pagado=${p}&mediopago=${m}&fechaentrega=${fmysql}`
+            let url = `https://nuestrocampo.cl/demo/pedidos/update.php?id=${id}&idcliente=${idc}&idrepartidor=${idr}&estado=${e}&pagado=${p}&mediopago=${m}&fechaentrega=${fmysql}`
             axios.put(url).then(function (response) {
                 console.log(response.data);
             });
@@ -326,7 +326,7 @@ export default {
                 let cantidad = array[i].cantidad;
                 let total = array[i].total;
 
-                let url = `https://nuestrocampo.cl/api/pedidos/create-detail.php?id_pedido=${pedido}&id_producto=${producto}&cantidad=${cantidad}&total=${total}`
+                let url = `https://nuestrocampo.cl/demo/pedidos/create-detail.php?id_pedido=${pedido}&id_producto=${producto}&cantidad=${cantidad}&total=${total}`
                 axios.post(url).then(function (response) {
                     console.log(response.data)
                 })
@@ -335,7 +335,7 @@ export default {
         },
         /** BORRA el pedido vacío */
         descartarPedido(i) {
-            let url = `https://nuestrocampo.cl/api/pedidos/delete-empty.php?id=${i}`
+            let url = `https://nuestrocampo.cl/demo/pedidos/delete-empty.php?id=${i}`
             axios.delete(url);
             location.reload();
         },

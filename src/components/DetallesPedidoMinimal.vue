@@ -97,7 +97,7 @@ export default {
         //Obtiene el detalle del pedido desde la Base de Datos
         leerDetallePedido() {
             const idp = this.id;
-            const url = `https://nuestrocampo.cl/api/pedidos/read-detail.php?id=${idp}`;
+            const url = `https://nuestrocampo.cl/demo/pedidos/read-detail.php?id=${idp}`;
         
             axios.get(url)
                 .then(response => {

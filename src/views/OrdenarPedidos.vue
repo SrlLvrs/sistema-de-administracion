@@ -146,7 +146,7 @@ export default {
       let orden = 0;
       for (const grupo of this.pedidosPorFecha) {
         for (const item of grupo.pedidos) {
-          let url = `https://nuestrocampo.cl/api/pedidos/order.php?orden=${orden}&idp=${item.ID}`;
+          let url = `https://nuestrocampo.cl/demo/pedidos/order.php?orden=${orden}&idp=${item.ID}`;
           axios.put(url);
           orden++;
         }
@@ -181,7 +181,7 @@ export default {
       console.log('Sesión iniciada');
       let id_user = sessionData.id;
       if (sessionData.rol === 'Repartidor') {
-        let url = `https://nuestrocampo.cl/api/pedidos/read-week-deliver.php?id=${id_user}`;
+        let url = `https://nuestrocampo.cl/demo/pedidos/read-week-deliver.php?id=${id_user}`;
         axios.get(url).then((response) => {
           this.items = response.data;
           this.agruparPedidosPorFecha();

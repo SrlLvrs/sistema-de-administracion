@@ -141,7 +141,7 @@ export default {
             for (let i = 0; i < array.length; i++) {
                 let idp = array[i].id
                 let c = array[i].cantidad
-                let url = `https://nuestrocampo.cl/api/resumen/create.php?idp=${idp}&idr=${idr}&cantidad=${c}&fecha=${hoy}`
+                let url = `https://nuestrocampo.cl/demo/resumen/create.php?idp=${idp}&idr=${idr}&cantidad=${c}&fecha=${hoy}`
 
                 axios.post(url).then(function (response) {
                     console.log(response.data)
@@ -189,11 +189,11 @@ export default {
             }
         },
         async getRepartidores() {
-            let url = `https://nuestrocampo.cl/api/users/read-deliver.php`;
+            let url = `https://nuestrocampo.cl/demo/users/read-deliver.php`;
             await axios.get(url).then((response) => (this.items = response.data));
         },
         async getProductos() {
-            let url = `https://nuestrocampo.cl/api/productos/read.php`
+            let url = `https://nuestrocampo.cl/demo/productos/read.php`
             await axios.get(url).then((response) => (this.productos = response.data));
         },
     },

@@ -50,7 +50,7 @@ export default {
 
     methods: {
         eliminarSector(id) {
-            let url = `https://nuestrocampo.cl/api/sectores/delete.php?id=${id}`;
+            let url = `https://nuestrocampo.cl/demo/sectores/delete.php?id=${id}`;
             axios.put(url);
             location.reload();
         }

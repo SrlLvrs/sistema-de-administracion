@@ -116,7 +116,7 @@ export default {
         /** 1. Obtiene todos los pedidos automáticos */
         async getPA() {
             //GET pedidos automaticos
-            let url = `https://nuestrocampo.cl/api/pedidos/read-auto.php`;
+            let url = `https://nuestrocampo.cl/demo/pedidos/read-auto.php`;
             await axios.get(url).then((response) => {
                 this.items = response.data;
                 // Añadir estas líneas
@@ -133,7 +133,7 @@ export default {
             let hsql = this.formatToMySQLDateTime(h)
             let idpa = this.last_idpa;
             let estado = this.observaciones ? 'Pendiente' : 'Agendado'; // Añadir esta línea
-            let url = `https://nuestrocampo.cl/api/pedidos/create-w-idpa.php?id_cliente=${idc}&hora_creacion=${hsql}&fecha_reparto=${fecha}&idpa=${idpa}&estado=${estado}&observacion=${this.observaciones}` // Modificar esta línea
+            let url = `https://nuestrocampo.cl/demo/pedidos/create-w-idpa.php?id_cliente=${idc}&hora_creacion=${hsql}&fecha_reparto=${fecha}&idpa=${idpa}&estado=${estado}&observacion=${this.observaciones}` // Modificar esta línea
             await axios.post(url).then(response => {
                 console.log(response.data);
                 this.last_idp = response.data.id
@@ -143,7 +143,7 @@ export default {
         /** 3. Obtiene el detalle de todos los pedidos automáticos */
         async getPAP(id) {
             //GET pedidos automaticos
-            let url = `https://nuestrocampo.cl/api/pedidos/read-detail-auto.php?id=${id}`;
+            let url = `https://nuestrocampo.cl/demo/pedidos/read-detail-auto.php?id=${id}`;
             await axios.get(url).then(response => {
                 const data = response.data;
 
@@ -161,7 +161,7 @@ export default {
                 let c = arrayPAP[k].Cantidad;
                 let t = arrayPAP[k].Total
 
-                let url = `https://nuestrocampo.cl/api/pedidos/create-detail.php?id_pedido=${p}&id_producto=${pro}&cantidad=${c}&total=${t}`
+                let url = `https://nuestrocampo.cl/demo/pedidos/create-detail.php?id_pedido=${p}&id_producto=${pro}&cantidad=${c}&total=${t}`
                 await axios.post(url).then(function (response) {
                     console.log(response.data)
                 })
@@ -206,7 +206,7 @@ export default {
         async actualizarFecha(fecha) {
             //Actualizar por fecha
             let idpa = this.last_idpa
-            let url = `https://nuestrocampo.cl/api/pedidos/update-auto-date.php?id=${idpa}&fecha=${fecha}`
+            let url = `https://nuestrocampo.cl/demo/pedidos/update-auto-date.php?id=${idpa}&fecha=${fecha}`
             axios.put(url).then(function (response) {
                 console.log(response.data);
             });

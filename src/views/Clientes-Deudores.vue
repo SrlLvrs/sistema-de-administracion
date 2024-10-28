@@ -94,7 +94,7 @@ export default {
             return sessionData ? sessionData : null;
         },
         async getClientesDeudores() {
-            let url = "https://nuestrocampo.cl/api/clientes/read-debt.php";
+            let url = "https://nuestrocampo.cl/demo/clientes/read-debt.php";
             await axios.get(url).then((response) => {
                 this.items = response.data;
                 this.calcularTotalDeuda();

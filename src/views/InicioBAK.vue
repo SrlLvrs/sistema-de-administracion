@@ -56,8 +56,8 @@ export default {
     methods: {
         async llamadasConcurrentes() {
             const urls = [
-                'https://nuestrocampo.cl/api/inicio/read.php',
-                'https://nuestrocampo.cl/api/inicio/read-pendientes.php',
+                'https://nuestrocampo.cl/demo/inicio/read.php',
+                'https://nuestrocampo.cl/demo/inicio/read-pendientes.php',
             ];
 
             const promises = urls.map(url => axios.get(url));

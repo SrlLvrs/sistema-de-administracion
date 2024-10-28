@@ -83,7 +83,7 @@ export default {
             let u = this.username;
             let p = hashedPassword;
             let r = this.rol;
-            let url = `https://nuestrocampo.cl/api/users/create.php?username=${u}&pass=${p}&rol=${r}`;
+            let url = `https://nuestrocampo.cl/demo/users/create.php?username=${u}&pass=${p}&rol=${r}`;
 
             axios.post(url).then(function (response) {
                 console.log(response.data);

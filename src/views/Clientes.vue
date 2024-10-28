@@ -191,7 +191,7 @@ export default {
         async getClientes() {
             this.isLoading = true;
             let search = this.busquedaTexto;
-            let url = `https://nuestrocampo.cl/api/clientes/read.php?busqueda=${search}`;
+            let url = `https://nuestrocampo.cl/demo/clientes/read.php?busqueda=${search}`;
             try {
                 const response = await axios.get(url);
                 this.items = response.data;

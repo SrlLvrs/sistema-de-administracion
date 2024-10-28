@@ -58,7 +58,7 @@ export default {
             return sessionData ? sessionData : null;
         },
         async getUsers() {
-            let url = `https://nuestrocampo.cl/api/users/read.php`;
+            let url = `https://nuestrocampo.cl/demo/users/read.php`;
             await axios.get(url).then((response) => (this.usuarios = response.data));
         }
     },

@@ -120,7 +120,7 @@ export default {
         //Obtiene el detalle del cliente desde la Base de Datos
         leerDetalleCliente() {
             let idc = this.id;
-            let url = `https://nuestrocampo.cl/api/clientes/read-detail.php?id=${idc}`
+            let url = `https://nuestrocampo.cl/demo/clientes/read-detail.php?id=${idc}`
 
             axios.get(url).then((response) => {
                 this.items = response.data;
@@ -128,7 +128,7 @@ export default {
                 this.telefono = response.data[0].Telefono;
             });
 
-            let url2 = `https://nuestrocampo.cl/api/clientes/read-order-detail.php?id=${idc}`
+            let url2 = `https://nuestrocampo.cl/demo/clientes/read-order-detail.php?id=${idc}`
             axios.get(url2).then((response) => {
                 this.detalle = Array.isArray(response.data) ? response.data : [];
                 this.calcularSuma();

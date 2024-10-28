@@ -1,9 +1,9 @@
 <?php
 class Database {
     private $host = "localhost";
-    private $db_name = "nuestrocampo_vue";
-    private $username = "nuestrocampo_vue";
-    private $password = "LetSRKz4vxY59Ya";
+    private $db_name = "nuestrocampo_demo";
+    private $username = "nuestrocampo_demo";
+    private $password = "C1mNhav~+oIl";
     public $conn;
 
     public function getConnection() {

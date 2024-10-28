@@ -43,7 +43,7 @@ export default {
 
     methods: {
         eliminarCliente(id) {
-            let url = `https://nuestrocampo.cl/api/clientes/delete.php?id=${id}`;
+            let url = `https://nuestrocampo.cl/demo/clientes/delete.php?id=${id}`;
             axios.put(url);
             location.reload();
         }

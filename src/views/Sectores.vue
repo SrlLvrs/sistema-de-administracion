@@ -99,7 +99,7 @@ export default {
         },
         async getSectores() {
             this.isLoading = true;
-            let url = "https://nuestrocampo.cl/api/sectores/read.php";
+            let url = "https://nuestrocampo.cl/demo/sectores/read.php";
             try {
                 const response = await axios.get(url);
                 this.items = response.data;

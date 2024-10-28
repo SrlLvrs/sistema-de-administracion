@@ -160,7 +160,7 @@ export default {
         async getPedidos() {
             this.isLoading = true;
             let fechaFormateada = this.formatearFecha(this.fechaSeleccionada);
-            let url = `https://nuestrocampo.cl/api/pedidos/read.php?fecha=${fechaFormateada}`;
+            let url = `https://nuestrocampo.cl/demo/pedidos/read.php?fecha=${fechaFormateada}`;
             try {
                 const response = await axios.get(url);
                 this.items = response.data;
@@ -179,7 +179,7 @@ export default {
             
             for (const item of this.items) {
                 try {
-                    const url = `https://nuestrocampo.cl/api/pedidos/update_fecha_reparto.php?id=${item.ID}&nuevaFecha=${encodeURIComponent(fechaFormateada)}`;
+                    const url = `https://nuestrocampo.cl/demo/pedidos/update_fecha_reparto.php?id=${item.ID}&nuevaFecha=${encodeURIComponent(fechaFormateada)}`;
                     const response = await axios.get(url);
                     
                     if (response.data.success) {

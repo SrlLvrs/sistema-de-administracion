@@ -60,7 +60,7 @@ export default {
         },
         getResumen() {
             console.log('Obteniendo resumen...')
-            let url = `https://nuestrocampo.cl/api/resumen/read.php`;
+            let url = `https://nuestrocampo.cl/demo/resumen/read.php`;
             axios.get(url).then((response) => {
                 console.log(response.data)
                 this.items = response.data;
@@ -82,7 +82,7 @@ export default {
             console.log('Obteniendo detalle para el repartidor:', idRepartidor);
             // Verifica si los detalles ya están almacenados
             if (!this.repartidorDetails[idRepartidor]) {
-                let url = `https://nuestrocampo.cl/api/resumen/read-detail.php?idr=${idRepartidor}`;
+                let url = `https://nuestrocampo.cl/demo/resumen/read-detail.php?idr=${idRepartidor}`;
                 axios.get(url).then((response) => {
                     // Almacena los detalles para el repartidor directamente
                     this.repartidorDetails[idRepartidor] = response.data;

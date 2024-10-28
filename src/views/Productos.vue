@@ -89,7 +89,7 @@ export default {
             return sessionData ? sessionData : null;
         },
         async getProductos() {
-            let url = "https://nuestrocampo.cl/api/productos/read.php";
+            let url = "https://nuestrocampo.cl/demo/productos/read.php";
             await axios.get(url).then((response) => (this.items = response.data));
         }
     },

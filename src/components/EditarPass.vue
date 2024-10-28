@@ -70,7 +70,7 @@ export default {
             // Enviar datos al backend (API)
             let id = this.id;
             let p = hashedPassword;
-            let url = `https://nuestrocampo.cl/api/users/update.php?id=${id}&pass=${p}`;
+            let url = `https://nuestrocampo.cl/demo/users/update.php?id=${id}&pass=${p}`;
             axios.put(url).then(function (response) {
                 console.log(response.data);
             });

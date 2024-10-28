@@ -60,7 +60,7 @@ export default {
             let id = this.id
 
             // Enviar datos al backend (API)
-            let url = `https://nuestrocampo.cl/api/users/delete.php?id=${id}`;
+            let url = `https://nuestrocampo.cl/demo/users/delete.php?id=${id}`;
             axios.put(url).then(function (response) {
                 console.log(response.data);
             });

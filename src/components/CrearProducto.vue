@@ -68,7 +68,7 @@ export default {
         crearProducto() {
             let d = this.descripcion;
             let p = this.precio;
-            let url = `https://nuestrocampo.cl/api/productos/create.php?descripcion=${d}&precio=${p}`
+            let url = `https://nuestrocampo.cl/demo/productos/create.php?descripcion=${d}&precio=${p}`
             axios.post(url);
             location.reload();
         },

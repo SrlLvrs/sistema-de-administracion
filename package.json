@@ -12,6 +12,7 @@
     "@heroicons/react": "^2.1.5",
     "@heroicons/vue": "^2.1.5",
     "@popperjs/core": "^2.11.8",
+    "@supabase/supabase-js": "^2.45.6",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
     "firebase": "^10.13.1",

@@ -81,7 +81,7 @@ export default {
     //Método para llamar a la API cuando se cree la instancia
     created() {
         //Variable con endpoint
-        let url = "https://nuestrocampo.cl/api/sectores/read.php";
+        let url = "https://nuestrocampo.cl/demo/sectores/read.php";
 
         axios.get(url).then((response) => (this.sectores = response.data));
     },

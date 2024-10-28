@@ -124,7 +124,7 @@ export default {
         //Obtiene el detalle del pedido desde la Base de Datos
         leerDetallePedido() {
             let idp = this.id;
-            let url = `https://nuestrocampo.cl/api/pedidos/read-detail.php?id=${idp}`
+            let url = `https://nuestrocampo.cl/demo/pedidos/read-detail.php?id=${idp}`
 
             axios.get(url).then((response) => (this.items = response.data));
 

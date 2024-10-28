@@ -226,11 +226,11 @@ export default {
         getDetalle() {
             //GET detalle cliente
             let idc = this.cliente
-            let url = `https://nuestrocampo.cl/api/clientes/read-detail.php?id=${idc}`;
+            let url = `https://nuestrocampo.cl/demo/clientes/read-detail.php?id=${idc}`;
             axios.get(url).then((response) => (this.items = response.data));
 
             //GET todos los productos
-            let url2 = "https://nuestrocampo.cl/api/productos/read.php";
+            let url2 = "https://nuestrocampo.cl/demo/productos/read.php";
             axios.get(url2).then((response) => (this.productos = response.data));
 
             this.fecha_reparto_local = new Date();
@@ -304,7 +304,7 @@ export default {
 
             let idpa = ''
 
-            let url = `https://nuestrocampo.cl/api/pedidos/create-auto.php?id_cliente=${idc}&ultimo_pedido=${up}&frecuencia=${f}&observacion=${o}`
+            let url = `https://nuestrocampo.cl/demo/pedidos/create-auto.php?id_cliente=${idc}&ultimo_pedido=${up}&frecuencia=${f}&observacion=${o}`
             await axios.post(url).then(function (response) {
                 console.log(response.data);
                 idpa = response.data.id
@@ -324,7 +324,7 @@ export default {
                 let c = array[i].cantidad
                 let t = array[i].total
 
-                let url = `https://nuestrocampo.cl/api/pedidos/create-auto-detail.php?idpa=${idpedido}&idproducto=${idp}&cantidad=${c}&total=${t}`
+                let url = `https://nuestrocampo.cl/demo/pedidos/create-auto-detail.php?idpa=${idpedido}&idproducto=${idp}&cantidad=${c}&total=${t}`
                 await axios.post(url).then(function (response) {
                     console.log(response.data);
                 });
@@ -358,7 +358,7 @@ export default {
             let estado = this.observaciones ? 'Pendiente' : 'Agendado';
             let ultimoid = ''
 
-            let url = `https://nuestrocampo.cl/api/pedidos/create-w-idpa.php?id_cliente=${idc}&hora_creacion=${hsql}&fecha_reparto=${fecha}&idpa=${idpa}&estado=${estado}&observacion=${this.observaciones}`
+            let url = `https://nuestrocampo.cl/demo/pedidos/create-w-idpa.php?id_cliente=${idc}&hora_creacion=${hsql}&fecha_reparto=${fecha}&idpa=${idpa}&estado=${estado}&observacion=${this.observaciones}`
             await axios.post(url).then(function (response) {
                 console.log(response.data);
                 ultimoid = response.data.id
@@ -378,7 +378,7 @@ export default {
                 let c = array[i].cantidad;
                 let t = array[i].total;
 
-                let url = `https://nuestrocampo.cl/api/pedidos/create-detail.php?id_pedido=${p}&id_producto=${pro}&cantidad=${c}&total=${t}`
+                let url = `https://nuestrocampo.cl/demo/pedidos/create-detail.php?id_pedido=${p}&id_producto=${pro}&cantidad=${c}&total=${t}`
                 await axios.post(url).then(function (response) {
                     console.log(response.data)
                 })
@@ -389,7 +389,7 @@ export default {
             //Actualizar por fecha
             let idp = this.last_idpa
 
-            let url = `https://nuestrocampo.cl/api/pedidos/update-auto-date.php?id=${idp}&fecha=${fecha}`
+            let url = `https://nuestrocampo.cl/demo/pedidos/update-auto-date.php?id=${idp}&fecha=${fecha}`
             await axios.put(url).then(function (response) {
                 console.log(response.data);
             });

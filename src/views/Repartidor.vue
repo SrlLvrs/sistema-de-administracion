@@ -145,7 +145,7 @@ export default {
             console.log('Sesión iniciada');
             this.id_user = sessionData.id;
             if (sessionData.rol === 'Repartidor') {
-                let url = `https://nuestrocampo.cl/api/pedidos/read-today-deliver.php?id=${this.id_user}`;
+                let url = `https://nuestrocampo.cl/demo/pedidos/read-today-deliver.php?id=${this.id_user}`;
                 axios.get(url).then((response) => (this.items = response.data));
             } else {
                 console.log('El usuario no es repartidor');

@@ -167,7 +167,7 @@ export default {
                 ids = this.sectorSeleccionado;
             }
 
-            let url = `https://nuestrocampo.cl/api/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&observacion=${o}`;
+            let url = `https://nuestrocampo.cl/demo/clientes/update.php?id=${id}&nombre=${n}&direccion=${d}&idsector=${ids}&telefono=${t}&telefono2=${t2}&linkmaps=${l}&observacion=${o}`;
             if (dre !== "") {
               url += `&dre=${dre}`;
             }
@@ -194,11 +194,11 @@ export default {
 
     created() {
         //Leer sectores
-        let url = "https://nuestrocampo.cl/api/sectores/read.php";
+        let url = "https://nuestrocampo.cl/demo/sectores/read.php";
 
         axios.get(url).then((response) => (this.sectores = response.data));
 
-        let url2 = "https://nuestrocampo.cl/api/productos/read.php";
+        let url2 = "https://nuestrocampo.cl/demo/productos/read.php";
 
         axios.get(url2).then((response) => (this.productos = response.data));
     },

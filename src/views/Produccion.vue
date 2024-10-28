@@ -105,7 +105,7 @@ export default {
                     let dia = currentDay.toISOString().split('T')[0];
                     console.log(dia)
 
-                    let url = `https://nuestrocampo.cl/api/stock/update.php?idp=${idp}&fecha=${dia}&stock=${stock}`;
+                    let url = `https://nuestrocampo.cl/demo/stock/update.php?idp=${idp}&fecha=${dia}&stock=${stock}`;
                     console.log(stock);
 
                     axios.put(url).then(function (response) {
@@ -121,7 +121,7 @@ export default {
             location.reload()
         },
         async getProductos() {
-            const url = 'https://nuestrocampo.cl/api/productos/read.php';
+            const url = 'https://nuestrocampo.cl/demo/productos/read.php';
 
             await axios
                 .get(url)
@@ -142,7 +142,7 @@ export default {
         async getStock() {
             try {
                 // Llamar a la API para obtener el stock de la semana actual
-                const response = await axios.get('https://nuestrocampo.cl/api/stock/read.php');
+                const response = await axios.get('https://nuestrocampo.cl/demo/stock/read.php');
                 this.stockData = response.data; // Asignar el stock a stockData
 
                 await this.getProductos()
@@ -181,7 +181,7 @@ export default {
                     let dia = currentDay.toISOString().split('T')[0];
                     console.log(dia)
 
-                    let url = `https://nuestrocampo.cl/api/stock/create.php?idp=${idp}&fecha=${dia}&stock=${stock}`;
+                    let url = `https://nuestrocampo.cl/demo/stock/create.php?idp=${idp}&fecha=${dia}&stock=${stock}`;
                     await axios.post(url).then(function (response) {
                         console.log(response);
                     })
@@ -196,7 +196,7 @@ export default {
         //GET stock de la semana anterior
         async getLastWeek() {
             try {
-                let url = `https://nuestrocampo.cl/api/stock/read-last-week.php`;
+                let url = `https://nuestrocampo.cl/demo/stock/read-last-week.php`;
                 const response = await axios.get(url);
                 this.lastWeek = response.data;
 

@@ -104,14 +104,14 @@ export default {
             let dr = this.diareparto;
             let r = this.repartidor;
             let o = this.orden; // Nuevo campo orden
-            let url = `https://nuestrocampo.cl/api/sectores/create.php?nombresector=${ns}&comuna=${c}&diareparto=${dr}&repartidor=${r}&orden=${o}`
+            let url = `https://nuestrocampo.cl/demo/sectores/create.php?nombresector=${ns}&comuna=${c}&diareparto=${dr}&repartidor=${r}&orden=${o}`
             axios.post(url);
             location.reload();
         }
     },
 
     mounted() {
-        let url = `https://nuestrocampo.cl/api/users/read-deliver.php`
+        let url = `https://nuestrocampo.cl/demo/users/read-deliver.php`
         axios.get(url).then((response) => (this.items = response.data))
     }
 };

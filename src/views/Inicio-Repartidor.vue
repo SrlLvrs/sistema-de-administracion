@@ -44,7 +44,7 @@ export default {
             return sessionData ? sessionData : null;
         },
         async llamadasConcurrentes() {
-            const url = `https://nuestrocampo.cl/api/inicio/read-log-repartidor.php?idRepartidor=${this.id_user}`;
+            const url = `https://nuestrocampo.cl/demo/inicio/read-log-repartidor.php?idRepartidor=${this.id_user}`;
 
             try {
                 const respuesta = await axios.get(url);

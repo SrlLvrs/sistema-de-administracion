@@ -59,7 +59,7 @@ export default {
             let n = this.nombre;
             let r = this.rol;
             let u = this.uid;
-            let url = `https://nuestrocampo.cl/api/users/create.php?name=${n}&rol=${r}&uid=${u}`;
+            let url = `https://nuestrocampo.cl/demo/users/create.php?name=${n}&rol=${r}&uid=${u}`;
 
             axios.post(url).then(function (response) {
                 console.log(response.data);

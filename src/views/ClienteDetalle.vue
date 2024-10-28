@@ -179,10 +179,10 @@ export default {
     methods: {
         async getInfoCliente() {
             const urls = [
-                `https://nuestrocampo.cl/api/clientes/read-detail.php?id=${this.id}`,
-                `https://nuestrocampo.cl/api/pedidos/read-debt.php?id=${this.id}`,
-                `https://nuestrocampo.cl/api/pedidos/read-next.php?id=${this.id}`,
-                `https://nuestrocampo.cl/api/pedidos/read-past.php?id=${this.id}`,
+                `https://nuestrocampo.cl/demo/clientes/read-detail.php?id=${this.id}`,
+                `https://nuestrocampo.cl/demo/pedidos/read-debt.php?id=${this.id}`,
+                `https://nuestrocampo.cl/demo/pedidos/read-next.php?id=${this.id}`,
+                `https://nuestrocampo.cl/demo/pedidos/read-past.php?id=${this.id}`,
             ];
 
             const promises = urls.map(url => axios.get(url));

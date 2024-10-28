@@ -43,7 +43,7 @@ export default {
         async iniciar_sesion() {
             let self = this;
             let u = this.username
-            let url = `https://nuestrocampo.cl/api/users/read-hash.php?username=${u}`
+            let url = `https://nuestrocampo.cl/demo/users/read-hash.php?username=${u}`
 
             await axios.get(url).then((response) => {
                 this.storedHash = response.data[0].Pass;
