@@ -94,8 +94,6 @@
                     </li>
                 </ul>
             </div>  
-            <!-- Logo -->
-            <a class="btn btn-ghost text-xl"><router-link to='/'>Nuestro Campo</router-link></a>
         </div>
         <!-- Este es el menú de pantallas grandes -->
         <div class="navbar-center hidden lg:flex">

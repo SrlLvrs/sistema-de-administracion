@@ -1,5 +1,5 @@
 <template>
-  <VDatePicker v-model="date" :is-dark="true" transparent>
+  <VDatePicker v-model="date" transparent>
     <template #default="{ inputValue, inputEvents }">
       <input
         :value="inputValue"
